@@ -10,13 +10,13 @@ namespace Play.Inventory.Service.Controllers;
 public class InventoryController : ControllerBase
 {
     private readonly IRepository<InventoryItem> _itemsRepository;
-    private readonly CatalogClient _catalogClient;
+    private readonly IRepository<CatalogItem> _catalogItemsRepository;
 
     public InventoryController(IRepository<InventoryItem> itemsRepository,
-        CatalogClient catalogClient)
+        IRepository<CatalogItem> catalogItemsRepository)
     {
         _itemsRepository = itemsRepository;
-        _catalogClient = catalogClient;
+        _catalogItemsRepository = catalogItemsRepository;
     }
 
     [HttpGet]
@@ -27,7 +27,7 @@ public class InventoryController : ControllerBase
             return BadRequest();
         }
 
-        var catalogItems = await _catalogClient.GetCatalogItemsAsync();
+        var catalogItems = await _catalogItemsRepository.GetAllAsync();
         var inventoryItems = await _itemsRepository.GetAllAsync(i => i.UserId == userId);
 
         var inventoryItemsDtos = inventoryItems.Select(i =>
