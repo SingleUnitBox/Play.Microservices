@@ -1,4 +1,4 @@
-﻿namespace Play.User.Service.Auth;
+﻿namespace Play.Inventory.Service.Auth;
 
 public class AuthSettings
 {
@@ -6,7 +6,7 @@ public class AuthSettings
     public string Issuer { get; set; }
     public string ValidIssuer { get; set; }
     public bool ValidateIssuer { get; set; }
-    public bool ValidateAudience { get; set; }
+    public bool     ValidateAudience { get; set; }
     public bool ValidateLifetime { get; set; }
     public TimeSpan Expiry { get; set; }
 }

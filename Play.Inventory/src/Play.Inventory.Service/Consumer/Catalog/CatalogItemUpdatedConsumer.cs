@@ -3,7 +3,7 @@ using Play.Catalog.Contracts;
 using Play.Common;
 using Play.Inventory.Service.Entities;
 
-namespace Play.Inventory.Service.Consumer;
+namespace Play.Inventory.Service.Consumer.Catalog;
 
 public class CatalogItemUpdatedConsumer : IConsumer<Contracts.CatalogItemUpdated>
 {

@@ -1,22 +1,32 @@
 using System.Reflection;
+using System.Text;
 using GreenPipes.Caching;
 using MassTransit;
 using MassTransit.Definition;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Play.Common.Auth;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 using Play.Common.Settings;
 using Play.Inventory.Service.Clients;
 using Play.Inventory.Service.Consumer;
 using Play.Inventory.Service.Entities;
+using Play.User.Service.Context;
 using Polly;
 using Polly.Timeout;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 builder.Services.AddMongo(builder.Configuration)
     .AddMongoRepository<InventoryItem>("inventoryItems")
-    .AddMongoRepository<CatalogItem>("catalogItems");
+    .AddMongoRepository<CatalogItem>("catalogItems")
+    .AddMongoRepository<User>("users");
+builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+
+builder.Services.AddContext();
     
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, Assembly.GetExecutingAssembly());
 
@@ -30,7 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseRouting();
+app.UseAuthorization();
 app.UseEndpoints(end =>
 {
     end.MapControllers();

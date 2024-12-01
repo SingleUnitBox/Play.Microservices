@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Play.Common;
-using Play.Inventory.Service.Clients;
 using Play.Inventory.Service.Entities;
+using Play.User.Service.Context;
 
 namespace Play.Inventory.Service.Controllers;
 
@@ -11,17 +12,22 @@ public class InventoryController : ControllerBase
 {
     private readonly IRepository<InventoryItem> _itemsRepository;
     private readonly IRepository<CatalogItem> _catalogItemsRepository;
+    private readonly IContext _context;
 
     public InventoryController(IRepository<InventoryItem> itemsRepository,
-        IRepository<CatalogItem> catalogItemsRepository)
+        IRepository<CatalogItem> catalogItemsRepository,
+        IContext context)
     {
         _itemsRepository = itemsRepository;
         _catalogItemsRepository = catalogItemsRepository;
+        _context = context;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetAsync(Guid userId)
+    [Authorize]
+    public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetAsync()
     {
+        var userId = _context.IdentityContext.UserId;
         if (userId == Guid.Empty)
         {
             return BadRequest();

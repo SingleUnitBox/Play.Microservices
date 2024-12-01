@@ -11,7 +11,8 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.11",
           "Microsoft.AspNetCore.Authorization": "8.0.11",
           "Microsoft.AspNetCore.OpenApi": "8.0.11",
-          "Play.Common": "1.0.5",
+          "Play.Common": "1.0.11",
+          "Play.User.Contracts": "1.0.0",
           "Swashbuckle.AspNetCore": "6.6.2"
         },
         "runtime": {
@@ -380,10 +381,11 @@
           }
         }
       },
-      "Play.Common/1.0.5": {
+      "Play.Common/1.0.11": {
         "dependencies": {
           "MassTransit.AspNetCore": "7.3.1",
           "MassTransit.RabbitMQ": "7.3.1",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.11",
           "Microsoft.Extensions.Configuration.Binder": "8.0.2",
           "Microsoft.Extensions.DependencyInjection": "8.0.1",
           "MongoDB.Driver": "3.0.0"
@@ -494,6 +496,14 @@
           "lib/net7.0/ZstdSharp.dll": {
             "assemblyVersion": "0.7.3.0",
             "fileVersion": "0.7.3.0"
+          }
+        }
+      },
+      "Play.User.Contracts/1.0.0": {
+        "runtime": {
+          "Play.User.Contracts.dll": {
+            "assemblyVersion": "1.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -771,12 +781,12 @@
       "path": "newtonsoft.json.bson/1.0.2",
       "hashPath": "newtonsoft.json.bson.1.0.2.nupkg.sha512"
     },
-    "Play.Common/1.0.5": {
+    "Play.Common/1.0.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-FbbADY/svH8/96dpxxl5RRkn8y8v3ifM9FGv3PjUswCOqmLOLFNc4qDFY1GnSOpy1olkDm/6AMFn/XSbbYtEaA==",
-      "path": "play.common/1.0.5",
-      "hashPath": "play.common.1.0.5.nupkg.sha512"
+      "sha512": "sha512-guipW7FuanpjrzfB29RLGcQ7ozkX5fJITrLq5FMPwauxGeZ0IB4gvLxv1G5rr+q6hJsgmo0imTce2WsWghYjzw==",
+      "path": "play.common/1.0.11",
+      "hashPath": "play.common.1.0.11.nupkg.sha512"
     },
     "RabbitMQ.Client/6.2.2": {
       "type": "package",
@@ -917,6 +927,11 @@
       "sha512": "sha512-U9Ix4l4cl58Kzz1rJzj5hoVTjmbx1qGMwzAcbv1j/d3NzrFaESIurQyg+ow4mivCgkE3S413y+U9k4WdnEIkRA==",
       "path": "zstdsharp.port/0.7.3",
       "hashPath": "zstdsharp.port.0.7.3.nupkg.sha512"
+    },
+    "Play.User.Contracts/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

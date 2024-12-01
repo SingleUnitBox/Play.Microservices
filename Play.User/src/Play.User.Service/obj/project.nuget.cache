@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qMAGwLRy+v8=",
+  "dgSpecHash": "ypge1Zn9pk0=",
   "success": true,
   "projectFilePath": "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.User\\src\\Play.User.Service\\Play.User.Service.csproj",
   "expectedPackageFiles": [
@@ -42,7 +42,7 @@
     "C:\\Users\\czlom\\.nuget\\packages\\newid\\3.0.3\\newid.3.0.3.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\newtonsoft.json\\12.0.1\\newtonsoft.json.12.0.1.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
-    "C:\\Users\\czlom\\.nuget\\packages\\play.common\\1.0.5\\play.common.1.0.5.nupkg.sha512",
+    "C:\\Users\\czlom\\.nuget\\packages\\play.common\\1.0.11\\play.common.1.0.11.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\rabbitmq.client\\6.2.2\\rabbitmq.client.6.2.2.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\sharpcompress\\0.30.1\\sharpcompress.0.30.1.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\snappier\\1.0.0\\snappier.1.0.0.nupkg.sha512",
@@ -62,7 +62,8 @@
     "C:\\Users\\czlom\\.nuget\\packages\\system.text.json\\5.0.2\\system.text.json.5.0.2.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\system.threading.channels\\4.7.1\\system.threading.channels.4.7.1.nupkg.sha512",
     "C:\\Users\\czlom\\.nuget\\packages\\system.valuetuple\\4.5.0\\system.valuetuple.4.5.0.nupkg.sha512",
-    "C:\\Users\\czlom\\.nuget\\packages\\zstdsharp.port\\0.7.3\\zstdsharp.port.0.7.3.nupkg.sha512"
+    "C:\\Users\\czlom\\.nuget\\packages\\zstdsharp.port\\0.7.3\\zstdsharp.port.0.7.3.nupkg.sha512",
+    "C:\\Users\\czlom\\.nuget\\packages\\play.user.contracts\\1.0.0\\play.user.contracts.1.0.0.nupkg.sha512"
   ],
   "logs": []
 }

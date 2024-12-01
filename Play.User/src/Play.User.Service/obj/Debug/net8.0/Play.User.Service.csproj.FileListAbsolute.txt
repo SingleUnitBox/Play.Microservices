@@ -65,3 +65,5 @@ C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\b
 C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\bin\Debug\net8.0\Snappier.dll
 C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\bin\Debug\net8.0\ZstdSharp.dll
+C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\bin\Debug\net8.0\Play.User.Contracts.dll
+C:\Users\czlom\source\repos\Play.Microservices\Play.User\src\Play.User.Service\bin\Debug\net8.0\Play.User.Contracts.pdb

@@ -639,11 +639,12 @@
           }
         }
       },
-      "Play.Common/1.0.5": {
+      "Play.Common/1.0.11": {
         "type": "package",
         "dependencies": {
           "MassTransit.AspNetCore": "7.3.1",
           "MassTransit.RabbitMQ": "7.3.1",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "8.0.11",
           "Microsoft.Extensions.Configuration.Binder": "8.0.2",
           "Microsoft.Extensions.DependencyInjection": "8.0.1",
           "MongoDB.Driver": "3.0.0"
@@ -653,7 +654,10 @@
         },
         "runtime": {
           "lib/net8.0/Play.Common.dll": {}
-        }
+        },
+        "frameworkReferences": [
+          "Microsoft.AspNetCore.App"
+        ]
       },
       "RabbitMQ.Client/6.2.2": {
         "type": "package",
@@ -924,6 +928,16 @@
         },
         "runtime": {
           "lib/net7.0/ZstdSharp.dll": {}
+        }
+      },
+      "Play.User.Contracts/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v8.0",
+        "compile": {
+          "bin/placeholder/Play.User.Contracts.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Play.User.Contracts.dll": {}
         }
       }
     }
@@ -2033,14 +2047,14 @@
         "newtonsoft.json.bson.nuspec"
       ]
     },
-    "Play.Common/1.0.5": {
-      "sha512": "FbbADY/svH8/96dpxxl5RRkn8y8v3ifM9FGv3PjUswCOqmLOLFNc4qDFY1GnSOpy1olkDm/6AMFn/XSbbYtEaA==",
+    "Play.Common/1.0.11": {
+      "sha512": "guipW7FuanpjrzfB29RLGcQ7ozkX5fJITrLq5FMPwauxGeZ0IB4gvLxv1G5rr+q6hJsgmo0imTce2WsWghYjzw==",
       "type": "package",
-      "path": "play.common/1.0.5",
+      "path": "play.common/1.0.11",
       "files": [
         ".nupkg.metadata",
         "lib/net8.0/Play.Common.dll",
-        "play.common.1.0.5.nupkg.sha512",
+        "play.common.1.0.11.nupkg.sha512",
         "play.common.nuspec"
       ]
     },
@@ -2657,6 +2671,11 @@
         "zstdsharp.port.0.7.3.nupkg.sha512",
         "zstdsharp.port.nuspec"
       ]
+    },
+    "Play.User.Contracts/1.0.0": {
+      "type": "project",
+      "path": "../Play.User.Contracts/Play.User.Contracts.csproj",
+      "msbuildProject": "../Play.User.Contracts/Play.User.Contracts.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -2664,7 +2683,8 @@
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 8.0.11",
       "Microsoft.AspNetCore.Authorization >= 8.0.11",
       "Microsoft.AspNetCore.OpenApi >= 8.0.11",
-      "Play.Common >= 1.0.5",
+      "Play.Common >= 1.0.11",
+      "Play.User.Contracts >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.6.2"
     ]
   },
@@ -2697,7 +2717,11 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.User\\src\\Play.User.Contracts\\Play.User.Contracts.csproj": {
+              "projectPath": "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.User\\src\\Play.User.Contracts\\Play.User.Contracts.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
@@ -2729,7 +2753,7 @@
           },
           "Play.Common": {
             "target": "Package",
-            "version": "[1.0.5, )"
+            "version": "[1.0.11, )"
           },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
