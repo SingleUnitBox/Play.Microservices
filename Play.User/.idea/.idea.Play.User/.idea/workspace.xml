@@ -19,8 +19,10 @@
     <option name="firstShow" value="false" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/36/9cd20f40/IEntity.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/5d/8a5241fe/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b741f17422844062bda644589ab84b32337fefcb677bc51957a62c3df8ad4d/AuthorizationAppBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/../Play.Common/src/Play.Common/MongoDb/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="ProjectColorInfo"><![CDATA[{
   "associatedIndex": 2
@@ -98,7 +100,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1732999448676</updated>
-      <workItem from="1732999449745" duration="3510000" />
+      <workItem from="1732999449745" duration="8193000" />
     </task>
     <servers />
   </component>
@@ -108,5 +110,24 @@
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/5d/8a5241fe/Extensions.cs</url>
+          <line>24</line>
+          <properties documentPath="C:\Users\czlom\AppData\Roaming\JetBrains\Rider2024.3\resharper-host\DecompilerCache\decompiler\399c3155f01e4b1d852c3fdd8d54b8be4400\5d\8a5241fe\Extensions.cs" containingFunctionPresentation="Method 'AddMongo'">
+            <startOffsets>
+              <option value="781" />
+            </startOffsets>
+            <endOffsets>
+              <option value="894" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

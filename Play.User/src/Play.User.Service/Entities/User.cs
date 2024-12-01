@@ -20,5 +20,6 @@ public class User : IEntity
         Password = password;
         Role = role;
         Claims = claims;
+        CreatedAt = DateTimeOffset.Now;
     }
 }

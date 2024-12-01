@@ -21,6 +21,7 @@ public static class Extensions
         {
             ValidIssuer = authSettings.ValidIssuer,
             ValidateIssuer = authSettings.ValidateIssuer,
+            ValidateAudience = authSettings.ValidateAudience,
             ValidateLifetime = authSettings.ValidateLifetime,
             ClockSkew = TimeSpan.Zero,
         };

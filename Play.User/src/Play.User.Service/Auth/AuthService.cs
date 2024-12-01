@@ -57,4 +57,21 @@ public class AuthService : IAuthService
         var token = _jwtManager.GenerateToken(user.Id.ToString(), user.Role, user.Claims);
         return token;
     }
+
+    public async Task<AccountDto> GetAccount(Guid userId)
+    {
+        var user = await _userRepository.GetByIdAsync(userId);
+        if (user is not null)
+        {
+            return new AccountDto
+            {
+                Id = user.Id,
+                Username = user.Username,
+                Role = user.Role,
+                Claims = user.Claims,
+            };
+        }
+
+        return null;
+    }
 }
