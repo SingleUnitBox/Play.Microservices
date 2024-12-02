@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Play.Common.Settings;
+using Play.Common.SharedKernel.Types.Serializers;
 
 namespace Play.Common.MongoDb;
 
@@ -14,6 +15,7 @@ public static class Extensions
     public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
         
         services.AddSingleton(sp =>
         {

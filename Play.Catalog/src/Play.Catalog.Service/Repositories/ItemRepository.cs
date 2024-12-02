@@ -16,9 +16,7 @@ public class ItemRepository : IItemRepository
     }
     
     public async Task CreateAsync(Item item)
-    {
-        await _itemsCollection.InsertOneAsync(item);
-    }
+        => await _itemsCollection.InsertOneAsync(item);
 
     public async Task UpdateAsync(Item item)
     {
@@ -39,7 +37,16 @@ public class ItemRepository : IItemRepository
     }
 
     public async Task<Item> GetAsync(Expression<Func<Item, bool>> predicate)
+        => await _itemsCollection.Find(predicate).SingleOrDefaultAsync();
+    
+
+    public async Task<IReadOnlyList<Item>> GetAllAsync(Expression<Func<Item, bool>> predicate)
+        => await _itemsCollection.Find(predicate).ToListAsync();
+
+    public async Task<IReadOnlyList<Item>> GetAllAsync()
     {
-        return await _itemsCollection.Find(predicate).SingleOrDefaultAsync();
+        var items = await _itemsCollection.Find(_filterBuilder.Empty).ToListAsync();
+        return items;
     }
+    
 }

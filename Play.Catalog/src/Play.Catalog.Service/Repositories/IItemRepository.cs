@@ -12,4 +12,6 @@ public interface IItemRepository : IMongoRepository<Item>
     Task DeleteAsync(AggregateRootId id);
     Task<Item> GetByIdAsync(AggregateRootId id);
     Task<Item> GetAsync(Expression<Func<Item, bool>> predicate);
+    Task<IReadOnlyList<Item>> GetAllAsync(Expression<Func<Item, bool>> predicate);
+    Task<IReadOnlyList<Item>> GetAllAsync();
 }
