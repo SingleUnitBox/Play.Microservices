@@ -11,9 +11,8 @@ namespace Play.Common.MongoDb;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMongo(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
-        // guid serializer
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
         
         services.AddSingleton(sp =>
@@ -28,17 +27,32 @@ public static class Extensions
         return services;
     }
     
-    public static IServiceCollection AddMongoRepository<TEntity>(this IServiceCollection services,
-        string collectionName) where TEntity : class, IEntity
+    // public static IServiceCollection AddMongoRepository<TEntity>(this IServiceCollection services,
+    //     string collectionName) where TEntity : class, IEntity
+    // {
+    //     services.AddSingleton<IRepository<TEntity>>(sp =>
+    //     {
+    //         var mongoDb = sp.GetRequiredService<IMongoDatabase>();
+    //         var repository = new MongoRepository<TEntity>(mongoDb, collectionName);
+    //
+    //         return repository;
+    //     });
+    //         
+    //     return services;
+    // }
+    
+    public static IServiceCollection AddMongoRepository<TIMongoRepository, TMongoRepository>(
+        this IServiceCollection services,
+        Func<IMongoDatabase, TMongoRepository> factory)
+        where TIMongoRepository : class
+        where TMongoRepository : TIMongoRepository
     {
-        services.AddSingleton<IRepository<TEntity>>(sp =>
+        services.AddScoped<TIMongoRepository>(sp =>
         {
             var mongoDb = sp.GetRequiredService<IMongoDatabase>();
-            var repository = new MongoRepository<TEntity>(mongoDb, collectionName);
-
-            return repository;
+            return factory(mongoDb);
         });
-            
+        
         return services;
     }
 }

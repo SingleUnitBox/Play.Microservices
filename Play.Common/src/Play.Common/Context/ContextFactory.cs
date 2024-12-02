@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace Play.User.Service.Context;
+namespace Play.Common.Context;
 
 public class ContextFactory : IContextFactory
 {

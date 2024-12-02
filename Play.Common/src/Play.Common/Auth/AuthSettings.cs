@@ -1,4 +1,4 @@
-﻿namespace Play.User.Service.Auth;
+﻿namespace Play.Common.Auth;
 
 public class AuthSettings
 {

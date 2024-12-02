@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace Play.User.Service.Context;
+namespace Play.Common.Context;
 
 public class IdentityContext : IIdentityContext
 {

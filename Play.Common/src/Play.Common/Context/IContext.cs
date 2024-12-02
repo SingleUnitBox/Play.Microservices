@@ -1,4 +1,4 @@
-﻿namespace Play.User.Service.Context;
+﻿namespace Play.Common.Context;
 
 public interface IContext
 {

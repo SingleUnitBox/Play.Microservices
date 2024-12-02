@@ -1,7 +1,6 @@
-﻿using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 
-namespace Play.User.Service.Context;
+namespace Play.Common.Context;
 
 public class Context : IContext
 {

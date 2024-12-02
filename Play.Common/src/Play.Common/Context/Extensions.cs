@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Play.User.Service.Context;
+namespace Play.Common.Context;
 
 public static class Extensions
 {
