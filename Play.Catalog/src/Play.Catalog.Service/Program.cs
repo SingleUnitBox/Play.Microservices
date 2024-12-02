@@ -25,8 +25,6 @@ internal class Program
         builder.Services.AddMongoDb(builder.Configuration);
         builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
             db => new ItemRepository(db, "items"));
-        builder.Services.AddMongoRepository<IAggregateItemRepository, AggregateItemRepository>(
-            db => new AggregateItemRepository(db, "aggregateItems"));
 
         var app = builder.Build();
 

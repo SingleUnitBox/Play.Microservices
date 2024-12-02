@@ -11,15 +11,12 @@ namespace Play.Catalog.Service.Controllers
     public class ItemsController : ControllerBase
     {
         private readonly IItemRepository _itemRepository;
-        private readonly IAggregateItemRepository _aggregateItemRepository;
         private readonly IPublishEndpoint _publishEndpoint;
 
         public ItemsController(IItemRepository itemRepository,
-            IPublishEndpoint publishEndpoint,
-            IAggregateItemRepository aggregateItemRepository)
+            IPublishEndpoint publishEndpoint)
         {
             _publishEndpoint = publishEndpoint;
-            _aggregateItemRepository = aggregateItemRepository;
             _itemRepository = itemRepository;
         }
 
@@ -82,14 +79,6 @@ namespace Play.Catalog.Service.Controllers
             await _itemRepository.DeleteAsync(id);
             await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemDeleted(id));
             
-            return NoContent();
-        }
-
-        [HttpPost("aggregate")]
-        public async Task<ActionResult> PostAggregate(CreateAggregateItemDto dto)
-        {
-            var aggregateItem = new AggregateItem(dto.Name, dto.Description, dto.Price);
-            await _aggregateItemRepository.CreateAsync(aggregateItem);
             return NoContent();
         }
     }
