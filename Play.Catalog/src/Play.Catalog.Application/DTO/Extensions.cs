@@ -1,6 +1,6 @@
 using Play.Catalog.Domain.Entities;
 
-namespace Play.Catalog.Service
+namespace Play.Catalog.Application.DTO
 {
     public static class Extensions
     {

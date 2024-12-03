@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Play.Catalog.Application.DTO;
 using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
 
