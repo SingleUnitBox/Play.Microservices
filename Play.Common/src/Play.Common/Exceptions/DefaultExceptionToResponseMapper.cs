@@ -4,7 +4,7 @@ using Play.Common.Abstractions.Exceptions;
 
 namespace Play.Common.Exceptions;
 
-public class ExceptionToResponseMapper : IExceptionToResponseMapper
+public class DefaultExceptionToResponseMapper : IExceptionToResponseMapper
 {
     public ExceptionResponse Map(Exception exception)
         => exception switch

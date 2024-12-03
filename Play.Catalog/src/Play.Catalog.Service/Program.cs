@@ -1,5 +1,6 @@
 using System.Reflection;
 using Play.Catalog.Domain.Repositories;
+using Play.Catalog.Infra.Exceptions;
 using Play.Catalog.Service.Repositories;
 using Play.Common.Exceptions;
 using Play.Common.MassTransit;
@@ -14,6 +15,7 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddExceptionHandling();
+        builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
         builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, Assembly.GetExecutingAssembly());
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();

@@ -43,6 +43,7 @@ namespace Play.Catalog.Service.Controllers
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto createItemDto)
         {
+            throw new InvalidCastException();
             var item = new Item(createItemDto.Name, createItemDto.Description, createItemDto.Price);
         
             await _itemRepository.CreateAsync(item);

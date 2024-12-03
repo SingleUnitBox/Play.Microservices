@@ -4,11 +4,11 @@ namespace Play.Common.Exceptions;
 
 public class ErrorHandlingMiddleware : IMiddleware
 {
-    private readonly IExceptionToResponseMapper _exceptionToResponseMapper;
+    private readonly IExceptionCompositionRootMapper _exceptionCompositionRootMapper;
 
-    public ErrorHandlingMiddleware(IExceptionToResponseMapper exceptionToResponseMapper)
+    public ErrorHandlingMiddleware(IExceptionCompositionRootMapper exceptionCompositionRootMapper)
     {
-        _exceptionToResponseMapper = exceptionToResponseMapper;
+        _exceptionCompositionRootMapper = exceptionCompositionRootMapper;
     }
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -18,7 +18,7 @@ public class ErrorHandlingMiddleware : IMiddleware
         }
         catch (Exception exception)
         {
-            var response = _exceptionToResponseMapper.Map(exception);
+            var response = _exceptionCompositionRootMapper.Map(exception);
             context.Response.StatusCode = (int)response.HttpStatusCode;
             await context.Response.WriteAsJsonAsync(response.Error);
         }
