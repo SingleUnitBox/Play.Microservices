@@ -10,11 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3aad32c-134d-4ca9-bef5-8c2f6f9ae48d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/Play.Common.Abstractions.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/Play.Catalog.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/Play.Catalog.sln" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Controllers/ItemsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Controllers/ItemsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Entities/AggregateItem.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Entities/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Domain/Entities/Item.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Extensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Play.Catalog.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Play.Catalog.Service.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/AggregateItemRepository.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/IAggregateItemRepository.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/IItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Domain/Repositories/IItemRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/ItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/ItemRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/Play.Common.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/Play.Common.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/Play.Common.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common/Play.Common.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/AggregateRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/AggregateRoot.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/DomainEvents/IDomainEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/DomainEvents/IDomainEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Repositories/IMongoRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/Repositories/IMongoRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/AggregateRootId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/Types/AggregateRootId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/Serializers/AggregateRootIdSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/Serializers/AggregateRootIdSerializer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

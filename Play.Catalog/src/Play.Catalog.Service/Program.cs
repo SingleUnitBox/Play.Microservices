@@ -1,10 +1,8 @@
 using System.Reflection;
-using Play.Catalog.Service.Entities;
+using Play.Catalog.Domain.Repositories;
 using Play.Catalog.Service.Repositories;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
-using Play.Common.Settings;
-
 
 namespace Play.Catalog.Service;
 

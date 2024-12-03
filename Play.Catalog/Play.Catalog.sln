@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Play.Catalog.Service", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Contracts", "src\Play.Catalog.Contracts\Play.Catalog.Contracts.csproj", "{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Domain", "src\Play.Catalog.Domain\Play.Catalog.Domain.csproj", "{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -30,6 +36,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6A99F374-B3FF-48E5-8128-AD974F93F395} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
 		{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
+		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B8D97F1-054E-4288-99CF-C2C42970AE4B}

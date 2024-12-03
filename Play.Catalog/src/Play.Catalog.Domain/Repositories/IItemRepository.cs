@@ -1,9 +1,9 @@
 ﻿using System.Linq.Expressions;
-using Play.Catalog.Service.Entities;
-using Play.Common.SharedKernel.Repositories;
-using Play.Common.SharedKernel.Types;
+using Play.Catalog.Domain.Entities;
+using Play.Common.Abstractions.SharedKernel.Repositories;
+using Play.Common.Abstractions.SharedKernel.Types;
 
-namespace Play.Catalog.Service.Repositories;
+namespace Play.Catalog.Domain.Repositories;
 
 public interface IItemRepository : IMongoRepository<Item>
 {

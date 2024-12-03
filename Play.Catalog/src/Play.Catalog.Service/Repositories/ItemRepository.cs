@@ -1,7 +1,8 @@
 ﻿using System.Linq.Expressions;
 using MongoDB.Driver;
-using Play.Catalog.Service.Entities;
-using Play.Common.SharedKernel.Types;
+using Play.Catalog.Domain.Entities;
+using Play.Catalog.Domain.Repositories;
+using Play.Common.Abstractions.SharedKernel.Types;
 
 namespace Play.Catalog.Service.Repositories;
 
@@ -23,7 +24,7 @@ public class ItemRepository : IItemRepository
         var filter = Builders<Item>.Filter.Eq(x => x.Id, item.Id);
         await _itemsCollection.ReplaceOneAsync(filter, item);
     }
-
+    
     public async Task DeleteAsync(AggregateRootId id)
     {
         var filter = _filterBuilder.Eq(item => item.Id, id);

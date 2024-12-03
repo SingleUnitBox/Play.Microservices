@@ -8,12 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
-    <PackageReference Include="Play.Common" Version="1.0.16" />
+    <PackageReference Include="Play.Common" Version="1.0.20" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Play.Catalog.Contracts\Play.Catalog.Contracts.csproj" />
+    <ProjectReference Include="..\Play.Catalog.Domain\Play.Catalog.Domain.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-using Play.Catalog.Service.Entities;
+using Play.Catalog.Domain.Entities;
 
 namespace Play.Catalog.Service
 {

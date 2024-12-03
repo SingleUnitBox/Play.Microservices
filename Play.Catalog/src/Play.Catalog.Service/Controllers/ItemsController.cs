@@ -1,8 +1,7 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
-using Play.Catalog.Service.Entities;
-using Play.Catalog.Service.Repositories;
-using Play.Common;
+using Play.Catalog.Domain.Entities;
+using Play.Catalog.Domain.Repositories;
 
 namespace Play.Catalog.Service.Controllers
 {

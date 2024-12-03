@@ -1,14 +1,14 @@
-using Play.Common;
-using Play.Common.SharedKernel;
-using Play.Common.SharedKernel.Types;
+using Play.Catalog.Domain.ValueObjects;
+using Play.Common.Abstractions.SharedKernel;
+using Play.Common.Abstractions.SharedKernel.Types;
 
-namespace Play.Catalog.Service.Entities
+namespace Play.Catalog.Domain.Entities
 {
     public class Item : AggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public decimal Price { get; set; }
+        public Price Price { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 
         public Item(string name, string description, decimal price)

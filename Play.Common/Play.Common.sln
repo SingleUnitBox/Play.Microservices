@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{338DD5F6-ABF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Play.Common", "src\Play.Common\Play.Common.csproj", "{6388F36B-B7AE-4419-AA7B-418457CF6BB0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Common.Abstractions", "src\Play.Common.Abstractions\Play.Common.Abstractions.csproj", "{B8B1B731-0277-4A3B-86CF-ACCAD37E8051}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -17,12 +19,17 @@ Global
 		{6388F36B-B7AE-4419-AA7B-418457CF6BB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6388F36B-B7AE-4419-AA7B-418457CF6BB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6388F36B-B7AE-4419-AA7B-418457CF6BB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8B1B731-0277-4A3B-86CF-ACCAD37E8051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8B1B731-0277-4A3B-86CF-ACCAD37E8051}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8B1B731-0277-4A3B-86CF-ACCAD37E8051}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8B1B731-0277-4A3B-86CF-ACCAD37E8051}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{6388F36B-B7AE-4419-AA7B-418457CF6BB0} = {338DD5F6-ABF1-4956-91C2-1E7A5F629137}
+		{B8B1B731-0277-4A3B-86CF-ACCAD37E8051} = {338DD5F6-ABF1-4956-91C2-1E7A5F629137}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF4A6736-2F77-42C6-B6F2-17EB8E6E6198}
