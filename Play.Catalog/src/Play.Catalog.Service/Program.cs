@@ -1,6 +1,7 @@
 using System.Reflection;
 using Play.Catalog.Domain.Repositories;
 using Play.Catalog.Service.Repositories;
+using Play.Common.Exceptions;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 
@@ -11,7 +12,8 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-        
+
+        builder.Services.AddExceptionHandling();
         builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, Assembly.GetExecutingAssembly());
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -26,6 +28,7 @@ internal class Program
 
         var app = builder.Build();
 
+        app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
