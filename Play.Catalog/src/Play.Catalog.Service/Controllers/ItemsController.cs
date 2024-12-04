@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Application.DTO;
 using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
+using Play.Common.Abstractions;
 
 namespace Play.Catalog.Service.Controllers
 {
@@ -12,6 +13,7 @@ namespace Play.Catalog.Service.Controllers
     {
         private readonly IItemRepository _itemRepository;
         private readonly IPublishEndpoint _publishEndpoint;
+        private readonly ICommandDispatcher _commandDispatcher;
 
         public ItemsController(IItemRepository itemRepository,
             IPublishEndpoint publishEndpoint)
@@ -44,7 +46,6 @@ namespace Play.Catalog.Service.Controllers
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto createItemDto)
         {
-            throw new InvalidCastException();
             var item = new Item(createItemDto.Name, createItemDto.Description, createItemDto.Price);
         
             await _itemRepository.CreateAsync(item);

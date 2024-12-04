@@ -1,7 +1,7 @@
 using System.Reflection;
 using Play.Catalog.Domain.Repositories;
 using Play.Catalog.Infra.Exceptions;
-using Play.Catalog.Service.Repositories;
+using Play.Catalog.Infra.Repositories;
 using Play.Common.Exceptions;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;

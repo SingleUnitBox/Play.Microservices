@@ -6,8 +6,8 @@ namespace Play.Catalog.Domain.Entities
 {
     public class Item : AggregateRoot
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public Name Name { get; set; }
+        public Description Description { get; set; }
         public Price Price { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 

@@ -2,9 +2,9 @@
 using MongoDB.Driver;
 using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
-using Play.Common.Abstractions.SharedKernel.Types;
+using Play.Common
 
-namespace Play.Catalog.Service.Repositories;
+namespace Play.Catalog.Infra.Repositories;
 
 public class ItemRepository : IItemRepository
 {
