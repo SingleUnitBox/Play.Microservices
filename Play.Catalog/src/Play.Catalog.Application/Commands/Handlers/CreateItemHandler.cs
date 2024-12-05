@@ -1,6 +1,6 @@
 ﻿using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
-using Play.Common.Abstractions.Commands;
+using Play.Common.Temp.Commands;
 
 namespace Play.Catalog.Application.Commands.Handlers;
 

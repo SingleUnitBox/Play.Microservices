@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Play.Catalog.Domain.Entities;
-using Play.Common.Abstractions.SharedKernel.Repositories;
-using Play.Common.Abstractions.SharedKernel.Types;
+using Play.Common.Temp.SharedKernel.Repositories;
+using Play.Common.Temp.SharedKernel.Types;
 
 namespace Play.Catalog.Domain.Repositories;
 

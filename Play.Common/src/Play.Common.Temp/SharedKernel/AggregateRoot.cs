@@ -1,7 +1,7 @@
-﻿using Play.Common.Abstractions.SharedKernel.DomainEvents;
-using Play.Common.Abstractions.SharedKernel.Types;
+﻿using Play.Common.Temp.SharedKernel.DomainEvents;
+using Play.Common.Temp.SharedKernel.Types;
 
-namespace Play.Common.Abstractions.SharedKernel;
+namespace Play.Common.Temp.SharedKernel;
 
 public abstract class AggregateRoot<TKey>
 {

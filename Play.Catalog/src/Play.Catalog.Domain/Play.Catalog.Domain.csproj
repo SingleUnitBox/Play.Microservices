@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Play.Common.Abstractions" Version="1.0.6" />
+      <PackageReference Include="Play.Common.Temp" Version="1.0.0" />
     </ItemGroup>
     
 </Project>

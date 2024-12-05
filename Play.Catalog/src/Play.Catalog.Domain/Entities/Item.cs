@@ -1,6 +1,6 @@
 using Play.Catalog.Domain.ValueObjects;
-using Play.Common.Abstractions.SharedKernel;
-using Play.Common.Abstractions.SharedKernel.Types;
+using Play.Common.Temp.SharedKernel;
+using Play.Common.Temp.SharedKernel.Types;
 
 namespace Play.Catalog.Domain.Entities
 {

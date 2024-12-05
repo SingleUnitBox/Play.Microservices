@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
-using Play.Common
+using Play.Common.Temp.SharedKernel.Types;
 
 namespace Play.Catalog.Infra.Repositories;
 

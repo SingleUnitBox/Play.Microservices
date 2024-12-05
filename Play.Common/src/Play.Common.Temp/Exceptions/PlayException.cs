@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Abstractions.Exceptions;
+﻿namespace Play.Common.Temp.Exceptions;
 
 public class PlayException : Exception
 {

@@ -1,4 +1,4 @@
-﻿using Play.Common.Abstractions.Exceptions;
+﻿using Play.Common.Temp.Exceptions;
 
 namespace Play.Catalog.Domain.Exceptions;
 

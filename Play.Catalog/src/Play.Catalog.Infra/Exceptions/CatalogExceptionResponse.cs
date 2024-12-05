@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using Play.Common.Abstractions.Exceptions;
 using Play.Common.Exceptions;
 
 namespace Play.Catalog.Infra.Exceptions;

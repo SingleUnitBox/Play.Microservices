@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Abstractions.Commands;
+﻿namespace Play.Common.Temp.Commands;
 
 public interface ICommandHandler<TCommand> where TCommand : class, ICommand
 {

@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Abstractions.SharedKernel.Repositories;
+﻿namespace Play.Common.Temp.SharedKernel.Repositories;
 
 public interface IMongoRepository<TAggregateRoot> where TAggregateRoot : AggregateRoot
 {

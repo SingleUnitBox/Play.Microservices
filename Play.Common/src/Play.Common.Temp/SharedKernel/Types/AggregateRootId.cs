@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Abstractions.SharedKernel.Types
+﻿namespace Play.Common.Temp.SharedKernel.Types
 {
     public class AggregateRootId<TKey> : IEquatable<AggregateRootId<TKey>>
     {
