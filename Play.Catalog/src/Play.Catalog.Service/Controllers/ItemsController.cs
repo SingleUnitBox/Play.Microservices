@@ -1,7 +1,7 @@
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
+using Play.Catalog.Application.Commands;
 using Play.Catalog.Application.DTO;
-using Play.Catalog.Domain.Entities;
 using Play.Catalog.Domain.Repositories;
 using Play.Common.Temp.Commands;
 
@@ -16,9 +16,11 @@ namespace Play.Catalog.Service.Controllers
         private readonly ICommandDispatcher _commandDispatcher;
 
         public ItemsController(IItemRepository itemRepository,
-            IPublishEndpoint publishEndpoint)
+            IPublishEndpoint publishEndpoint,
+            ICommandDispatcher commandDispatcher)
         {
             _publishEndpoint = publishEndpoint;
+            _commandDispatcher = commandDispatcher;
             _itemRepository = itemRepository;
         }
 
@@ -44,15 +46,16 @@ namespace Play.Catalog.Service.Controllers
         }
         
         [HttpPost]
-        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItemDto createItemDto)
+        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
         {
-            var item = new Item(createItemDto.Name, createItemDto.Description, createItemDto.Price);
-        
-            await _itemRepository.CreateAsync(item);
-            await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemCreated(
-                item.Id, item.Name, item.Description));
-        
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, null);
+            await _commandDispatcher.DispatchAsync(command);
+            
+            // await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemCreated(
+            //     command.Id, command.Name, command.Description));
+            //
+            // return CreatedAtAction(nameof(GetByIdAsync), new { id = command.Id }, null);
+
+            return Ok();
         }
         
         [HttpPut("{id}")]

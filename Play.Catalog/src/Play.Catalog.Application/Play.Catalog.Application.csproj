@@ -9,5 +9,5 @@
     <ItemGroup>
       <ProjectReference Include="..\Play.Catalog.Domain\Play.Catalog.Domain.csproj" />
     </ItemGroup>
-    
+
 </Project>

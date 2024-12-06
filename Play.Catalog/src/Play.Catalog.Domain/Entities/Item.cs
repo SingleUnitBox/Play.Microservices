@@ -11,13 +11,19 @@ namespace Play.Catalog.Domain.Entities
         public Price Price { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
 
-        public Item(string name, string description, decimal price)
+        public Item(string name, string description, Price price)
         {
             Id = new AggregateRootId();
             Name = name;
             Description = description;
             Price = price;
             CreatedDate = DateTimeOffset.UtcNow;
+        }
+        
+        public Item(Guid id, string name, string description, decimal price)
+            : this(name, description, price)
+        {
+            Id = id;
         }
     }
 }

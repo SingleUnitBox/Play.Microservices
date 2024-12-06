@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Domain", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Infra", "src\Play.Catalog.Infra\Play.Catalog.Infra.csproj", "{CB2E7D17-7065-42E1-ADA6-594D89B321C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Application", "src\Play.Catalog.Application\Play.Catalog.Application.csproj", "{914AB449-A748-40E7-9AE0-B5BCC02021E9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Catalog.Application", "src\Play.Catalog.Application\Play.Catalog.Application.csproj", "{573AC709-1A12-461D-BC8E-ED27662E9224}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,10 +37,10 @@ Global
 		{CB2E7D17-7065-42E1-ADA6-594D89B321C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CB2E7D17-7065-42E1-ADA6-594D89B321C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CB2E7D17-7065-42E1-ADA6-594D89B321C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{914AB449-A748-40E7-9AE0-B5BCC02021E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{914AB449-A748-40E7-9AE0-B5BCC02021E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{914AB449-A748-40E7-9AE0-B5BCC02021E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{914AB449-A748-40E7-9AE0-B5BCC02021E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{573AC709-1A12-461D-BC8E-ED27662E9224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{573AC709-1A12-461D-BC8E-ED27662E9224}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{573AC709-1A12-461D-BC8E-ED27662E9224}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{573AC709-1A12-461D-BC8E-ED27662E9224}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +50,7 @@ Global
 		{FE2042AC-00DB-4E7A-8C0D-D22AC7A8563C} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
 		{037C6A1D-C372-4D75-8CCF-55EB1AF96B9B} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
 		{CB2E7D17-7065-42E1-ADA6-594D89B321C4} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
-		{914AB449-A748-40E7-9AE0-B5BCC02021E9} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
+		{573AC709-1A12-461D-BC8E-ED27662E9224} = {6466A04F-5797-4F5C-A5CF-F79BDC1FE2FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1B8D97F1-054E-4288-99CF-C2C42970AE4B}

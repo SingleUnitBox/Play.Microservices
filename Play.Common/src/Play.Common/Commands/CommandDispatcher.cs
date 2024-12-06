@@ -13,12 +13,14 @@ public class CommandDispatcher : ICommandDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public Task DispatchAsync<TCommand>(TCommand command) where TCommand : class, ICommand
+    public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : class, ICommand
     {
-        var commandHandlerType = typeof(ICommandHandler<TCommand>);
-        var commandHandler = _serviceProvider.GetRequiredService(commandHandlerType);
+        //var commandHandlerType = typeof(ICommandHandler<TCommand>);
+        using var scope = _serviceProvider.CreateScope();
+        var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand>>();
         
-        return (Task)commandHandlerType.GetMethod(nameof(ICommandHandler<TCommand>.HandleAsync))
-            ?.Invoke(command, new[] { command });
+        await commandHandler.HandleAsync(command);
+        // return (Task)commandHandlerType.GetMethod(nameof(ICommandHandler<TCommand>.HandleAsync))
+        //     ?.Invoke(command, new[] { command });
     }
 }

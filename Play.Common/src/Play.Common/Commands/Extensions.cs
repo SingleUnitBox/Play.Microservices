@@ -9,7 +9,11 @@ public static class Extensions
     public static IServiceCollection AddCommands(this IServiceCollection services)
     {
         services.AddSingleton<ICommandDispatcher, CommandDispatcher>();
-        services.Scan(a => a.FromAssemblies(Assembly.GetExecutingAssembly())
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        var types = assemblies.SelectMany(a => a.GetTypes())
+            .Where(t => typeof(ICommandHandler<>).IsAssignableFrom(t) && !t.IsInterface)
+            .ToList();
+        services.Scan(a => a.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
             .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
