@@ -39,10 +39,20 @@ internal class Program
         }
 
         app.UseRouting();
+#pragma warning disable ASP0014
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
+            endpoints.MapGet("/", () => "Hello from Play.Catalog.Service");
+            endpoints.MapGet("/file", async () =>
+            {
+                string filePath = "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.Catalog\\static\\file.txt";
+                
+                var fileContents = await File.ReadAllTextAsync(filePath);
+                return Results.Text(fileContents, "text/plain");
+            });
         });
+#pragma warning restore ASP0014
 
         app.Run();
     }
