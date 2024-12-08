@@ -58,31 +58,21 @@ namespace Play.Catalog.Service.Controllers
             return Ok();
         }
         
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAsync(Guid id, UpdateItemDto updateItemDto)
+        [HttpPut("{itemId}")]
+        public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
         {
-            var item = await _itemRepository.GetByIdAsync(id);
-            if (item == null)
-            {
-                return NotFound();
-            };
-        
-            item.Name = updateItemDto.Name;
-            item.Description = updateItemDto.Description;
-            item.Price = updateItemDto.Price;
-            
-            await _itemRepository.UpdateAsync(item);
-            await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemUpdated(
-                item.Id, item.Name, item.Description));
+            await _commandDispatcher.DispatchAsync(command with { ItemId = itemId });
+            // await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemUpdated(
+            //     item.Id, item.Name, item.Description));
             
             return NoContent();
         }
         
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAsync(Guid id)
+        [HttpDelete("{itemId}")]
+        public async Task<IActionResult> DeleteAsync(Guid itemId)
         {
-            await _itemRepository.DeleteAsync(id);
-            await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemDeleted(id));
+            await _commandDispatcher.DispatchAsync(new DeleteItem(itemId));
+            //await _publishEndpoint.Publish(new Contracts.Contracts.CatalogItemDeleted(id));
             
             return NoContent();
         }

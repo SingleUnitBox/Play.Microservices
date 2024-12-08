@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Play.Catalog.Domain\Play.Catalog.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Queries\" />
+    </ItemGroup>
+
 </Project>
