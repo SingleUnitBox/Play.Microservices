@@ -31,18 +31,14 @@ namespace Play.Items.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetAsync()
         {
-            var items = (await _itemRepository.GetAllAsync())
-                .Select(i => i.AsDto());
-            
+            var items = await _queryDispatcher.QueryAsync(new GetItems());
             return Ok(items);
         }
         
         [HttpGet("{itemId}")]
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid itemId)
-        {
-            return Ok(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
-        }
-        
+            => OkOrNotFound(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
+    
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
         {
