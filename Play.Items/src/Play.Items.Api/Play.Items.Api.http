@@ -1,0 +1,6 @@
+@Play.Items.Api_HostAddress = http://localhost:5034
+
+GET {{Play.Items.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

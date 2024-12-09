@@ -1,6 +1,6 @@
 ﻿using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using Play.Common.Temp.SharedKernel.Types;
+using Play.Common.Abs.SharedKernel.Types;
 
 namespace Play.Common.SharedKernel.Types.Serializers;
 

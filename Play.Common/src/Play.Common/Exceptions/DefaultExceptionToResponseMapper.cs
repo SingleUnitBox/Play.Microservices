@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using Humanizer;
-using Play.Common.Temp.Exceptions;
+using Play.Common.Abs.Exceptions;
 
 namespace Play.Common.Exceptions;
 
