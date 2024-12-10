@@ -1,4 +1,7 @@
-﻿namespace Play.Inventory.Service.Clients;
+﻿using System.Net.Http.Json;
+using Play.Inventory.Application;
+
+namespace Play.Inventory.Infra.Clients;
 
 public class CatalogClient
 {

@@ -1,4 +1,4 @@
-﻿namespace Play.Inventory.Service
+﻿namespace Play.Inventory.Application
 {
     public record GrantItemsDto(Guid UserId, Guid CatalogItemId, int Quantity);
     

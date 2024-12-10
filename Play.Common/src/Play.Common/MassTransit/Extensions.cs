@@ -10,11 +10,11 @@ namespace Play.Common.MassTransit;
 public static class Extensions
 {
     public static IServiceCollection AddMassTransitWithRabbitMq(this IServiceCollection services, IConfiguration configuration,
-        Assembly assembly)
+        Assembly[] assemblies)
     {
         services.AddMassTransit(configure =>
         {
-            configure.AddConsumers(assembly);
+            configure.AddConsumers(assemblies);
             configure.UsingRabbitMq((ctx, cfg) =>
             {
                 var rabbitMqSettings = configuration

@@ -1,9 +1,14 @@
 using System.Reflection;
+using MassTransit;
 using Play.Common.Commands;
 using Play.Common.Exceptions;
 using Play.Common.MassTransit;
+using Play.Common.MassTransit.Formatters;
+using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
+using Play.Common.Settings;
+using Play.Items.Application.Events;
 using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Repositories;
 
@@ -17,7 +22,25 @@ public class Program
 
         builder.Services.AddExceptionHandling();
         //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
-        builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, Assembly.GetExecutingAssembly());
+        //builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddMassTransit(configure =>
+        {
+            configure.UsingRabbitMq((ctx, cfg) =>
+            {
+                var rabbitMqSettings = builder.Configuration
+                    .GetSection(nameof(RabbitMqSettings))
+                    .Get<RabbitMqSettings>();
+                cfg.Host(rabbitMqSettings.Host);
+            
+                cfg.Message<ItemCreated>(e =>
+                {
+                    e.SetEntityName("Items.ItemCreated");
+                });
+            });
+        });
+        builder.Services.AddMassTransitHostedService();
+        
+        builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
         builder.Services.AddQueries();

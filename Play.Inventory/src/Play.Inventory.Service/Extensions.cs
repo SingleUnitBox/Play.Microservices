@@ -1,4 +1,5 @@
-﻿using Play.Inventory.Service.Entities;
+﻿using Play.Inventory.Application;
+using Play.Inventory.Domain.Entities;
 
 namespace Play.Inventory.Service;
 
