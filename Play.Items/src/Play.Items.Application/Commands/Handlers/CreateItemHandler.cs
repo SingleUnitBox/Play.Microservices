@@ -29,9 +29,11 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
         
         item = new Item(command.Id, command.Name, command.Description, command.Price);
         await _itemRepository.CreateAsync(item);
-        await _busPublisher.PublishAsync(new ItemCreated
-        {
-            ItemId = item.Id, Name = item.Name, Price = item.Price
-        });
+        // await _busPublisher.PublishAsync(new ItemCreated
+        // {
+        //     ItemId = item.Id, Name = item.Name, Price = item.Price
+        // });
+        await _busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemCreated(
+            item.Id, item.Name, item.Price));
     }
 }

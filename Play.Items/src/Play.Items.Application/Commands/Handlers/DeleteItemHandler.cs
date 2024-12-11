@@ -1,26 +1,22 @@
 ﻿using Play.Common.Abs.Commands;
+using Play.Common.Abs.Messaging;
 using Play.Items.Application.Exceptions;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class DeleteItemHandler : ICommandHandler<DeleteItem>
+public class DeleteItemHandler(IItemRepository itemRepository,
+    IBusPublisher busPublisher) : ICommandHandler<DeleteItem>
 {
-    private readonly IItemRepository _itemRepository;
-
-    public DeleteItemHandler(IItemRepository itemRepository)
-    {
-        _itemRepository = itemRepository;
-    }
-
     public async Task HandleAsync(DeleteItem command)
     {
-        var item = await _itemRepository.GetByIdAsync(command.ItemId);
+        var item = await itemRepository.GetByIdAsync(command.ItemId);
         if (item is null)
         {
             throw new ItemNotFoundException(command.ItemId);
         }
         
-        await _itemRepository.DeleteAsync(item.Id);
+        await itemRepository.DeleteAsync(item.Id);
+        await busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemDeleted(item.Id));
     }
 }
