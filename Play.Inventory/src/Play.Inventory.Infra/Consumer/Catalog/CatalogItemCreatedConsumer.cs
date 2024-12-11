@@ -1,22 +1,20 @@
 ﻿using MassTransit;
+using Microsoft.Extensions.Logging;
 using Play.Inventory.Application.Events.External.Items;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Repositories;
 
 namespace Play.Inventory.Infra.Consumer.Catalog;
 
-public class CatalogItemCreatedConsumer : IConsumer<ItemCreated>
+public class CatalogItemCreatedConsumer(
+    ICatalogItemRepository catalogItemRepository,
+    ILogger<CatalogItemCreatedConsumer> logger) : IConsumer<ItemCreated>
 {
-    private readonly ICatalogItemRepository _catalogItemRepository;
-
-    public CatalogItemCreatedConsumer(ICatalogItemRepository catalogItemRepository)
-    {
-        _catalogItemRepository = catalogItemRepository;
-    }
-
     public async Task Consume(ConsumeContext<ItemCreated> context)
     {
-        var catalogItem = await _catalogItemRepository.GetAsync(i => i.Id == context.Message.ItemId);
+        logger.LogInformation($"Consuming message - {context.Message.GetType().Name}");
+        
+        var catalogItem = await catalogItemRepository.GetAsync(i => i.Id == context.Message.ItemId);
         if (catalogItem is not null)
         {
             return;
@@ -29,6 +27,6 @@ public class CatalogItemCreatedConsumer : IConsumer<ItemCreated>
             Price = context.Message.Price,
         };
         
-        await _catalogItemRepository.CreateAsync(catalogItem);
+        await catalogItemRepository.CreateAsync(catalogItem);
     }
 }

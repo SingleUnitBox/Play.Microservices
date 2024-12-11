@@ -11,4 +11,8 @@
       <ProjectReference Include="..\Play.Items.Domain\Play.Items.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Play.Items.Contracts" Version="1.0.0" />
+    </ItemGroup>
+
 </Project>

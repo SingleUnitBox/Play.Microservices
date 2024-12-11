@@ -25,6 +25,7 @@ public class Program
         //builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
         builder.Services.AddMassTransit(configure =>
         {
+            configure.SetKebabCaseEndpointNameFormatter();
             configure.UsingRabbitMq((ctx, cfg) =>
             {
                 var rabbitMqSettings = builder.Configuration
@@ -32,10 +33,11 @@ public class Program
                     .Get<RabbitMqSettings>();
                 cfg.Host(rabbitMqSettings.Host);
             
-                cfg.Message<ItemCreated>(e =>
-                {
-                    e.SetEntityName("Items.ItemCreated");
-                });
+                // cfg.Message<ItemCreated>(e =>
+                // {
+                //     e.SetEntityName("Items.ItemCreated");
+                // });
+                cfg.ConfigureEndpoints(ctx);
             });
         });
         builder.Services.AddMassTransitHostedService();

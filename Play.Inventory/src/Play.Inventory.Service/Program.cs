@@ -1,4 +1,5 @@
 using MassTransit;
+using MassTransit.Definition;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.MassTransit;
@@ -27,7 +28,10 @@ builder.Services.AddContext();
 //builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<CatalogItemCreatedConsumer>();
+    //x.AddConsumer<CatalogItemCreatedConsumer>();
+    x.AddConsumer<CatalogContractsItemCreatedConsumer>();
+    x.SetKebabCaseEndpointNameFormatter();
+    //x.SetEndpointNameFormatter(new SnakeCaseEndpointNameFormatter("inventory", false));
 
     x.UsingRabbitMq((context, cfg) =>
     {
@@ -42,7 +46,7 @@ builder.Services.AddMassTransit(x =>
         //     e.ConfigureConsumer<CatalogItemCreatedConsumer>(context);
         //
         //     // Bind to the publisher's exchange
-        //     e.Bind("Items.ItemCreated");
+        //     e.Bind("Play.Items.Application.Events:ItemCreated");
         // });
     });
 });
