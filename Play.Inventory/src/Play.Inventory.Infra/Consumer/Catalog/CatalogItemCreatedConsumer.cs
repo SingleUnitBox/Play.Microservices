@@ -14,18 +14,14 @@ public class CatalogItemCreatedConsumer(
     {
         logger.LogInformation($"Consuming message - {context.Message.GetType().Name}");
         
+        var message = context.Message;
         var catalogItem = await catalogItemRepository.GetAsync(i => i.Id == context.Message.ItemId);
         if (catalogItem is not null)
         {
             return;
         }
 
-        catalogItem = new CatalogItem
-        {
-            Id = context.Message.ItemId,
-            Name = context.Message.Name,
-            Price = context.Message.Price,
-        };
+        catalogItem = CatalogItem.Create(message.ItemId, message.Name, message.Price);
         
         await catalogItemRepository.CreateAsync(catalogItem);
     }
