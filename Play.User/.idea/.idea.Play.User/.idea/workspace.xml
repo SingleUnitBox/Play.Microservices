@@ -10,32 +10,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3aad32c-134d-4ca9-bef5-8c2f6f9ae48d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Application/Exceptions/CatalogItemNotFoundException.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Consumer/Catalog/CatalogContractsItemDeletedConsumer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Consumer/Catalog/CatalogContractsItemUpdatedConsumer.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Service/Program.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Consumer/User/UserCreatedConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Domain/Entities/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Domain/Entities/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Play.Inventory.Infra.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Play.Inventory.Infra.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Play.User.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Play.User.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/AuthSettings.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/Extensions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/IJwtManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/JwtManager.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/JwtToken.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/DTO/SignInDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/DTO/SignUpDto.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Entities/User.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Play.User.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/Play.User.Service.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.Common.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.Common.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.exe" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/bin/Debug/net8.0/Play.User.Service.pdb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfoInputs.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.MvcApplicationPartsAssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.MvcApplicationPartsAssemblyInfo.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Play.User.Service.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Play.User.Service.csproj.nuget.dgspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.assets.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.nuget.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.packagespec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.model.nuget.info" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.sourcelink.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.sourcelink.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/apphost.exe" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/apphost.exe" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/ref/Play.User.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/ref/Play.User.Service.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/refint/Play.User.Service.dll" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/refint/Play.User.Service.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,12 +51,13 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/5d/8a5241fe/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/54cc6432a4194838b61a53b0bdafba9a6000/37/72b2f386/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6dbdbd05a2854e2b97926377ad9adc489000/8e/280a50ba/Extensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/aee58943102141b78940a06cb923c7361e00/bc/c8c0bddd/IBusPublisher.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cb19493d9b5347789f42895f466c2d49cb28/95/b0c0d7f6/JwtBearerDefaults.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b741f17422844062bda644589ab84b32337fefcb677bc51957a62c3df8ad4d/AuthorizationAppBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Play.Common/src/Play.Common/Auth/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Play.Common/src/Play.Common/MongoDb/Extensions.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Auth/JwtManager.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Auth/UserService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Play.User.Core/Auth/JwtManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Play.User.Core/Auth/UserService.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Controllers/UserController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -153,7 +150,7 @@
       <updated>1732999448676</updated>
       <workItem from="1732999449745" duration="8193000" />
       <workItem from="1733043651231" duration="18221000" />
-      <workItem from="1733956039151" duration="4778000" />
+      <workItem from="1733956039151" duration="6839000" />
     </task>
     <servers />
   </component>

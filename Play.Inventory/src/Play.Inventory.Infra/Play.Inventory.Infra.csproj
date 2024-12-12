@@ -13,10 +13,7 @@
     <ItemGroup>
       <PackageReference Include="Play.Common" Version="1.0.52" />
       <PackageReference Include="Play.Items.Contracts" Version="1.0.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Consumer\User\" />
+      <PackageReference Include="Play.User.Contracts" Version="1.0.1" />
     </ItemGroup>
 
 </Project>
