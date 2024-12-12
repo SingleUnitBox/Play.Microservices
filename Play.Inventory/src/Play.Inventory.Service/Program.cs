@@ -1,12 +1,10 @@
 using MassTransit;
-using MassTransit.Definition;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 using Play.Common.Settings;
 using Play.Inventory.Domain.Repositories;
-using Play.Inventory.Infra.Consumer.Catalog;
 using Play.Inventory.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,33 +23,32 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 
 builder.Services.AddContext();
     
-//builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddMassTransit(x =>
-{
-    //x.AddConsumer<CatalogItemCreatedConsumer>();
-    x.AddConsumer<CatalogContractsItemCreatedConsumer>();
-    x.SetKebabCaseEndpointNameFormatter();
-    //x.SetEndpointNameFormatter(new SnakeCaseEndpointNameFormatter("inventory", false));
-
-    x.UsingRabbitMq((context, cfg) =>
-    {
-        var rabbitmqSettings = builder.Configuration
-            .GetSection(nameof(RabbitMqSettings))
-            .Get<RabbitMqSettings>();
-        cfg.Host(rabbitmqSettings.Host);
-        cfg.ConfigureEndpoints(context);
-
-        // cfg.ReceiveEndpoint("inventory-items", e =>
-        // {
-        //     e.ConfigureConsumer<CatalogItemCreatedConsumer>(context);
-        //
-        //     // Bind to the publisher's exchange
-        //     e.Bind("Play.Items.Application.Events:ItemCreated");
-        // });
-    });
-});
-
-builder.Services.AddMassTransitHostedService();
+builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+// builder.Services.AddMassTransit(x =>
+// {
+//     //x.AddConsumer<CatalogItemCreatedConsumer>();
+//     x.AddConsumers(AppDomain.CurrentDomain.GetAssemblies());
+//     x.SetKebabCaseEndpointNameFormatter();
+//     //x.SetEndpointNameFormatter(new SnakeCaseEndpointNameFormatter("inventory", false));
+//
+//     x.UsingRabbitMq((context, cfg) =>
+//     {
+//         var rabbitmqSettings = builder.Configuration
+//             .GetSection(nameof(RabbitMqSettings))
+//             .Get<RabbitMqSettings>();
+//         cfg.Host(rabbitmqSettings.Host);
+//         cfg.ConfigureEndpoints(context);
+//
+//         // cfg.ReceiveEndpoint("inventory-items", e =>
+//         // {
+//         //     e.ConfigureConsumer<CatalogItemCreatedConsumer>(context);
+//         //
+//         //     // Bind to the publisher's exchange
+//         //     e.Bind("Play.Items.Application.Events:ItemCreated");
+//         // });
+//     });
+// });
+//builder.Services.AddMassTransitHostedService();
 
 
 builder.Services.AddEndpointsApiExplorer();

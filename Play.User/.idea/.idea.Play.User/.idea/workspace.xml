@@ -10,23 +10,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c3aad32c-134d-4ca9-bef5-8c2f6f9ae48d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/Play.Common.Abstractions.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/Play.Catalog.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/Play.Catalog.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Controllers/ItemsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Controllers/ItemsController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Entities/Item.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Domain/Entities/Item.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Extensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Play.Catalog.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Play.Catalog.Service.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Program.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/IItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Domain/Repositories/IItemRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/ItemRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Catalog/src/Play.Catalog.Service/Repositories/ItemRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/Play.Common.sln" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/Play.Common.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/Play.Common.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common/Play.Common.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/AggregateRoot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/AggregateRoot.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/DomainEvents/IDomainEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/DomainEvents/IDomainEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Repositories/IMongoRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/Repositories/IMongoRepository.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/AggregateRootId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common.Abstractions/SharedKernel/Types/AggregateRootId.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/Serializers/AggregateRootIdSerializer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Common/src/Play.Common/SharedKernel/Types/Serializers/AggregateRootIdSerializer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Application/Exceptions/CatalogItemNotFoundException.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Consumer/Catalog/CatalogContractsItemDeletedConsumer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Infra/Consumer/Catalog/CatalogContractsItemUpdatedConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../Play.Inventory/src/Play.Inventory.Service/Program.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Play.User/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Play.User.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Play.User.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/AuthSettings.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/Extensions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/IJwtManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/JwtManager.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Auth/JwtToken.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/DTO/SignInDto.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/DTO/SignUpDto.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Entities/User.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Play.User.Service.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/Play.User.Service.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfoInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.AssemblyInfoInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.assets.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.assets.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Debug/net8.0/Play.User.Service.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/Play.User.Service.csproj.nuget.dgspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/Play.User.Service.csproj.nuget.dgspec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.assets.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.assets.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.nuget.cache" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.nuget.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/project.packagespec.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/project.packagespec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.model.nuget.info" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.model.nuget.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/src/Play.User.Service/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,6 +54,7 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/36/9cd20f40/IEntity.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/399c3155f01e4b1d852c3fdd8d54b8be4400/5d/8a5241fe/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/54cc6432a4194838b61a53b0bdafba9a6000/37/72b2f386/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6dbdbd05a2854e2b97926377ad9adc489000/8e/280a50ba/Extensions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/cb19493d9b5347789f42895f466c2d49cb28/95/b0c0d7f6/JwtBearerDefaults.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/b741f17422844062bda644589ab84b32337fefcb677bc51957a62c3df8ad4d/AuthorizationAppBuilderExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Play.Common/src/Play.Common/Auth/Extensions.cs" root0="SKIP_HIGHLIGHTING" />
@@ -54,10 +64,10 @@
     <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Controllers/UserController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/src/Play.User.Service/Program.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -66,26 +76,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.Play.User.Service: IIS Express.executor": "Run",
-    ".NET Launch Settings Profile.Play.User.Service: https.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.Play.User.Service: IIS Express.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.Play.User.Service: https.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mongo"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mongo&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected=".NET Launch Settings Profile.Play.User.Service: https">
     <configuration name="Play.User.Service: IIS Express" type="LaunchSettings" factoryName=".NET Launch Settings Profile">
       <option name="LAUNCH_PROFILE_PROJECT_FILE_PATH" value="$PROJECT_DIR$/src/Play.User.Service/Play.User.Service.csproj" />
@@ -143,6 +153,7 @@
       <updated>1732999448676</updated>
       <workItem from="1732999449745" duration="8193000" />
       <workItem from="1733043651231" duration="18221000" />
+      <workItem from="1733956039151" duration="4778000" />
     </task>
     <servers />
   </component>
