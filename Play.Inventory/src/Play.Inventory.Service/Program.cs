@@ -1,29 +1,21 @@
-using MassTransit;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
-using Play.Common.Settings;
-using Play.Inventory.Domain.Repositories;
+using Play.Common.Queries;
 using Play.Inventory.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
-builder.Services.AddMongoDb(builder.Configuration);
-builder.Services.AddMongoRepository<ICatalogItemRepository, CatalogItemRepository>
-    (db => new CatalogItemRepository(db, "catalogItems"));
-builder.Services.AddMongoRepository<IInventoryItemRepository, InventoryItemRepository>
-    (db => new InventoryItemRepository(db, "inventoryItems"));
-builder.Services.AddMongoRepository<IUserRepository, UserRepository>
-    (db => new UserRepository(db, "users"));
-
+//builder.Services.AddMongoDb(builder.Configuration);
+builder.Services.AddMongoDbWithMongoClient(builder.Configuration);
+builder.Services.AddRepositories();
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
-
 builder.Services.AddContext();
-    
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddQueries();
 // builder.Services.AddMassTransit(x =>
 // {
 //     //x.AddConsumer<CatalogItemCreatedConsumer>();

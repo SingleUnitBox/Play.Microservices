@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Play.Common.Abs" Version="1.0.3" />
+      <PackageReference Include="Play.Common.Abs" Version="1.0.5" />
     </ItemGroup>
 
 </Project>

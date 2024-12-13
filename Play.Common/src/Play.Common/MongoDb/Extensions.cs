@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Play.Common.Settings;
@@ -16,6 +15,27 @@ public static class Extensions
     {
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
         BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
+        
+        services.AddSingleton(sp =>
+        {
+            var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+            var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+            var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+            
+            return mongoClient.GetDatabase(serviceSettings.ServiceName);
+        });
+        
+        return services;
+    }
+    
+    public static IServiceCollection AddMongoDbWithMongoClient(this IServiceCollection services, IConfiguration configuration)
+    {
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
+        BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
+
+        services.AddSingleton<IMongoClient>(sp =>
+            new MongoClient(configuration
+                .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()?.ConnectionString));
         
         services.AddSingleton(sp =>
         {
