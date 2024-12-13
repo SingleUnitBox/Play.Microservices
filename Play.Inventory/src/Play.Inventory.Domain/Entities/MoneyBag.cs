@@ -5,7 +5,7 @@ namespace Play.Inventory.Domain.Entities;
 public class MoneyBag
 {
     public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public Guid UserId { get; private set; }
     public decimal Gold { get; private set; }
 
     public MoneyBag(Guid userId, decimal gold)
@@ -26,7 +26,7 @@ public class MoneyBag
 
     public void SubtractGold(decimal amount)
     {
-        if (amount < Gold)
+        if (Gold < amount)
         {
             throw new NotEnoughGoldException(Gold);
         }

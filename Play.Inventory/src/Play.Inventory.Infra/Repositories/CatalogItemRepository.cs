@@ -41,4 +41,7 @@ public class CatalogItemRepository : ICatalogItemRepository
     {
         return await _catalogItems.Find(predicate).SingleOrDefaultAsync();
     }
+
+    public async Task<IReadOnlyCollection<CatalogItem>> BrowseItems()
+        => await _catalogItems.Find(_ => true).ToListAsync();
 }

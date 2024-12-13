@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Linq.Expressions;
+using MongoDB.Driver;
 using Play.Common.Abs.SharedKernel;
 using Play.Common.Abs.SharedKernel.Types;
 using Play.Inventory.Domain.Entities;
@@ -38,4 +39,7 @@ public class InventoryItemRepository : IInventoryItemRepository
         var filter = _filterBuilder.Eq(i => i.Id, itemId);
         return await _inventoryItems.Find(filter).SingleOrDefaultAsync();
     }
+
+    public Task<InventoryItem> GetInventory(Expression<Func<InventoryItem, bool>> predicate)
+        => _inventoryItems.Find(predicate).SingleOrDefaultAsync();
 }

@@ -1,5 +1,7 @@
 using Play.Common.Auth;
+using Play.Common.Commands;
 using Play.Common.Context;
+using Play.Common.Exceptions;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
@@ -7,7 +9,7 @@ using Play.Inventory.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 //builder.Services.AddMongoDb(builder.Configuration);
 builder.Services.AddMongoDbWithMongoClient(builder.Configuration);
@@ -16,6 +18,7 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddQueries();
+builder.Services.AddCommands();
 // builder.Services.AddMassTransit(x =>
 // {
 //     //x.AddConsumer<CatalogItemCreatedConsumer>();
@@ -53,6 +56,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandling();
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();

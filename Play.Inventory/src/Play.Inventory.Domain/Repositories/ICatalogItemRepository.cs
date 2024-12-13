@@ -10,4 +10,5 @@ public interface ICatalogItemRepository
     Task DeleteAsync(Guid itemId);
     Task<CatalogItem> GetByIdAsync(Guid itemId);
     Task<CatalogItem> GetAsync(Expression<Func<CatalogItem, bool>> predicate);
+    Task<IReadOnlyCollection<CatalogItem>> BrowseItems();
 }
