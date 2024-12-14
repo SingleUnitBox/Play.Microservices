@@ -12,36 +12,36 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
     private readonly ICatalogItemRepository _catalogItemRepository;
     private readonly IInventoryItemRepository _inventoryItemRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;
-    private readonly IUserRepository _userRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IWeaponPurchasePolicyFactory _policyFactory;
     
     public PurchaseItemHandler(ICatalogItemRepository catalogItemRepository,
         IInventoryItemRepository inventoryItemRepository, 
         IMoneyBagRepository moneyBagRepository, 
-        IUserRepository userRepository,
+        IPlayerRepository playerRepository,
         IWeaponPurchasePolicyFactory policyFactory)
     {
         _catalogItemRepository = catalogItemRepository;
         _inventoryItemRepository = inventoryItemRepository;
         _moneyBagRepository = moneyBagRepository;
-        _userRepository = userRepository;
+        _playerRepository = playerRepository;
         _policyFactory = policyFactory;
     }
 
     public async Task HandleAsync(PurchaseItem command)
     {
-        var catalogItem = await ValidateCataloItem(command.ItemId);
-        var user = await ValidateUser(command.UserId);
+        var catalogItem = await ValidateCatalogItem(command.ItemId);
+        var player = await ValidateUser(command.UserId);
         var moneyBag = await ValidateMoneyBag(command.UserId);
         var inventoryItem = await _inventoryItemRepository.GetInventory(i =>
-            i.UserId == user.Id && i.CatalogItemId == command.ItemId);
+            i.PlayerId == player.Id && i.CatalogItemId == command.ItemId);
         
         var purchasePolicy = _policyFactory.Create(moneyBag);
 
         if (inventoryItem is null)
         {
             inventoryItem = InventoryItem
-                .Create(catalogItem.Id, user.Id, command.Quantity, DateTimeOffset.UtcNow);
+                .Create(catalogItem.Id, player.Id, command.Quantity, DateTimeOffset.UtcNow);
             CanCatalogItemBePurchased(purchasePolicy, catalogItem, inventoryItem);
             IsEnoughGoldToPurchase(moneyBag.Gold, catalogItem, command.Quantity);
             
@@ -78,9 +78,9 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         }
     }
 
-    private Task<CatalogItem> ValidateCataloItem(Guid itemId)
+    private async Task<CatalogItem> ValidateCatalogItem(Guid itemId)
     {
-        var catalogItem = _catalogItemRepository.GetByIdAsync(itemId);
+        var catalogItem = await _catalogItemRepository.GetByIdAsync(itemId);
         if (catalogItem is null)
         {
             throw new CatalogItemNotFoundException(itemId);
@@ -89,20 +89,20 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         return catalogItem;
     }
     
-    private Task<User> ValidateUser(Guid userId)
+    private async Task<Player> ValidateUser(Guid userId)
     {
-        var user = _userRepository.GetByIdAsync(userId);
+        var user = await _playerRepository.GetByIdAsync(userId);
         if (user is null)
         {
-            throw new UserNotFoundException(userId);
+            throw new PlayerNotFoundException(userId);
         }
         
         return user;
     }
 
-    private Task<MoneyBag> ValidateMoneyBag(Guid userId)
+    private async Task<MoneyBag> ValidateMoneyBag(Guid userId)
     {
-        var moneyBag = _moneyBagRepository.GetMoneyBagByUserId(userId);
+        var moneyBag = await _moneyBagRepository.GetMoneyBagByUserId(userId);
         if (moneyBag is null)
         {
             throw new MoneyBagNotFoundException(userId);

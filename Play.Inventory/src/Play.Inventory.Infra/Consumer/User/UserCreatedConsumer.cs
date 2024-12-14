@@ -7,13 +7,13 @@ namespace Play.Inventory.Infra.Consumer.User;
 
 public class UserCreatedConsumer : IConsumer<Contracts.UserCreated>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;
     
-    public UserCreatedConsumer(IUserRepository userRepository,
+    public UserCreatedConsumer(IPlayerRepository playerRepository,
         IMoneyBagRepository moneyBagRepository)
     {
-        _userRepository = userRepository;
+        _playerRepository = playerRepository;
         _moneyBagRepository = moneyBagRepository;
     }
 
@@ -21,16 +21,16 @@ public class UserCreatedConsumer : IConsumer<Contracts.UserCreated>
     {
         var message = context.Message;
 
-        var user = await _userRepository.GetByIdAsync(message.UserId);
-        if (user is not null)
+        var player = await _playerRepository.GetByIdAsync(message.UserId);
+        if (player is not null)
         {
             return;
         }
 
-        user = Domain.Entities.User.Create(message.UserId, message.Username);
-        await _userRepository.CreateAsync(user);
+        player = Domain.Entities.Player.Create(message.UserId, message.Username);
+        await _playerRepository.CreateAsync(player);
         
-        var moneyMag = MoneyBag.Create(user.Id, 100);
+        var moneyMag = MoneyBag.Create(player.Id, 100);
         await _moneyBagRepository.CreateMoneyBag(moneyMag);
     }
 }

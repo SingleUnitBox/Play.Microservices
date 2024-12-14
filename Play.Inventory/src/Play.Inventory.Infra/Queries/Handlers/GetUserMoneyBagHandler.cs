@@ -8,33 +8,33 @@ namespace Play.Inventory.Infra.Queries.Handlers;
 
 public class GetUserMoneyBagHandler : IQueryHandler<GetUserMoneyBag, UserMoneyBagDto>
 {
-    private readonly IUserRepository _userRepository;
+    private readonly IPlayerRepository _playerRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;
 
-    public GetUserMoneyBagHandler(IUserRepository userRepository, IMoneyBagRepository moneyBagRepository)
+    public GetUserMoneyBagHandler(IPlayerRepository playerRepository, IMoneyBagRepository moneyBagRepository)
     {
-        _userRepository = userRepository;
+        _playerRepository = playerRepository;
         _moneyBagRepository = moneyBagRepository;
     }
 
     public async Task<UserMoneyBagDto> QueryAsync(GetUserMoneyBag query)
     {
-        var user = await _userRepository.GetByIdAsync(query.UserId);
-        if (user is null)
+        var player = await _playerRepository.GetByIdAsync(query.PlayerId);
+        if (player is null)
         {
             // ??
         }
 
-        var moneyBag = await _moneyBagRepository.GetMoneyBagByUserId(query.UserId);
+        var moneyBag = await _moneyBagRepository.GetMoneyBagByUserId(query.PlayerId);
         if (moneyBag is null)
         {
-            throw new MoneyBagNotFoundException(query.UserId);
+            throw new MoneyBagNotFoundException(query.PlayerId);
         }
 
         return new UserMoneyBagDto
         {
-            UserId = moneyBag.UserId,
-            Username = user.Username,
+            PlayerId = moneyBag.PlayerId,
+            Username = player.Username,
             Gold = moneyBag.Gold,
         };
     }

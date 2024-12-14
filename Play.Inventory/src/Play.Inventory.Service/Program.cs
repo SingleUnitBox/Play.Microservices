@@ -7,16 +7,19 @@ using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra.Postgres;
-using Play.Inventory.Infra.Repositories;
+using Play.Inventory.Infra.Postgres.Repositories;
+using Play.Common.AppInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 //builder.Services.AddMongoDb(builder.Configuration);
-//builder.Services.AddMongoDbWithMongoClient(builder.Configuration);
+// builder.Services.AddMongoDbWithMongoClient(builder.Configuration);
+// builder.Services.AddMongoRepositories();
 builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
-builder.Services.AddRepositories();
+builder.Services.AddPostgresRepositories();
+builder.Services.AddHostedService<AppInitializer>();
 builder.Services.AddPolicies();
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();

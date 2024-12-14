@@ -2,10 +2,10 @@
 
 namespace Play.Inventory.Application.Exceptions;
 
-public class UserNotFoundException : PlayException
+public class PlayerNotFoundException : PlayException
 {
     public Guid UserId { get; }
-    public UserNotFoundException(Guid userId)
+    public PlayerNotFoundException(Guid userId)
         : base($"User with id '{userId}' was not found.")
     {
         UserId = userId;

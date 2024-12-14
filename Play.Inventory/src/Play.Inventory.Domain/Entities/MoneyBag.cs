@@ -5,12 +5,12 @@ namespace Play.Inventory.Domain.Entities;
 public class MoneyBag
 {
     public Guid Id { get; set; }
-    public Guid UserId { get; private set; }
+    public Guid PlayerId { get; private set; }
     public decimal Gold { get; private set; }
 
-    public MoneyBag(Guid userId, decimal gold)
+    public MoneyBag(Guid playerId, decimal gold)
     {
-        UserId = userId;
+        PlayerId = playerId;
         Gold = gold;
     }
     
@@ -34,6 +34,6 @@ public class MoneyBag
         Gold -= amount;
     }
     
-    public static MoneyBag Create(Guid userId, decimal gold)
-        => new MoneyBag(userId, gold);
+    public static MoneyBag Create(Guid playerId, decimal gold)
+        => new MoneyBag(playerId, gold);
 }

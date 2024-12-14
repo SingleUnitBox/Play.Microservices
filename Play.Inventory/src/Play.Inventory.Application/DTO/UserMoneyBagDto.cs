@@ -2,7 +2,7 @@
 
 public class UserMoneyBagDto
 {
-    public Guid UserId { get; set; }
+    public Guid PlayerId { get; set; }
     public string Username { get; set; }
     public decimal Gold { get; set; }
 }

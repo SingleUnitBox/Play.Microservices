@@ -21,13 +21,13 @@ public class MoneyBagRepository : IMoneyBagRepository
 
     public async Task UpdateMoneyBag(MoneyBag moneyBag)
     {
-        var filter = _filterDefinitionBuilder.Eq(m => m.UserId, moneyBag.UserId);
+        var filter = _filterDefinitionBuilder.Eq(m => m.PlayerId, moneyBag.PlayerId);
         await _moneyBagCollection.ReplaceOneAsync(filter, moneyBag);
     }
 
-    public async Task<MoneyBag> GetMoneyBagByUserId(Guid userId)
+    public async Task<MoneyBag> GetMoneyBagByUserId(Guid playerId)
     {
-        var filter = _filterDefinitionBuilder.Eq(m => m.UserId, userId);
+        var filter = _filterDefinitionBuilder.Eq(m => m.PlayerId, playerId);
         return await _moneyBagCollection.Find(filter).SingleOrDefaultAsync();
     }
 }
