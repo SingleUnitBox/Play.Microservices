@@ -5,6 +5,7 @@ using Play.Common.Exceptions;
 using Play.Common.MassTransit;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
+using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,7 @@ builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNa
 //builder.Services.AddMongoDb(builder.Configuration);
 builder.Services.AddMongoDbWithMongoClient(builder.Configuration);
 builder.Services.AddRepositories();
+builder.Services.AddPolicies();
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
@@ -32,7 +34,7 @@ builder.Services.AddCommands();
 //             .GetSection(nameof(RabbitMqSettings))
 //             .Get<RabbitMqSettings>();
 //         cfg.Host(rabbitmqSettings.Host);
-//         cfg.ConfigureEndpoints(context);
+//         cfg.ConfigureEndpoints(context);s
 //
 //         // cfg.ReceiveEndpoint("inventory-items", e =>
 //         // {
