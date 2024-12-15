@@ -16,14 +16,18 @@ public static class Extensions
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
         BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
         
-        services.AddSingleton(sp =>
+        var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+        if (mongoDbSettings.Enabled)
         {
-            var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
-            var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-            var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+            services.AddSingleton(sp =>
+            {
+                var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
             
-            return mongoClient.GetDatabase(serviceSettings.ServiceName);
-        });
+                var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+            
+                return mongoClient.GetDatabase(serviceSettings.ServiceName);
+            });
+        }
         
         return services;
     }
@@ -33,35 +37,23 @@ public static class Extensions
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
         BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
 
-        services.AddSingleton<IMongoClient>(sp =>
-            new MongoClient(configuration
-                .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()?.ConnectionString));
-        
-        services.AddSingleton(sp =>
+        var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+        if (mongoDbSettings.Enabled)
         {
-            var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
-            var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-            var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
+            services.AddSingleton<IMongoClient>(sp =>
+                new MongoClient(configuration
+                    .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>()?.ConnectionString));
+            services.AddSingleton(sp =>
+            {
+                var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();
+                var mongoClient = new MongoClient(mongoDbSettings.ConnectionString);
             
-            return mongoClient.GetDatabase(serviceSettings.ServiceName);
-        });
+                return mongoClient.GetDatabase(serviceSettings.ServiceName);
+            });
+        }
         
         return services;
     }
-    
-    // public static IServiceCollection AddMongoRepository<TEntity>(this IServiceCollection services,
-    //     string collectionName) where TEntity : class, IEntity
-    // {
-    //     services.AddSingleton<IRepository<TEntity>>(sp =>
-    //     {
-    //         var mongoDb = sp.GetRequiredService<IMongoDatabase>();
-    //         var repository = new MongoRepository<TEntity>(mongoDb, collectionName);
-    //
-    //         return repository;
-    //     });
-    //         
-    //     return services;
-    // }
     
     public static IServiceCollection AddMongoRepository<TIMongoRepository, TMongoRepository>(
         this IServiceCollection services,

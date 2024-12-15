@@ -4,7 +4,7 @@ using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Application.Queries;
 using Play.Inventory.Domain.Repositories;
 
-namespace Play.Inventory.Infra.Queries.Handlers;
+namespace Play.Inventory.Infra.Mongo.Queries.Handlers;
 
 public class GetUserMoneyBagHandler : IQueryHandler<GetUserMoneyBag, UserMoneyBagDto>
 {

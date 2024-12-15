@@ -15,10 +15,13 @@ public static class Extensions
             .GetRequiredService<IConfiguration>()
             .GetSection(nameof(PostgresSettings))
             .Get<PostgresSettings>();
-        services.AddDbContext<TDbContext>(options =>
+        if (postgresOptions.Enabled)
         {
-            options.UseNpgsql(postgresOptions.ConnectionString);
-        });
+            services.AddDbContext<TDbContext>(options =>
+            {
+                options.UseNpgsql(postgresOptions.ConnectionString);
+            });
+        }
         
         return services;
     }
