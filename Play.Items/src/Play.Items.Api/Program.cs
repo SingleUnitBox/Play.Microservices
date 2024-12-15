@@ -22,25 +22,24 @@ public class Program
 
         builder.Services.AddExceptionHandling();
         //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
-        //builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-        builder.Services.AddMassTransit(configure =>
-        {
-            configure.SetKebabCaseEndpointNameFormatter();
-            configure.UsingRabbitMq((ctx, cfg) =>
-            {
-                var rabbitMqSettings = builder.Configuration
-                    .GetSection(nameof(RabbitMqSettings))
-                    .Get<RabbitMqSettings>();
-                cfg.Host(rabbitMqSettings.Host);
-            
-                // cfg.Message<ItemCreated>(e =>
-                // {
-                //     e.SetEntityName("Items.ItemCreated");
-                // });
-                cfg.ConfigureEndpoints(ctx);
-            });
-        });
-        builder.Services.AddMassTransitHostedService();
+        builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+        // builder.Services.AddMassTransit(configure =>
+        // {
+        //     configure.SetKebabCaseEndpointNameFormatter();
+        //     configure.UsingRabbitMq((ctx, cfg) =>
+        //     {
+        //         var rabbitMqSettings = builder.Configuration
+        //             .GetSection(nameof(RabbitMqSettings))
+        //             .Get<RabbitMqSettings>();
+        //         cfg.Host(rabbitMqSettings.Host);
+        //     
+        //         // cfg.Message<ItemCreated>(e =>
+        //         // {
+        //         //     e.SetEntityName("Items.ItemCreated");
+        //         // });
+        //         cfg.ConfigureEndpoints(ctx);
+        //     });
+        // });
         
         builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
