@@ -4,8 +4,8 @@ namespace Play.Inventory.Application.DTO;
 
 public static  class Extensions
 {
-    public static ItemDto AsDto(this CatalogItem catalogItem)
-        => new ItemDto
+    public static CatalogItemDto AsDto(this CatalogItem catalogItem)
+        => new CatalogItemDto
         {
             Id = catalogItem.Id,
             Name = catalogItem.Name,

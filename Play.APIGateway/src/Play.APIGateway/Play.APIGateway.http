@@ -1,0 +1,6 @@
+@Play.APIGateway_HostAddress = http://localhost:5125
+
+GET {{Play.APIGateway_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

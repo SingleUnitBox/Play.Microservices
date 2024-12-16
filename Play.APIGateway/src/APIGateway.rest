@@ -1,0 +1,30 @@
+@url = http://localhost:5008
+@itemId = e3249a6d-3ccf-4702-aacd-4e7f1bcdacfd
+
+### PLAY-ITEMS
+
+###
+GET {{url}}/play-items/items
+
+###
+POST {{url}}/play-items/items
+Content-Type: application/json
+
+{
+  "name": "Antidote",
+  "description": "Cures poisons",
+  "price": 10
+}
+
+###
+PUT {{url}}/play-items/items/{{itemId}}
+Content-Type: application/json
+
+{
+  "name": "Antidoteeeeeeee",
+  "description": "Cures poison",
+  "price": 12
+}
+
+###
+DELETE {{url}}/play-items/items/{{itemId}}

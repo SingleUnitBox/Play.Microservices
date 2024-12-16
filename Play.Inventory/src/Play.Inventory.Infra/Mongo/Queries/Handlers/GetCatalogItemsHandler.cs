@@ -14,7 +14,7 @@ public class GetCatalogItemsHandler //: IQueryHandler<GetCatalogItems, IReadOnly
     {
         _mongoDatabase = mongoDatabase;
     }
-    public async Task<IReadOnlyCollection<ItemDto>> QueryAsync(GetCatalogItems query)
+    public async Task<IReadOnlyCollection<CatalogItemDto>> QueryAsync(GetCatalogItems query)
     {
         var items = await _mongoDatabase
             .GetCollection<CatalogItem>("inventoryItems")

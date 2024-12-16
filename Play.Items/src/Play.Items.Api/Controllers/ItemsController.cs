@@ -41,46 +41,46 @@ namespace Play.Items.Api.Controllers
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid itemId)
             => OkOrNotFound(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
     
-        // [HttpPost]
-        // public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
-        // {
-        //     await _commandDispatcher.DispatchAsync(command);
-        //     return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.Id }, null);
-        // }
-        
         [HttpPost]
-        public async Task<ActionResult> CreateItemAsync(CreateItem command)
+        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
         {
-            await _publishEndpoint.Publish(command);
+            await _commandDispatcher.DispatchAsync(command);
             return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.Id }, null);
         }
         
-        // [HttpPut("{itemId}")]
-        // public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
+        // [HttpPost]
+        // public async Task<ActionResult> CreateItemAsync(CreateItem command)
         // {
-        //     await _commandDispatcher.DispatchAsync(command with { ItemId = itemId });
-        //     return NoContent();
+        //     await _publishEndpoint.Publish(command);
+        //     return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.Id }, null);
         // }
         
         [HttpPut("{itemId}")]
         public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
         {
-            await _publishEndpoint.Publish(command with { ItemId = itemId });
+            await _commandDispatcher.DispatchAsync(command with { ItemId = itemId });
             return NoContent();
         }
         
-        // [HttpDelete("{itemId}")]
-        // public async Task<IActionResult> DeleteAsync(Guid itemId)
+        // [HttpPut("{itemId}")]
+        // public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
         // {
-        //     await _commandDispatcher.DispatchAsync(new DeleteItem(itemId));
+        //     await _publishEndpoint.Publish(command with { ItemId = itemId });
         //     return NoContent();
         // }
         
         [HttpDelete("{itemId}")]
         public async Task<IActionResult> DeleteAsync(Guid itemId)
         {
-            await _publishEndpoint.Publish(new DeleteItem(itemId));
+            await _commandDispatcher.DispatchAsync(new DeleteItem(itemId));
             return NoContent();
         }
+        
+        // [HttpDelete("{itemId}")]
+        // public async Task<IActionResult> DeleteAsync(Guid itemId)
+        // {
+        //     await _publishEndpoint.Publish(new DeleteItem(itemId));
+        //     return NoContent();
+        // }
     }
 }

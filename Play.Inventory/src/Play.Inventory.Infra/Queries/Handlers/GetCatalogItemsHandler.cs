@@ -8,7 +8,7 @@ using Play.Inventory.Infra.Mongo.Queries.Handlers;
 
 namespace Play.Inventory.Infra.Queries.Handlers;
 
-public class GetCatalogItemsHandler : IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>
+public class GetCatalogItemsHandler //: IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>
 {
     private readonly IDataAccessLayerResolver _dataAccessLayerResolver;
 
@@ -16,11 +16,11 @@ public class GetCatalogItemsHandler : IQueryHandler<GetCatalogItems, IReadOnlyCo
     {
         _dataAccessLayerResolver = dataAccessLayer;
     }
-    public async Task<IReadOnlyCollection<ItemDto>> QueryAsync(GetCatalogItems query)
+    public async Task<IReadOnlyCollection<CatalogItemDto>> QueryAsync(GetCatalogItems query)
     {
         var items = await _dataAccessLayerResolver.Resolve();
         return items.Select(i =>
-            new ItemDto()
+            new CatalogItemDto()
             {
                 Id = i.Id,
                 Name = i.Name,

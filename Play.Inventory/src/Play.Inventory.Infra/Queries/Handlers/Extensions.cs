@@ -16,7 +16,7 @@ public static class Extensions
 {
     public static IServiceCollection AddQueryHandlers(this IServiceCollection services)
     {
-        services.AddScoped<IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>, GetCatalogItemsHandler>();
+        //services.AddScoped<IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>, GetCatalogItemsHandler>();
         services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IDataAccessLayerResolver, DataAccessLayerResolver>();
         services.AddScoped<IDataAccessLayer>(sp =>

@@ -6,7 +6,7 @@ using Play.Inventory.Domain.Repositories;
 
 namespace Play.Inventory.Infra.Mongo.Queries.Handlers;
 
-public class GetUserMoneyBagHandler : IQueryHandler<GetUserMoneyBag, UserMoneyBagDto>
+public class GetUserMoneyBagHandler //: IQueryHandler<GetUserMoneyBag, UserMoneyBagDto>
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;

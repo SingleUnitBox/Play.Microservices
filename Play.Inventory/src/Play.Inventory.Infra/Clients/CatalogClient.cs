@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Play.Inventory.Application;
+using Play.Inventory.Application.DTO;
 
 namespace Play.Inventory.Infra.Clients;
 

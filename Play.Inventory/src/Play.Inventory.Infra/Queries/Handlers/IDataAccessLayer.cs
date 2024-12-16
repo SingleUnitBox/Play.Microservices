@@ -6,4 +6,5 @@ namespace Play.Inventory.Infra.Queries.Handlers;
 public interface IDataAccessLayer
 {
     Task<IReadOnlyCollection<CatalogItem>> BrowseItems();
+    
 }

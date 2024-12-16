@@ -6,9 +6,9 @@ using Play.Inventory.Application.Queries;
 
 namespace Play.Inventory.Service.Controllers;
 
-public class ItemController(IQueryDispatcher queryDispatcher) : BaseController
+public class ItemsController(IQueryDispatcher queryDispatcher) : BaseController
 {
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyCollection<ItemDto>>> BrowseItems()
+    public async Task<ActionResult<IReadOnlyCollection<CatalogItemDto>>> BrowseItems()
         => Ok(await queryDispatcher.QueryAsync(new GetCatalogItems()));
 }
