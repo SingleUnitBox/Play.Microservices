@@ -11,9 +11,12 @@ public class BusPublisher : IBusPublisher
     {
         _publishEndpoint = publishEndpoint;
     }
-
-    public async Task PublishAsync<TMessage>(TMessage message)
+    
+    public async Task PublishAsync<TMessage>(TMessage message, Guid correlationId = default)
     {
-        await _publishEndpoint.Publish(message);
+        await _publishEndpoint.Publish(message, context =>
+        {
+            context.CorrelationId = correlationId;
+        });
     }
 }

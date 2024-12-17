@@ -1,15 +1,12 @@
-using System.Reflection;
-using MassTransit;
 using Play.Common.Commands;
+using Play.Common.Context;
 using Play.Common.Exceptions;
 using Play.Common.MassTransit;
-using Play.Common.MassTransit.Formatters;
 using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
-using Play.Common.Settings;
-using Play.Items.Application.Events;
 using Play.Items.Domain.Repositories;
+using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Repositories;
 
 namespace Play.Items.Api;
@@ -21,6 +18,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         builder.Services.AddExceptionHandling();
+        builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
         builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
         // builder.Services.AddMassTransit(configure =>
@@ -40,7 +38,8 @@ public class Program
         //         cfg.ConfigureEndpoints(ctx);
         //     });
         // });
-        
+
+        builder.Services.AddContext();
         builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
@@ -57,7 +56,7 @@ public class Program
 
         var app = builder.Build();
 
-        //app.UseExceptionHandling();
+        app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

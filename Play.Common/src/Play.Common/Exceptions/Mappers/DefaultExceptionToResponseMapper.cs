@@ -2,7 +2,7 @@
 using Humanizer;
 using Play.Common.Abs.Exceptions;
 
-namespace Play.Common.Exceptions;
+namespace Play.Common.Exceptions.Mappers;
 
 public class DefaultExceptionToResponseMapper : IExceptionToResponseMapper
 {

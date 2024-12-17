@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Exceptions.Mappers;
 
 namespace Play.Common.Exceptions;
 
@@ -18,6 +19,14 @@ public static class Extensions
         where TMapperImplementation : class, IExceptionToResponseMapper
     {
         services.AddSingleton<IExceptionToResponseMapper, TMapperImplementation>();
+        
+        return services;
+    }
+
+    public static IServiceCollection AddCustomExceptionToMessageMapper<TMapper>(this IServiceCollection services)
+        where TMapper : class, IExceptionToMessageMapper
+    {
+        services.AddSingleton<IExceptionToMessageMapper, TMapper>();
         
         return services;
     }

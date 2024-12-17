@@ -6,6 +6,7 @@ using Play.Common.Abs.Queries;
 using Play.Common.Controllers;
 using Play.Items.Application.Commands;
 using Play.Items.Application.DTO;
+using Play.Items.Application.Exceptions;
 using Play.Items.Application.Queries;
 using Play.Items.Domain.Repositories;
 

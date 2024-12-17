@@ -1,7 +1,11 @@
-﻿using MassTransit;
+﻿using GreenPipes;
+using MassTransit;
 using Play.Common.Abs.Messaging;
+using Play.Common.Context;
+using Play.Common.Exceptions.Mappers;
 using Play.Items.Application.Commands;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
 
@@ -21,6 +25,9 @@ public class CreateItemConsumer : IConsumer<CreateItem>
     
     public async Task Consume(ConsumeContext<CreateItem> context)
     {
+        var scopedContext = context.GetPayload<IScopedContext>();
+        scopedContext.CurrentMessage = context.Message;
+        
         var command = context.Message;
         var item = await _itemRepository.GetByIdAsync(command.Id);
         if (item is not null)
@@ -30,7 +37,7 @@ public class CreateItemConsumer : IConsumer<CreateItem>
         
         item = new Item(command.Id, command.Name, command.Description, command.Price);
         await _itemRepository.CreateAsync(item);
-        await _busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemCreated(
+        await _busPublisher.PublishAsync(new ItemCreated(
             item.Id, item.Name, item.Price));
     }
 }

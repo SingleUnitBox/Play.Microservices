@@ -2,5 +2,6 @@
 
 public interface IBusPublisher
 {
-    Task PublishAsync<TMessage>(TMessage message);
+    Task PublishAsync<TMessage>(TMessage message, Guid correlationId = default);
+
 }

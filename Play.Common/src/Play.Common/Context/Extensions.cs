@@ -11,6 +11,8 @@ public static class Extensions
         services.AddSingleton<IContextFactory, ContextFactory>();
         services.AddTransient<IContext>(sp =>
             sp.GetRequiredService<IContextFactory>().Create());
+
+        services.AddScoped<IScopedContext, ScopedContext>();
         
         return services;
     }

@@ -1,6 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
@@ -17,6 +18,6 @@ public class DeleteItemHandler(IItemRepository itemRepository,
         }
         
         await itemRepository.DeleteAsync(item.Id);
-        await busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemDeleted(item.Id));
+        await busPublisher.PublishAsync(new ItemDeleted(item.Id));
     }
 }

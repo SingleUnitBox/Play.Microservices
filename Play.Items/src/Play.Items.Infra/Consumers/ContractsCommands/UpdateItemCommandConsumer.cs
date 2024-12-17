@@ -1,13 +1,14 @@
 ﻿using MassTransit;
 using Play.Common.Abs.Messaging;
-using Play.Items.Application.Commands;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Commands;
 using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 
-namespace Play.Items.Infra.Consumers;
+namespace Play.Items.Infra.Consumers.ContractsCommands;
 
-public class UpdateItemConsumer(IItemRepository itemRepository, IBusPublisher busPublisher) : IConsumer<UpdateItem>
+public class UpdateItemCommandConsumer(IItemRepository itemRepository,
+    IBusPublisher busPublisher) : IConsumer<UpdateItem>
 {
     public async Task Consume(ConsumeContext<UpdateItem> context)
     {

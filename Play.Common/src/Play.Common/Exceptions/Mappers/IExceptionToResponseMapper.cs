@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Exceptions;
+﻿namespace Play.Common.Exceptions.Mappers;
 
 public interface IExceptionToResponseMapper
 {

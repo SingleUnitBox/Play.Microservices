@@ -1,13 +1,14 @@
 ﻿using MassTransit;
 using Play.Common.Abs.Messaging;
-using Play.Items.Application.Commands;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Commands;
 using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 
-namespace Play.Items.Infra.Consumers;
+namespace Play.Items.Infra.Consumers.ContractsCommands;
 
-public class DeleteItemConsumer(IItemRepository itemRepository, IBusPublisher busPublisher) : IConsumer<DeleteItem>
+public class DeleteItemCommandConsumer(IItemRepository itemRepository,
+    IBusPublisher busPublisher) : IConsumer<DeleteItem>
 {
     public async Task Consume(ConsumeContext<DeleteItem> context)
     {

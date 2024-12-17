@@ -1,6 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
@@ -21,7 +22,7 @@ public class UpdateItemHandler(IItemRepository itemRepository,
         item.Price = command.Price;
         
         await itemRepository.UpdateAsync(item);
-        await busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemUpdated(
+        await busPublisher.PublishAsync(new ItemUpdated(
             item.Id, item.Name, item.Price));
     }
 }

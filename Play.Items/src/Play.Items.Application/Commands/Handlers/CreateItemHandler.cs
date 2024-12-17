@@ -1,7 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
-using Play.Items.Application.Events;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
 
@@ -33,7 +33,7 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
         // {
         //     ItemId = item.Id, Name = item.Name, Price = item.Price
         // });
-        await _busPublisher.PublishAsync(new Contracts.Contracts.CatalogItemCreated(
+        await _busPublisher.PublishAsync(new ItemCreated(
             item.Id, item.Name, item.Price));
     }
 }

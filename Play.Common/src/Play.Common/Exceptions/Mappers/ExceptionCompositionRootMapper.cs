@@ -1,7 +1,6 @@
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Play.Common.Exceptions;
+namespace Play.Common.Exceptions.Mappers;
 
 public class ExceptionCompositionRootMapper : IExceptionCompositionRootMapper
 {

@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using Play.Common.Abs.Exceptions;
 using Play.Common.Exceptions;
+using Play.Common.Exceptions.Mappers;
 
 namespace Play.Items.Infra.Exceptions;
 
