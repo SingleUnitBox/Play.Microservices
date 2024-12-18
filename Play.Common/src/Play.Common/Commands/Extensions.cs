@@ -1,5 +1,9 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.Messaging;
 
 namespace Play.Common.Commands;
 
@@ -18,5 +22,18 @@ public static class Extensions
             .WithScopedLifetime());
         
         return services;
+    }
+    
+    public static WebApplication MapCommandEndpoint<TCommand>(this WebApplication app, string route, HttpMethod method)
+        where TCommand : class
+    {
+        app.MapMethods(route, new[] { method.Method }, 
+            async ([FromBody] TCommand command, [FromServices] IBusPublisher busPublisher) =>
+        {
+            await busPublisher.PublishAsync(command, Guid.NewGuid());
+            return Results.Accepted();
+        });
+        
+        return app;
     }
 }

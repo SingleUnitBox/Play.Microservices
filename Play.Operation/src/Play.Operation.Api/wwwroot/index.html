@@ -1,0 +1,62 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Command Status</title>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>-->
+<!--    <script src="js/signalr-client.js" defer></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<h1>Command Status Monitor</h1>-->
+<!--<div id="status">-->
+<!--    <p>Status: <span id="command-status">Pending</span></p>-->
+<!--    <p id="command-reason" style="color: red;"></p>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Buttons to simulate backend events &ndash;&gt;-->
+<!--<button onclick="simulateStatusUpdate('Completed')">Simulate Success</button>-->
+<!--<button onclick="simulateStatusUpdate('Rejected')">Simulate Rejection</button>-->
+
+<!--<script>-->
+<!--    async function simulateStatusUpdate(status) {-->
+<!--        const correlationId = '11111111-2222-3333-4444-555555555555';-->
+<!--        const reason = status === 'Rejected' ? 'Item already exists' : null;-->
+
+<!--        await fetch('/api/commandstatus/update', {-->
+<!--            method: 'POST',-->
+<!--            headers: { 'Content-Type': 'application/json' },-->
+<!--            body: JSON.stringify({ correlationId, status, reason })-->
+<!--        });-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Play.Operation SignalR</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3>Play.Operation SignalR messages</h3>
+            <div class="form-group">
+                <input type="text" class="form-control" id="jwt" placeholder="JWT">
+            </div>
+            <button id="connect" class="btn btn-primary">Connect</button>
+            <hr/>
+            <ul class="list-group" id="messages">
+            </ul>
+        </div>
+    </div>
+</div>
+<script src="js/signalr.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

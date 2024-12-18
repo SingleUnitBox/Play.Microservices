@@ -45,7 +45,7 @@ public class CreateItemCommandConsumer : IConsumer<CreateItem>
         var command = context.Message;
         try
         {
-            throw new ItemAlreadyExistException(command.Id);
+            //throw new ItemAlreadyExistException(command.Id);
             var item = await _itemRepository.GetByIdAsync(context.Message.Id);
             if (item != null)
             {
@@ -55,12 +55,14 @@ public class CreateItemCommandConsumer : IConsumer<CreateItem>
             // Continue processing the message
             item = new Item(command.Id, command.Name, command.Description, command.Price);
             await _itemRepository.CreateAsync(item);
-            await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price));
+            await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price),
+                context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
         }
         catch (ItemAlreadyExistException ex)
         {
             var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
-            await _busPublisher.PublishAsync(rejectedEvent);
+            await _busPublisher.PublishAsync(rejectedEvent, 
+                context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
         }
         catch (Exception ex)
         {

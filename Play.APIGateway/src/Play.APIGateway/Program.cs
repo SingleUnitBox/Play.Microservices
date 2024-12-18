@@ -1,7 +1,8 @@
-using MassTransit;
-using Play.APIGateway.Settings;
-using Play.Items.Contracts;
+using Play.Common.Commands;
+using Play.Common.MassTransit;
+using Play.Common.Messaging;
 using Play.Items.Contracts.Commands;
+using Play.User.Contracts.Commands;
 
 namespace Play.APIGateway;
 
@@ -12,43 +13,19 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-        builder.Services.AddMassTransit(x =>
-        {
-            x.UsingRabbitMq((ctx, cfg) =>
-            {
-                var rabbitMqSetttings = builder.Configuration
-                    .GetSection(nameof(RabbitMqSettings))
-                    .Get<RabbitMqSettings>();
-                var serviceSettings = builder.Configuration
-                    .GetSection(nameof(ServiceSettings))
-                    .Get<ServiceSettings>();
-                
-                cfg.Host(rabbitMqSetttings.Host);
-                cfg.ConfigureEndpoints(ctx, 
-                    new KebabCaseEndpointNameFormatter(serviceSettings.ServiceName, false));
-            });
-        });
-        builder.Services.AddMassTransitHostedService();
+        builder.Services.AddMessaging();
+        builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+        
         var app = builder.Build();
         app.MapReverseProxy();
-        app.MapPost("play-items/items", async (CreateItem command, IPublishEndpoint endpoint) =>
-        {
-            await endpoint.Publish(command, context =>
-            {
-                context.CorrelationId = Guid.NewGuid();
-            });
-            return Results.Accepted();
-        });
-        // app.MapPut("play-items/items", async (UpdateItem command, IPublishEndpoint endpoint) =>
-        // {
-        //     await endpoint.Publish(command);
-        //     return Results.Accepted();
-        // });
-        // app.MapDelete("play-items/items", async (DeleteItem command, IPublishEndpoint endpoint) =>
-        // {
-        //     await endpoint.Publish(command);
-        //     return Results.Accepted();
-        // });
+        // Play.Items
+        app.MapCommandEndpoint<CreateItem>("play-items/items", HttpMethod.Post);
+        app.MapCommandEndpoint<UpdateItem>("play-items/items", HttpMethod.Put);
+        app.MapCommandEndpoint<DeleteItem>("play-items/items", HttpMethod.Delete);
+        // Play.User
+        // app.MapCommandEndpoint<SignUp>("play-user/signUp", HttpMethod.Post);
+        // app.MapCommandEndpoint<SignIn>("play-user/signIn", HttpMethod.Post);
+        // Play.Inventory
         app.Run();
     }
 }
