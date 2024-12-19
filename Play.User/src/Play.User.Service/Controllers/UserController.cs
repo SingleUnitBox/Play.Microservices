@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Play.Common.Abs.Auth;
 using Play.Common.Context;
 using Play.User.Core.Auth;
 using Play.User.Core.DTO;

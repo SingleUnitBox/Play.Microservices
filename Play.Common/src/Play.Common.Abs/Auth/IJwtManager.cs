@@ -1,4 +1,4 @@
-﻿namespace Play.User.Core.Auth;
+﻿namespace Play.Common.Abs.Auth;
 
 public interface IJwtManager
 {

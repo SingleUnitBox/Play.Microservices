@@ -1,4 +1,5 @@
-﻿using Play.User.Core.DTO;
+﻿using Play.Common.Abs.Auth;
+using Play.User.Core.DTO;
 
 namespace Play.User.Core.Auth;
 

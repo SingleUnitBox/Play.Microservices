@@ -19,19 +19,19 @@ public static class Extensions
         //services.AddScoped<IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>, GetCatalogItemsHandler>();
         services.AddSingleton<IQueryDispatcher, QueryDispatcher>();
         services.AddScoped<IDataAccessLayerResolver, DataAccessLayerResolver>();
-        services.AddScoped<IDataAccessLayer>(sp =>
-        {
-            var scope = sp.CreateScope();
-            var mongoDbSettings = scope.ServiceProvider.GetRequiredService<IConfiguration>()
-             .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
-
-            if (mongoDbSettings.Enabled)
-            {
-                return new MongoHandlerDataAccessLayer(scope.ServiceProvider.GetRequiredService<IMongoDatabase>());
-            }
-
-            return new PostgresHandlerDataAccessLayer(scope.ServiceProvider.GetRequiredService<InventoryPostgresDbContext>());
-        });
+        // services.AddScoped<IDataAccessLayer>(sp =>
+        // {
+        //     var scope = sp.CreateScope();
+        //     var mongoDbSettings = scope.ServiceProvider.GetRequiredService<IConfiguration>()
+        //      .GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
+        //
+        //     if (mongoDbSettings.Enabled)
+        //     {
+        //         return new MongoHandlerDataAccessLayer(scope.ServiceProvider.GetRequiredService<IMongoDatabase>());
+        //     }
+        //
+        //     return new PostgresHandlerDataAccessLayer(scope.ServiceProvider.GetRequiredService<InventoryPostgresDbContext>());
+        // });
         
         return services;
     }

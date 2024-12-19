@@ -22,9 +22,6 @@ public class Program
         app.MapCommandEndpoint<CreateItem>("play-items/items", HttpMethod.Post);
         app.MapCommandEndpoint<UpdateItem>("play-items/items", HttpMethod.Put);
         app.MapCommandEndpoint<DeleteItem>("play-items/items", HttpMethod.Delete);
-        // Play.User
-        // app.MapCommandEndpoint<SignUp>("play-user/signUp", HttpMethod.Post);
-        // app.MapCommandEndpoint<SignIn>("play-user/signIn", HttpMethod.Post);
         // Play.Inventory
         app.Run();
     }

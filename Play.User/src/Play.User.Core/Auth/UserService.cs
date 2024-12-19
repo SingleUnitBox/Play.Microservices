@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Play.Common.Abs.Auth;
 using Play.Common.Abs.Messaging;
 using Play.User.Contracts.Events;
 using Play.User.Core.DTO;

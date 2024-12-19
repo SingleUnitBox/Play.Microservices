@@ -1,22 +1,58 @@
 @url = http://localhost:5008
-@itemId = e3249a6d-3ccf-4702-aacd-4e7f1bcdacfd
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MmU5ODQ4Yi1iYjBjLTRkODUtOGQ2Ny1iMzI3NjhkNmRlOGUiLCJ1bmlxdWVfbmFtZSI6IjUyZTk4NDhiLWJiMGMtNGQ4NS04ZDY3LWIzMjc2OGQ2ZGU4ZSIsImp0aSI6IjhhYjFkMGNjLTY4OWUtNGE5ZC05ZmY0LTZhOTcyNWU0MmEzNSIsImlhdCI6IjE3MzQyOTk1MjU1OTMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwidXQwZCI6WyJpdGVtcyIsImludmVudG9yeSJdLCJuYmYiOjE3MzQyOTk1MjUsImV4cCI6MTc0Mjg1MzEyNSwiaXNzIjoiUGxheS5Vc2VyLlNlcnZpY2UifQ.paE_LLbvOeXnKCEn1h6x-d65o_7UU2ocT-a_YgLPAxM
+@itemId = dc5e1f67-8ec9-4486-bb05-f4fc04be4d32
+@userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
-### PLAY-ITEMS
+
+### PLAY-USER ###
+###
+POST {{url}}/play-user/signUp
+Content-Type: application/json
+
+{
+  "username": "user3",
+  "email": "user3@play.com",
+  "password": "secret",
+  "role": "user",
+  "claims": {
+    "policies": [
+      "items",
+      "inventory"
+    ]
+  }
+}
 
 ###
+POST {{url}}/play-user/signIn
+Content-Type: application/json
+
+{
+    "email": "user1@play.com",
+    "password": "secret"
+}
+
+###
+GET {{url}}/play-user
+Authorization: Bearer {{accessToken}}
+
+### PLAY-ITEMS ###
+### Get Items
 GET {{url}}/play-items/items
 
-###
+### Get
+GET {{url}}/play-items/items/{{itemId}}
+
+### Create
 POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "Antidote",
-  "description": "Cures poisons",
-  "price": 10
+  "name": "corelation",
+  "description": "testProcus",
+  "price": 9
 }
 
-###
+### Update
 PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
@@ -26,5 +62,21 @@ Content-Type: application/json
   "price": 12
 }
 
-###
+### Delete
 DELETE {{url}}/play-items/items/{{itemId}}
+
+### PLAY-INVENTORY ###
+GET {{url}}/play-inventory/inventory
+Authorization: Bearer {{accessToken}}
+
+###
+GET {{url}}/play-inventory/items
+
+###
+POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=pending
+
+###
+POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=completed
+
+###
+POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=rejected
