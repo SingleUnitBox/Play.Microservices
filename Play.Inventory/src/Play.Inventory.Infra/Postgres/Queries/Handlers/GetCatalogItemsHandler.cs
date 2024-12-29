@@ -6,7 +6,7 @@ using Play.Inventory.Domain.Entities;
 
 namespace Play.Inventory.Infra.Postgres.Queries.Handlers;
 
-public class GetCatalogItemsHandler : IQueryHandler<GetCatalogItems, IReadOnlyCollection<CatalogItemDto>>
+public class GetCatalogItemsHandler : IQueryHandler<GetCatalogItems, IEnumerable<CatalogItemDto>>
 {
     private readonly DbSet<CatalogItem> _catalogItems;
 
@@ -15,7 +15,7 @@ public class GetCatalogItemsHandler : IQueryHandler<GetCatalogItems, IReadOnlyCo
         _catalogItems = dbContext.CatalogItems;
     }
     
-    public async Task<IReadOnlyCollection<CatalogItemDto>> QueryAsync(GetCatalogItems query)
+    public async Task<IEnumerable<CatalogItemDto>> QueryAsync(GetCatalogItems query)
     {
         var items = await _catalogItems
             .AsNoTracking()

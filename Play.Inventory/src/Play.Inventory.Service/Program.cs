@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
@@ -10,6 +11,7 @@ using Play.Inventory.Infra.Postgres;
 using Play.Inventory.Infra.Postgres.Repositories;
 using Play.Common.AppInitializer;
 using Play.Common.MongoDb;
+using Play.Common.Settings;
 using Play.Inventory.Infra.Queries.Handlers;
 using Play.Inventory.Infra.Repositories;
 
@@ -19,9 +21,15 @@ builder.Services.AddHostedService<AppInitializer>();
 builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
-builder.Services.AddMongoDb(builder.Configuration);
-builder.Services.AddMongoRepositories();
-builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
+//builder.Services.AddMongoDb(builder.Configuration);
+//builder.Services.AddMongoRepositories();
+//builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
+builder.Services.AddDbContext<InventoryPostgresDbContext>(o =>
+{
+    var postgresSettings = builder.Configuration.GetSection(nameof(PostgresSettings))
+        .Get<PostgresSettings>();
+    o.UseNpgsql(postgresSettings.ConnectionString);
+});
 builder.Services.AddPostgresRepositories();
 
 builder.Services.AddPolicies();

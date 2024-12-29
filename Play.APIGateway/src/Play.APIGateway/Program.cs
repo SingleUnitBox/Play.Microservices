@@ -2,7 +2,6 @@ using Play.Common.Commands;
 using Play.Common.MassTransit;
 using Play.Common.Messaging;
 using Play.Items.Contracts.Commands;
-using Play.User.Contracts.Commands;
 
 namespace Play.APIGateway;
 

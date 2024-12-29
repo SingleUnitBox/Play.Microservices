@@ -1,10 +1,10 @@
 ﻿using MassTransit;
 using Play.Inventory.Domain.Repositories;
-using Play.Items.Contracts;
+using Play.Items.Contracts.Events;
 
 namespace Play.Inventory.Infra.Consumer.Catalog;
 
-public class CatalogItemDeletedConsumer : IConsumer<Contracts.CatalogItemDeleted>
+public class CatalogItemDeletedConsumer : IConsumer<ItemDeleted>
 {
     private readonly ICatalogItemRepository _catalogItemRepository;
 
@@ -13,7 +13,7 @@ public class CatalogItemDeletedConsumer : IConsumer<Contracts.CatalogItemDeleted
         _catalogItemRepository = catalogItemRepository;
     }
 
-    public async Task Consume(ConsumeContext<Contracts.CatalogItemDeleted> context)
+    public async Task Consume(ConsumeContext<ItemDeleted> context)
     {
         var catalogItem = await _catalogItemRepository.GetAsync(i => i.Id == context.Message.ItemId);
         if (catalogItem == null)

@@ -47,8 +47,8 @@ POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "corelation",
-  "description": "testProcus",
+  "name": "sword",
+  "description": "deals damage",
   "price": 9
 }
 

@@ -21,6 +21,18 @@ services:
       - rabbitmqdata:/var/lib/rabbitmq
     hostname: rabbitmq
 
+  postgres:
+    image: postgres
+    container_name: postgres
+    ports: 
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=czcz
+    volumes:
+      - postgresdbdata:/var/lib/postgresql/data
+
+
 volumes:
   mongodbdata: 
   rabbitmqdata:
+  postgresdbdata:

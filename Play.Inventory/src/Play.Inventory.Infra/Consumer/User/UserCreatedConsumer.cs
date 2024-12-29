@@ -1,11 +1,11 @@
 ﻿using MassTransit;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Repositories;
-using Play.User.Contracts;
+using Play.User.Contracts.Events;
 
 namespace Play.Inventory.Infra.Consumer.User;
 
-public class UserCreatedConsumer : IConsumer<Contracts.UserCreated>
+public class UserCreatedConsumer : IConsumer<UserCreated>
 {
     private readonly IPlayerRepository _playerRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;
@@ -17,7 +17,7 @@ public class UserCreatedConsumer : IConsumer<Contracts.UserCreated>
         _moneyBagRepository = moneyBagRepository;
     }
 
-    public async Task Consume(ConsumeContext<Contracts.UserCreated> context)
+    public async Task Consume(ConsumeContext<UserCreated> context)
     {
         var message = context.Message;
 
@@ -27,7 +27,7 @@ public class UserCreatedConsumer : IConsumer<Contracts.UserCreated>
             return;
         }
 
-        player = Domain.Entities.Player.Create(message.UserId, message.Username);
+        player = Player.Create(message.UserId, message.Username);
         await _playerRepository.CreateAsync(player);
         
         var moneyMag = MoneyBag.Create(player.Id, 100);

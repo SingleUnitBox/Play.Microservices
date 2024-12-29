@@ -3,4 +3,4 @@ using Play.Inventory.Application.DTO;
 
 namespace Play.Inventory.Application.Queries;
 
-public record GetCatalogItems() : IQuery<IReadOnlyCollection<CatalogItemDto>>;
+public record GetCatalogItems() : IQuery<IEnumerable<CatalogItemDto>>;

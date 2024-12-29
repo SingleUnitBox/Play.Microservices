@@ -7,7 +7,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,7 +24,7 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
-    <PackageReference Include="Play.Common.Abs" Version="1.0.10" />
+    <PackageReference Include="Play.Common.Abs" Version="1.10.0" />
     <PackageReference Include="Scrutor" Version="5.0.2" />
   </ItemGroup>
   

@@ -1,11 +1,10 @@
 ﻿using MassTransit;
-using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Repositories;
-using Play.Items.Contracts;
+using Play.Items.Contracts.Events;
 
 namespace Play.Inventory.Infra.Consumer.Catalog;
 
-public class CatalogItemUpdatedConsumer : IConsumer<Contracts.CatalogItemUpdated>
+public class CatalogItemUpdatedConsumer : IConsumer<ItemUpdated>
 {
     private readonly ICatalogItemRepository _catalogItemRepository;
 
@@ -14,7 +13,7 @@ public class CatalogItemUpdatedConsumer : IConsumer<Contracts.CatalogItemUpdated
         _catalogItemRepository = catalogItemRepository;
     }
     
-    public async Task Consume(ConsumeContext<Contracts.CatalogItemUpdated> context)
+    public async Task Consume(ConsumeContext<ItemUpdated> context)
     {
         var catalogItem = await _catalogItemRepository.GetAsync(i => i.Id == context.Message.ItemId);
         // if (catalogItem is null)
