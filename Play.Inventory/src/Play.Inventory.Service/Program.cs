@@ -14,6 +14,7 @@ using Play.Common.MongoDb;
 using Play.Common.Settings;
 using Play.Inventory.Infra.Queries.Handlers;
 using Play.Inventory.Infra.Repositories;
+using Play.Common.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +25,11 @@ builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNa
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();
 //builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
+var postgresSettings = builder.Services.GetSettings<PostgresSettings>(nameof(PostgresSettings));
 builder.Services.AddDbContext<InventoryPostgresDbContext>(o =>
 {
-    var postgresSettings = builder.Configuration.GetSection(nameof(PostgresSettings))
-        .Get<PostgresSettings>();
-    o.UseNpgsql(postgresSettings.ConnectionString);
+    //o.UseNpgsql(postgresSettings.ConnectionString);
+    o.UseNpgsql("Host=localhost;Database=Play.Inventory.Db;Username=postgres;Password=czcz");
 });
 builder.Services.AddPostgresRepositories();
 

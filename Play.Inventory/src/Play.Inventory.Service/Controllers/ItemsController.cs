@@ -22,12 +22,6 @@ public class ItemsController : BaseController
     }
     
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyCollection<CatalogItemDto>>> BrowseItems()
+    public async Task<ActionResult<IEnumerable<CatalogItemDto>>> BrowseItems()
         => Ok(await _queryDispatcher.QueryAsync(new GetCatalogItems()));
-    
-    // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<CatalogItemDto>>> BrowseItems()
-    //     => Ok(await _catalogItems
-    //         .AsNoTracking()
-    //         .ToListAsync());
 }
