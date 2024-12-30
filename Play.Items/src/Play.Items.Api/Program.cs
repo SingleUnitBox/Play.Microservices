@@ -1,3 +1,4 @@
+using MongoDB.Driver;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Exceptions;
@@ -8,6 +9,7 @@ using Play.Common.Queries;
 using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Repositories;
+using Play.Items.Infra.Repositories.Cached;
 
 namespace Play.Items.Api;
 
@@ -51,8 +53,17 @@ public class Program
         });
         
         builder.Services.AddMongoDb(builder.Configuration);
-        builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
-            db => new ItemRepository(db, "items"));
+        // builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
+        //     db => new ItemRepository(db, "items"));
+        builder.Services.AddScoped<ItemRepository>(sp =>
+        {
+            var db = sp.GetRequiredService<IMongoDatabase>();
+            var itemRepository = new ItemRepository(db, "items");
+
+            return itemRepository;
+        });
+        builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
+        builder.Services.AddMemoryCache();
 
         var app = builder.Build();
 
