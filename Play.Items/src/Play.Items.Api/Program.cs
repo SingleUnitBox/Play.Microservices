@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Play.Common.Cache;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Exceptions;
@@ -64,6 +65,7 @@ public class Program
         });
         builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         builder.Services.AddMemoryCache();
+        builder.Services.AddCaching();
 
         var app = builder.Build();
 

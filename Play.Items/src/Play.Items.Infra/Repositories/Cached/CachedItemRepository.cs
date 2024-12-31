@@ -1,5 +1,7 @@
 using System.Linq.Expressions;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Caching.Memory;
+using Newtonsoft.Json;
 using Play.Common.Abs.SharedKernel.Types;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
@@ -10,12 +12,15 @@ public class CachedItemRepository : IItemRepository
 {
     private readonly ItemRepository _decoratedItemRepository;
     private readonly IMemoryCache _memoryCache;
+    private readonly IDistributedCache _distributedCache;
 
     public CachedItemRepository(ItemRepository decoratedItemRepository,
-        IMemoryCache memoryCache)
+        IMemoryCache memoryCache,
+        IDistributedCache distributedCache)
     {
         _decoratedItemRepository = decoratedItemRepository;
         _memoryCache = memoryCache;
+        _distributedCache = distributedCache;
     }
 
     public async Task CreateAsync(Item item)
@@ -33,17 +38,33 @@ public class CachedItemRepository : IItemRepository
         await _decoratedItemRepository.DeleteAsync(id);
     }
 
-    public Task<Item> GetByIdAsync(AggregateRootId id)
+    public async Task<Item> GetByIdAsync(AggregateRootId id)
     {
         string key = $"item-{id}";
-        return _memoryCache.GetOrCreateAsync(
-            key,
-            entry =>
+        var cachedItem = await _distributedCache.GetStringAsync(key);
+        if (string.IsNullOrEmpty(cachedItem))
+        {
+            var item = await _decoratedItemRepository.GetByIdAsync(id);
+            if (item is null)
             {
-                entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
+                return item;
+            }
 
-                return _decoratedItemRepository.GetByIdAsync(id);
-            });
+            await _distributedCache.SetStringAsync(
+                key,
+                JsonConvert.SerializeObject(item));
+
+            return item;
+        }
+
+        // return _memoryCache.GetOrCreateAsync(
+        //     key,
+        //     entry =>
+        //     {
+        //         entry.SetAbsoluteExpiration(TimeSpan.FromMinutes(1));
+        //
+        //         return _decoratedItemRepository.GetByIdAsync(id);
+        //     });
     }
 
     public Task<Item> GetAsync(Expression<Func<Item, bool>> predicate)
