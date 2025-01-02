@@ -42,9 +42,10 @@ public class CachedItemRepository : IItemRepository
     {
         string key = $"item-{id}";
         var cachedItem = await _distributedCache.GetStringAsync(key);
+        Item item;
         if (string.IsNullOrEmpty(cachedItem))
         {
-            var item = await _decoratedItemRepository.GetByIdAsync(id);
+            item = await _decoratedItemRepository.GetByIdAsync(id);
             if (item is null)
             {
                 return item;
@@ -56,6 +57,10 @@ public class CachedItemRepository : IItemRepository
 
             return item;
         }
+
+        item = JsonConvert.DeserializeObject<Item>(cachedItem);
+
+        return item;
 
         // return _memoryCache.GetOrCreateAsync(
         //     key,
