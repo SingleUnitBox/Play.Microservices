@@ -58,6 +58,7 @@ public class CachedItemRepository : IItemRepository
             return item;
         }
 
+        // something is wrong with Item creation
         item = JsonConvert.DeserializeObject<Item>(cachedItem);
 
         return item;
