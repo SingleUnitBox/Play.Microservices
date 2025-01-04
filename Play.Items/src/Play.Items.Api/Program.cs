@@ -69,7 +69,7 @@ public class Program
 
         var app = builder.Build();
 
-        app.UseExceptionHandling();
+        //app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
