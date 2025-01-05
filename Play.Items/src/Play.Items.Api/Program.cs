@@ -3,6 +3,7 @@ using Play.Common.Cache;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Exceptions;
+using Play.Common.Logging;
 using Play.Common.MassTransit;
 using Play.Common.Messaging;
 using Play.Common.MongoDb;
@@ -46,6 +47,7 @@ public class Program
         builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
+        builder.Services.AddLoggingCommandHandlerDecorator();
         builder.Services.AddQueries();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options =>
@@ -54,8 +56,8 @@ public class Program
         });
         
         builder.Services.AddMongoDb(builder.Configuration);
-        // builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
-        //     db => new ItemRepository(db, "items"));
+        builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
+            db => new ItemRepository(db, "items"));
         builder.Services.AddScoped<ItemRepository>(sp =>
         {
             var db = sp.GetRequiredService<IMongoDatabase>();
@@ -63,9 +65,11 @@ public class Program
 
             return itemRepository;
         });
-        builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
-        builder.Services.AddMemoryCache();
-        builder.Services.AddCaching();
+        
+        //caching
+        //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
+        //builder.Services.AddMemoryCache();
+        //builder.Services.AddCaching();
 
         var app = builder.Build();
 

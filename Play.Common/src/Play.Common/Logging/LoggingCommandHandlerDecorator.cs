@@ -19,7 +19,7 @@ public class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand
 
     public async Task HandleAsync(TCommand command)
     {
-        _logger.LogInformation("Starting to handle command '{typeof(TCommand)}'.");
+        _logger.LogInformation($"Starting to handle command '{typeof(TCommand)}'.");
         var stopwatch = Stopwatch.StartNew();
         await _innerHandler.HandleAsync(command);
         stopwatch.Stop();
