@@ -29,13 +29,13 @@ public class CreateItemConsumer : IConsumer<CreateItem>
         scopedContext.CurrentMessage = context.Message;
         
         var command = context.Message;
-        var item = await _itemRepository.GetByIdAsync(command.Id);
+        var item = await _itemRepository.GetByIdAsync(command.ItemId);
         if (item is not null)
         {
             throw new ItemAlreadyExistException(item.Id);
         }
         
-        item = new Item(command.Id, command.Name, command.Description, command.Price);
+        item = new Item(command.ItemId, command.Name, command.Description, command.Price);
         await _itemRepository.CreateAsync(item);
         await _busPublisher.PublishAsync(new ItemCreated(
             item.Id, item.Name, item.Price));

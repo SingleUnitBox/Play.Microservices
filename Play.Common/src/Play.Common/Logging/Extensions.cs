@@ -29,7 +29,10 @@ public static class Extensions
         {
             var seqSettings = ctx.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
             config.WriteTo.Console();
-            config.WriteTo.Seq(seqSettings.Url);
+            if (seqSettings.Enabled)
+            {
+                config.WriteTo.Seq(seqSettings.Url, apiKey: seqSettings.ApiKey);
+            }
         });
         
         return hostBuilder;

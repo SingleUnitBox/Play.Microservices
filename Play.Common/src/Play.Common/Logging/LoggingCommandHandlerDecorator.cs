@@ -1,6 +1,7 @@
-using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Commands;
+using Play.Common.Logging.Mappers;
+using SmartFormat;
 
 namespace Play.Common.Logging;
 
@@ -9,23 +10,54 @@ public class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand
 {
     private readonly ICommandHandler<TCommand> _innerHandler;
     private readonly ILogger<LoggingCommandHandlerDecorator<TCommand>> _logger;
-    private readonly Stopwatch _stopwatch;
+    private readonly IMessageToLogTemplateMapper _mapper;
 
     public LoggingCommandHandlerDecorator(ICommandHandler<TCommand> innerHandler,
-        ILogger<LoggingCommandHandlerDecorator<TCommand>> logger)
+        ILogger<LoggingCommandHandlerDecorator<TCommand>> logger,
+        IMessageToLogTemplateMapper mapper)
     {
         _innerHandler = innerHandler;
         _logger = logger;
-        _stopwatch = new Stopwatch();
+        _mapper = mapper;
     }
 
     public async Task HandleAsync(TCommand command)
     {
-        _logger.LogInformation("Starting to handle command '{CommandName}'.", typeof(TCommand));
-        _stopwatch.Start();
-        await _innerHandler.HandleAsync(command);
-        _stopwatch.Stop();
-        _logger.LogInformation("Stopping to handle command '{CommandName}'. " +
-                               "Completed in {StopwatchElapsed}ms.", typeof(TCommand), _stopwatch.ElapsedMilliseconds);
+        var template = _mapper.Map(command);
+        if (template is null)
+        {
+            await _innerHandler.HandleAsync(command);
+            return;
+        }
+
+        try
+        {
+            Log(command, template.Before);
+            await _innerHandler.HandleAsync(command);
+            Log(command, template.After);
+        }
+        catch (Exception exception)
+        {
+            var exceptionTemplate = template.GetExceptionTemplate(exception);
+            Log(command, exceptionTemplate, true);
+            throw;
+        }
+    }
+
+    private void Log(TCommand command, string message, bool isError = false)
+    {
+        if (string.IsNullOrEmpty(message))
+        {
+            return;
+        }
+
+        if (isError)
+        {
+            _logger.LogError(Smart.Format(message, command));
+        }
+        else
+        {
+            _logger.LogInformation(Smart.Format(message, command));
+        }
     }
 }

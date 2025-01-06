@@ -45,7 +45,7 @@ namespace Play.Items.Api.Controllers
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
         {
             await _commandDispatcher.DispatchAsync(command);
-            return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.Id }, null);
+            return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.ItemId }, null);
         }
         
         // [HttpPost]

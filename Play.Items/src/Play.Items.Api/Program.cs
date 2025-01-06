@@ -4,12 +4,14 @@ using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
+using Play.Common.Logging.Mappers;
 using Play.Common.MassTransit;
 using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
 using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Exceptions;
+using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
 using Play.Items.Infra.Repositories.Cached;
 using Serilog;
@@ -74,9 +76,10 @@ public class Program
         //builder.Services.AddCaching();
 
         builder.Host.UseSerilogWithSeq();
+        builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();
 
-        //app.UseExceptionHandling();
+        app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
