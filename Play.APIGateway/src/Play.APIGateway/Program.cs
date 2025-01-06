@@ -18,9 +18,13 @@ public class Program
         var app = builder.Build();
         app.MapReverseProxy();
         // Play.Items
-        app.MapCommandEndpoint<CreateItem>("play-items/items", HttpMethod.Post);
-        app.MapCommandEndpoint<UpdateItem>("play-items/items", HttpMethod.Put);
-        app.MapCommandEndpoint<DeleteItem>("play-items/items", HttpMethod.Delete);
+        // this is async, goes to RabbitMq
+        //app.MapCommandEndpoint<CreateItem>("play-items/items", HttpMethod.Post);
+        // these are sync, get directed to Play.Items
+        // play-items/items/guid-guid-guid, route is wrong
+        // app.MapCommandEndpoint<UpdateItem>("play-items/items", HttpMethod.Put);
+        // app.MapCommandEndpoint<DeleteItem>("play-items/items", HttpMethod.Delete);
+        
         // Play.Inventory
         app.Run();
     }

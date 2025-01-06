@@ -23,7 +23,7 @@ public class LoggingCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand
         var stopwatch = Stopwatch.StartNew();
         await _innerHandler.HandleAsync(command);
         stopwatch.Stop();
-        _logger.LogInformation($"Stopping to handle command '{typeof(TCommand)}'" +
-                               $" in {stopwatch.ElapsedMilliseconds}ms.");
+        _logger.LogInformation($"Stopping to handle command '{typeof(TCommand)}'. " +
+                               $"Completed in {stopwatch.ElapsedMilliseconds}ms.");
     }
 }

@@ -12,6 +12,7 @@ using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Repositories;
 using Play.Items.Infra.Repositories.Cached;
+using Serilog;
 
 namespace Play.Items.Api;
 
@@ -49,6 +50,7 @@ public class Program
         builder.Services.AddCommands();
         builder.Services.AddLoggingCommandHandlerDecorator();
         builder.Services.AddQueries();
+        builder.Services.AddLoggingQueryHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options =>
         {
@@ -71,6 +73,10 @@ public class Program
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
 
+        builder.Host.UseSerilog((ctx, cfg) =>
+        {
+            cfg.WriteTo.Console();
+        });
         var app = builder.Build();
 
         //app.UseExceptionHandling();
