@@ -73,10 +73,7 @@ public class Program
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
 
-        builder.Host.UseSerilog((ctx, cfg) =>
-        {
-            cfg.WriteTo.Console();
-        });
+        builder.Host.UseSerilogWithSeq();
         var app = builder.Build();
 
         //app.UseExceptionHandling();
