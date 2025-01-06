@@ -28,10 +28,12 @@ public static class Extensions
         hostBuilder.UseSerilog((ctx, config) =>
         {
             var seqSettings = ctx.Configuration.GetSettings<SeqSettings>(nameof(SeqSettings));
+            var serviceSettings = ctx.Configuration.GetSettings<ServiceSettings>(nameof(ServiceSettings));
             config.WriteTo.Console();
             if (seqSettings.Enabled)
             {
-                config.WriteTo.Seq(seqSettings.Url, apiKey: seqSettings.ApiKey);
+                config.WriteTo.Seq(seqSettings.Url, apiKey: seqSettings.ApiKey)
+                    .Enrich.WithProperty("ServiceName", serviceSettings.ServiceName);
             }
         });
         
