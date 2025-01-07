@@ -24,15 +24,41 @@ public static class Extensions
         return services;
     }
     
-    public static WebApplication MapCommandEndpoint<TCommand>(this WebApplication app, string route, HttpMethod method)
+    public static WebApplication MapCommandEndpoint<TCommand>(this WebApplication app,
+        string route,
+        HttpMethod method)
         where TCommand : class
     {
         app.MapMethods(route, new[] { method.Method }, 
             async ([FromBody] TCommand command, [FromServices] IBusPublisher busPublisher) =>
-        {
-            await busPublisher.PublishAsync(command, Guid.NewGuid());
-            return Results.Accepted();
-        });
+            {
+                await busPublisher.PublishAsync(command, Guid.NewGuid());
+                return Results.Accepted();
+            });
+        
+        return app;
+    }
+    
+    public static WebApplication MapCommandEndpointWithItemId<TCommand>(this WebApplication app,
+        string route,
+        HttpMethod method)
+        where TCommand : class
+    {
+        app.MapMethods(route + "/{itemId}", new[] { method.Method }, 
+            async (
+                [FromBody] TCommand command,
+                [FromServices] IBusPublisher busPublisher,
+                [FromRoute] Guid itemId) =>
+            {
+                var itemIdProperty = typeof(TCommand).GetProperty("ItemId");
+                if (itemIdProperty is not null && itemIdProperty.PropertyType == typeof(Guid))
+                {
+                    itemIdProperty.SetValue(command, itemId);
+                }
+
+                await busPublisher.PublishAsync(command, Guid.NewGuid());
+                return Results.Accepted();
+            });
         
         return app;
     }

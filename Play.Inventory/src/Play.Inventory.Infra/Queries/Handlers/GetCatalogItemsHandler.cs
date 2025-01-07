@@ -8,7 +8,7 @@ using Play.Inventory.Infra.Mongo.Queries.Handlers;
 
 namespace Play.Inventory.Infra.Queries.Handlers;
 
-public class GetCatalogItemsHandler //: IQueryHandler<GetCatalogItems, IReadOnlyCollection<ItemDto>>
+public class GetCatalogItemsHandler //: IQueryHandler<GetCatalogItems, IEnumerable<ItemDto>>
 {
     private readonly IDataAccessLayerResolver _dataAccessLayerResolver;
 

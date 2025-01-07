@@ -10,4 +10,8 @@
       <ProjectReference Include="..\Play.Inventory.Domain\Play.Inventory.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events\External\Items\" />
+    </ItemGroup>
+
 </Project>

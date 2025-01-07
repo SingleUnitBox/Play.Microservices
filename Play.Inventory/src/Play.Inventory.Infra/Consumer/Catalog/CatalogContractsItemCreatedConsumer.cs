@@ -6,13 +6,11 @@ using Play.Items.Contracts.Events;
 
 namespace Play.Inventory.Infra.Consumer.Catalog;
 
-public class CatalogContractsItemCreatedConsumer(ICatalogItemRepository catalogItemRepository,
-    ILogger<CatalogContractsItemCreatedConsumer> logger)
+public class CatalogContractsItemCreatedConsumer(ICatalogItemRepository catalogItemRepository)
     : IConsumer<ItemCreated>
 {
     public async Task Consume(ConsumeContext<ItemCreated> context)
     {
-        logger.LogInformation("Consuming catalog contracts item created.");
         var message = context.Message;
         var item = await catalogItemRepository.GetByIdAsync(message.ItemId);
         if (item is not null)

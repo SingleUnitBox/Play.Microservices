@@ -10,11 +10,14 @@ using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra.Postgres;
 using Play.Inventory.Infra.Postgres.Repositories;
 using Play.Common.AppInitializer;
+using Play.Common.Logging;
+using Play.Common.Logging.Mappers;
 using Play.Common.MongoDb;
 using Play.Common.Settings;
 using Play.Inventory.Infra.Queries.Handlers;
 using Play.Inventory.Infra.Repositories;
 using Play.Common.Settings;
+using Play.Inventory.Infra.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,13 +27,7 @@ builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNa
 
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();
-//builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
-var postgresSettings = builder.Services.GetSettings<PostgresSettings>(nameof(PostgresSettings));
-builder.Services.AddDbContext<InventoryPostgresDbContext>(o =>
-{
-    //o.UseNpgsql(postgresSettings.ConnectionString);
-    o.UseNpgsql("Host=localhost;Database=Play.Inventory.Db;Username=postgres;Password=czcz");
-});
+builder.Services.AddPostgresDb<InventoryPostgresDbContext>();
 builder.Services.AddPostgresRepositories();
 
 builder.Services.AddPolicies();
@@ -38,8 +35,10 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddQueries();
-//builder.Services.AddQueryHandlers();
+builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTempleMapper>();
+builder.Services.AddLoggingQueryHandlerDecorator();
 builder.Services.AddCommands();
+builder.Services.AddLoggingCommandHandlerDecorator();
 // builder.Services.AddMassTransit(x =>
 // {
 //     //x.AddConsumer<CatalogItemCreatedConsumer>();
@@ -70,6 +69,7 @@ builder.Services.AddCommands();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Host.UseSerilogWithSeq();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
