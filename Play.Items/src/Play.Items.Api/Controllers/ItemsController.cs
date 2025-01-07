@@ -36,39 +36,39 @@ namespace Play.Items.Api.Controllers
             var items = await _queryDispatcher.QueryAsync(new GetItems());
             return Ok(items);
         }
-        
+
         [HttpGet("{itemId}")]
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid itemId)
             => OkOrNotFound(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
-    
-        [HttpPost]
-        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
-        {
-            await _commandDispatcher.DispatchAsync(command);
-            return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.ItemId }, null);
-        }
-        
+
+        // [HttpPost]
+        // public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
+        // {
+        //     await _commandDispatcher.DispatchAsync(command);
+        //     return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.ItemId }, null);
+        // }
+
         // [HttpPost]
         // public async Task<ActionResult> CreateItemAsync(CreateItem command)
         // {
         //     await _publishEndpoint.Publish(command);
         //     return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.Id }, null);
         // }
-        
+
         [HttpPut("{itemId}")]
         public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
         {
             await _commandDispatcher.DispatchAsync(command with { ItemId = itemId });
             return NoContent();
         }
-        
+
         // [HttpPut("{itemId}")]
         // public async Task<IActionResult> UpdateAsync(Guid itemId, UpdateItem command)
         // {
         //     await _publishEndpoint.Publish(command with { ItemId = itemId });
         //     return NoContent();
         // }
-        
+
         [HttpDelete("{itemId}")]
         public async Task<IActionResult> DeleteAsync(Guid itemId)
         {

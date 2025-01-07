@@ -17,7 +17,7 @@ public class DeleteItemConsumer(IItemRepository itemRepository, IBusPublisher bu
         {
             throw new ItemNotFoundException(command.ItemId);
         }
-        
+
         await itemRepository.DeleteAsync(item.Id);
         await busPublisher.PublishAsync(new ItemDeleted(item.Id));
     }

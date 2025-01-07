@@ -15,7 +15,7 @@ public class GetItemsHandler : IQueryHandler<GetItems, IEnumerable<ItemDto>>
     {
         _itemsCollection = database.GetCollection<Item>("items");
     }
-    
+
     public async Task<IEnumerable<ItemDto>> QueryAsync(GetItems query)
     {
         var items = await _itemsCollection.Find(i => true).ToListAsync();

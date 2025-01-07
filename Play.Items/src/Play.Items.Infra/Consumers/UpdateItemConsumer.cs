@@ -17,11 +17,11 @@ public class UpdateItemConsumer(IItemRepository itemRepository, IBusPublisher bu
         {
             throw new ItemNotFoundException(command.ItemId);
         }
-        
+
         item.Name = command.Name;
         item.Description = command.Description;
         item.Price = command.Price;
-        
+
         await itemRepository.UpdateAsync(item);
         await busPublisher.PublishAsync(new ItemUpdated(
             item.Id, item.Name, item.Price));

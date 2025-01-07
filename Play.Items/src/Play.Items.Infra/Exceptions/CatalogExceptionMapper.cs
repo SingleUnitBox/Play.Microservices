@@ -13,7 +13,7 @@ public class CatalogExceptionMapper : IExceptionToResponseMapper
         {
             PlayException => new CatalogExceptionResponse(new Error(exception.GetType().Name, exception.Message),
                 HttpStatusCode.BadRequest),
-            _ => new CatalogExceptionResponse(new Error("catalog_error", "There was a catalog_error."), 
+            _ => new CatalogExceptionResponse(new Error("catalog_error", "There was a catalog_error."),
                 HttpStatusCode.InternalServerError)
         };
 }

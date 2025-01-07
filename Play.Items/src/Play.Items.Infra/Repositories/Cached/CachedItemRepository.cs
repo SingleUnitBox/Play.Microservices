@@ -55,7 +55,7 @@ public class CachedItemRepository : IItemRepository
                 key,
                 JsonConvert.SerializeObject(item));
 
-            
+
             return item;
         }
 

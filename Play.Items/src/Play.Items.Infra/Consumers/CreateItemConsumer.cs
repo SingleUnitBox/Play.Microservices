@@ -22,19 +22,19 @@ public class CreateItemConsumer : IConsumer<CreateItem>
         _itemRepository = itemRepository;
         _busPublisher = busPublisher;
     }
-    
+
     public async Task Consume(ConsumeContext<CreateItem> context)
     {
         var scopedContext = context.GetPayload<IScopedContext>();
         scopedContext.CurrentMessage = context.Message;
-        
+
         var command = context.Message;
         var item = await _itemRepository.GetByIdAsync(command.ItemId);
         if (item is not null)
         {
             throw new ItemAlreadyExistException(item.Id);
         }
-        
+
         item = new Item(command.ItemId, command.Name, command.Description, command.Price);
         await _itemRepository.CreateAsync(item);
         await _busPublisher.PublishAsync(new ItemCreated(

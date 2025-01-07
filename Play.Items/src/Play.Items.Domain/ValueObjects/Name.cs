@@ -15,7 +15,7 @@ public class Name
 
         Value = value;
     }
-    
+
     public static implicit operator string(Name name) => name.Value;
     public static implicit operator Name(string value) => new Name(value);
 }

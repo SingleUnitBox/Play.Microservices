@@ -29,33 +29,22 @@ public static class Extensions
         HttpMethod method)
         where TCommand : class
     {
-        app.MapMethods(route, new[] { method.Method }, 
-            async ([FromBody] TCommand command, [FromServices] IBusPublisher busPublisher) =>
-            {
-                await busPublisher.PublishAsync(command, Guid.NewGuid());
-                return Results.Accepted();
-            });
-        
-        return app;
-    }
-    
-    public static WebApplication MapCommandEndpointWithItemId<TCommand>(this WebApplication app,
-        string route,
-        HttpMethod method)
-        where TCommand : class
-    {
-        app.MapMethods(route + "/{itemId}", new[] { method.Method }, 
+        app.MapMethods(route + "/{id?}", new[] { method.Method }, 
             async (
                 [FromBody] TCommand command,
                 [FromServices] IBusPublisher busPublisher,
-                [FromRoute] Guid itemId) =>
+                [FromRoute] Guid? id) =>
             {
-                var itemIdProperty = typeof(TCommand).GetProperty("ItemId");
-                if (itemIdProperty is not null && itemIdProperty.PropertyType == typeof(Guid))
+                if (id.HasValue)
                 {
-                    itemIdProperty.SetValue(command, itemId);
+                    var idProperty = typeof(TCommand).GetProperties()
+                        .FirstOrDefault(p => p.PropertyType == typeof(Guid));
+                    if (idProperty is not null)
+                    {
+                        idProperty.SetValue(command, id);
+                    }
                 }
-
+                
                 await busPublisher.PublishAsync(command, Guid.NewGuid());
                 return Results.Accepted();
             });

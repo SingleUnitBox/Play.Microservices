@@ -12,8 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Play.Items.Contracts\Play.Items.Contracts.csproj" />
-      <ProjectReference Include="..\Play.Items.Infra\Play.Items.Infra.csproj" />
+        <ProjectReference Include="..\Play.Items.Contracts\Play.Items.Contracts.csproj"/>
+        <ProjectReference Include="..\Play.Items.Infra\Play.Items.Infra.csproj"/>
     </ItemGroup>
 
 </Project>

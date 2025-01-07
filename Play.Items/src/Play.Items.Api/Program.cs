@@ -1,3 +1,4 @@
+using MassTransit;
 using MongoDB.Driver;
 using Play.Common.Cache;
 using Play.Common.Commands;
@@ -10,6 +11,7 @@ using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
 using Play.Items.Domain.Repositories;
+using Play.Items.Infra.Consumers.ContractsCommands;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
@@ -28,37 +30,17 @@ public class Program
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
         builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-        // builder.Services.AddMassTransit(configure =>
-        // {
-        //     configure.SetKebabCaseEndpointNameFormatter();
-        //     configure.UsingRabbitMq((ctx, cfg) =>
-        //     {
-        //         var rabbitMqSettings = builder.Configuration
-        //             .GetSection(nameof(RabbitMqSettings))
-        //             .Get<RabbitMqSettings>();
-        //         cfg.Host(rabbitMqSettings.Host);
-        //     
-        //         // cfg.Message<ItemCreated>(e =>
-        //         // {
-        //         //     e.SetEntityName("Items.ItemCreated");
-        //         // });
-        //         cfg.ConfigureEndpoints(ctx);
-        //     });
-        // });
-
         builder.Services.AddContext();
         builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
         builder.Services.AddLoggingCommandHandlerDecorator();
+
         builder.Services.AddQueries();
         builder.Services.AddLoggingQueryHandlerDecorator();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddControllers(options =>
-        {
-            options.SuppressAsyncSuffixInActionNames = false;
-        });
-        
+        builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+
         builder.Services.AddMongoDb(builder.Configuration);
         builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
             db => new ItemRepository(db, "items"));
@@ -69,14 +51,14 @@ public class Program
 
             return itemRepository;
         });
-        
+
         //caching
         //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
 
         builder.Host.UseSerilogWithSeq();
-        builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
+        builder.Services.AddSingleton<IMessageToLogTemplateMapper, LocalMessageToLogTemplateMapper>();
         var app = builder.Build();
 
         app.UseExceptionHandling();
@@ -95,7 +77,7 @@ public class Program
             endpoints.MapGet("/file", async () =>
             {
                 string filePath = "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.Catalog\\static\\file.txt";
-                
+
                 var fileContents = await File.ReadAllTextAsync(filePath);
                 return Results.Text(fileContents, "text/plain");
             });
@@ -105,3 +87,22 @@ public class Program
         app.Run();
     }
 }
+
+
+// builder.Services.AddMassTransit(configure =>
+// {
+//     configure.SetKebabCaseEndpointNameFormatter();
+//     configure.UsingRabbitMq((ctx, cfg) =>
+//     {
+//         var rabbitMqSettings = builder.Configuration
+//             .GetSection(nameof(RabbitMqSettings))
+//             .Get<RabbitMqSettings>();
+//         cfg.Host(rabbitMqSettings.Host);
+//     
+//         // cfg.Message<ItemCreated>(e =>
+//         // {
+//         //     e.SetEntityName("Items.ItemCreated");
+//         // });
+//         cfg.ConfigureEndpoints(ctx);
+//     });
+// });

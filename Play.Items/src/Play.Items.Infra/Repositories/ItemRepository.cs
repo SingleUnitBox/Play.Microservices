@@ -15,7 +15,7 @@ public class ItemRepository : IItemRepository
     {
         _itemsCollection = database.GetCollection<Item>(collectionName);
     }
-    
+
     public async Task CreateAsync(Item item)
         => await _itemsCollection.InsertOneAsync(item);
 
@@ -24,7 +24,7 @@ public class ItemRepository : IItemRepository
         var filter = _filterBuilder.Eq(x => x.Id, item.Id);
         await _itemsCollection.ReplaceOneAsync(filter, item);
     }
-    
+
     public async Task DeleteAsync(AggregateRootId id)
     {
         var filter = _filterBuilder.Eq(item => item.Id, id);
@@ -36,10 +36,10 @@ public class ItemRepository : IItemRepository
         var filter = _filterBuilder.Eq(i => i.Id, id);
         return await _itemsCollection.Find(filter).SingleOrDefaultAsync();
     }
-    
+
     public async Task<Item> GetAsync(Expression<Func<Item, bool>> predicate)
         => await _itemsCollection.Find(predicate).SingleOrDefaultAsync();
-    
+
 
     public async Task<IReadOnlyList<Item>> GetAllAsync(Expression<Func<Item, bool>> predicate)
         => await _itemsCollection.Find(predicate).ToListAsync();
@@ -49,5 +49,4 @@ public class ItemRepository : IItemRepository
         var items = await _itemsCollection.Find(_filterBuilder.Empty).ToListAsync();
         return items;
     }
-    
 }

@@ -2,10 +2,7 @@
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
 using Play.Common.Exceptions.Mappers;
-using Play.Items.Application.Exceptions;
 using Play.Items.Contracts.Commands;
-using Play.Items.Contracts.Events;
-using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Infra.Consumers.ContractsCommands;
@@ -15,45 +12,31 @@ public class CreateItemCommandConsumer : IConsumer<CreateItem>
     private readonly IItemRepository _itemRepository;
     private readonly IBusPublisher _busPublisher;
     private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
+    private readonly ICommandDispatcher _commandDispatcher;
 
     public CreateItemCommandConsumer(IItemRepository itemRepository,
         IBusPublisher busPublisher,
-        IExceptionToMessageMapper exceptionToMessageMapper)
+        IExceptionToMessageMapper exceptionToMessageMapper,
+        ICommandDispatcher commandDispatcher)
     {
         _itemRepository = itemRepository;
         _busPublisher = busPublisher;
         _exceptionToMessageMapper = exceptionToMessageMapper;
+        _commandDispatcher = commandDispatcher;
     }
-    
+
     public async Task Consume(ConsumeContext<CreateItem> context)
     {
         var command = context.Message;
-        try
-        {
-            //throw new ItemAlreadyExistException(command.Id);
-            var item = await _itemRepository.GetByIdAsync(context.Message.Id);
-            if (item != null)
-            {
-                throw new ItemAlreadyExistException(item.Id);
-            }
+        var localCommand = new Application.Commands.CreateItem
+        (
+            command.Id,
+            command.Name,
+            command.Description,
+            command.Price
+        );
 
-            // Continue processing the message
-            item = new Item(command.Id, command.Name, command.Description, command.Price);
-            await _itemRepository.CreateAsync(item);
-            await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price),
-                context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
-        }
-        catch (ItemAlreadyExistException ex)
-        {
-            var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
-            await _busPublisher.PublishAsync(rejectedEvent, 
-                context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
-        }
-        catch (Exception ex)
-        {
-            // General exception handling
-            // You could log, publish a fault message, etc.
-        }
+        await _commandDispatcher.DispatchAsync(localCommand);
     }
 }
 
@@ -102,4 +85,3 @@ public class CreateItemCommandConsumer : IConsumer<CreateItem>
 //         }
 //     }
 // }
-

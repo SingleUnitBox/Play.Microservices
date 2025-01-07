@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Queries;
@@ -12,14 +13,18 @@ public static class Extensions
     public static IServiceCollection AddLoggingCommandHandlerDecorator(this IServiceCollection services)
     {
         services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
-        
         return services;
     }
-    
+
+    public static IServiceCollection AddLoggingCommandConsumerDecorator(this IServiceCollection services)
+    {
+        services.TryDecorate(typeof(IConsumer<>), typeof(LoggingCommandConsumerDecorator<>));
+        return services;
+    }
+
     public static IServiceCollection AddLoggingQueryHandlerDecorator(this IServiceCollection services)
     {
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(LoggingQueryHandlerDecorator<,>));
-        
         return services;
     }
 

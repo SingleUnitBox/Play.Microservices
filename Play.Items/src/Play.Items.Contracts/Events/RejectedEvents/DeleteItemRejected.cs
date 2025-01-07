@@ -10,5 +10,4 @@ public class DeleteItemRejected
 
     public DeleteItemRejected(Guid itemId, string reason, string code)
         => (ItemId, Reason, Code) = (itemId, reason, code);
-    
 }

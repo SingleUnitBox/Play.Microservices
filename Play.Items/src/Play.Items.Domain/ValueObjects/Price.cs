@@ -12,10 +12,10 @@ public class Price
         {
             throw new InvalidPriceException(value);
         }
-        
+
         Value = value;
     }
-    
+
     public static implicit operator decimal(Price price) => price.Value;
     public static implicit operator Price(decimal price) => new Price(price);
 }

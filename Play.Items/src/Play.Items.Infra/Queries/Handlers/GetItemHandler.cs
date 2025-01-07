@@ -15,13 +15,13 @@ public class GetItemHandler : IQueryHandler<GetItem, ItemDto>
     {
         _itemsCollection = database.GetCollection<Item>("items");
     }
-    
+
     public async Task<ItemDto> QueryAsync(GetItem query)
     {
         //var filter = _filterBuilder.Eq(i => i.Id.Value, query.ItemId);
         var filter = _filterBuilder.Eq("_id", query.ItemId);
         var item = await _itemsCollection.Find(filter).SingleOrDefaultAsync();
-        
+
         return item is not null
             ? item.AsDto()
             : null;

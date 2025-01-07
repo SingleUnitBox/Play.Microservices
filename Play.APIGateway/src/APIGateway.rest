@@ -1,6 +1,6 @@
 @url = http://localhost:5008
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MmU5ODQ4Yi1iYjBjLTRkODUtOGQ2Ny1iMzI3NjhkNmRlOGUiLCJ1bmlxdWVfbmFtZSI6IjUyZTk4NDhiLWJiMGMtNGQ4NS04ZDY3LWIzMjc2OGQ2ZGU4ZSIsImp0aSI6IjhhYjFkMGNjLTY4OWUtNGE5ZC05ZmY0LTZhOTcyNWU0MmEzNSIsImlhdCI6IjE3MzQyOTk1MjU1OTMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwidXQwZCI6WyJpdGVtcyIsImludmVudG9yeSJdLCJuYmYiOjE3MzQyOTk1MjUsImV4cCI6MTc0Mjg1MzEyNSwiaXNzIjoiUGxheS5Vc2VyLlNlcnZpY2UifQ.paE_LLbvOeXnKCEn1h6x-d65o_7UU2ocT-a_YgLPAxM
-@itemId = 9afaf469-1b88-4619-bffc-0e6b69f00c6b
+@itemId = 07a33066-0eba-43f7-b283-06fd91f81d00
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 
@@ -42,6 +42,9 @@ GET {{url}}/play-items/items
 ### Get
 GET {{url}}/play-items/items/{{itemId}}
 
+### Delete All Items
+DELETE {{url}}/play-items/items/delete
+
 ### Create
 POST {{url}}/play-items/items
 Content-Type: application/json
@@ -57,9 +60,9 @@ PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
 {
-  "name": "Antidoteeeeeeee",
+  "name": "Anti",
   "description": "Cures poison",
-  "price": 12
+  "price": 100
 }
 
 ### Delete

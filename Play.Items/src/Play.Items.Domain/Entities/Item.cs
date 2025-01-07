@@ -19,7 +19,7 @@ namespace Play.Items.Domain.Entities
             Price = price;
             CreatedDate = DateTimeOffset.UtcNow;
         }
-        
+
         public Item(Guid id, string name, string description, decimal price)
             : this(name, description, price)
         {

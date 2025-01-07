@@ -10,7 +10,8 @@ public class ExceptionToMessageMapper : IExceptionToMessageMapper
     public object Map(Exception exception, object message)
         => exception switch
         {
-            ItemAlreadyExistException ex => new CreateItemRejected(ex.ItemId, ex.Message, ex.Message, ex.GetType().Name),
+            ItemAlreadyExistException ex =>
+                new CreateItemRejected(ex.ItemId, ex.Message, ex.Message, ex.GetType().Name),
             ItemNotFoundException ex => message switch
             {
                 UpdateItem cmd => new UpdateItemRejected(cmd.ItemId, ex.Message, ex.GetType().Name),
@@ -19,5 +20,4 @@ public class ExceptionToMessageMapper : IExceptionToMessageMapper
             },
             _ => null
         };
-    
 }

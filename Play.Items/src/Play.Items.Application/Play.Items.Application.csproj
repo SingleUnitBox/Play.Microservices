@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Play.Items.Domain\Play.Items.Domain.csproj" />
+        <ProjectReference Include="..\Play.Items.Domain\Play.Items.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Play.Items.Contracts" Version="1.0.6" />
+        <PackageReference Include="Play.Items.Contracts" Version="1.0.7"/>
     </ItemGroup>
 
 </Project>
