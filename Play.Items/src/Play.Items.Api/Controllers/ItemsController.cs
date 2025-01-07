@@ -75,7 +75,14 @@ namespace Play.Items.Api.Controllers
             await _commandDispatcher.DispatchAsync(new DeleteItem(itemId));
             return NoContent();
         }
-        
+
+        [HttpDelete]
+        public async Task<ActionResult> DeleteAllAsync()
+        {
+            await _commandDispatcher.DispatchAsync(new DeleteItems());
+            return NoContent();
+        }
+
         // [HttpDelete("{itemId}")]
         // public async Task<IActionResult> DeleteAsync(Guid itemId)
         // {

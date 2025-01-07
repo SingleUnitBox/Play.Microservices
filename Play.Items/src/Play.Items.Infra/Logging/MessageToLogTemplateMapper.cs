@@ -38,6 +38,11 @@ public sealed class MessageToLogTemplateMapper : IMessageToLogTemplateMapper
                     [typeof(ItemNotFoundException)] = "Item with id '{ItemId}' was not found.",
                 }
             },
+            [typeof(DeleteItems)] = new()
+            {
+                Before = "Starting to delete all items.",
+                After = "Deleted all items.",
+            },
             [typeof(GetItem)] = new HandlerLogTemplate()
             {
                 Before = "Starting to query item with id '{ItemId}'.",
