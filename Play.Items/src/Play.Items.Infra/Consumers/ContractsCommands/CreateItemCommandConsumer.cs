@@ -28,13 +28,10 @@ public class CreateItemCommandConsumer : IConsumer<CreateItem>
     public async Task Consume(ConsumeContext<CreateItem> context)
     {
         var command = context.Message;
-        var localCommand = new Application.Commands.CreateItem
-        (
-            command.Id,
-            command.Name,
-            command.Description,
-            command.Price
-        );
+        var localCommand = new Application.Commands.CreateItem(command.Name, command.Description, command.Price)
+        {
+            ItemId = command.Id,
+        };
 
         await _commandDispatcher.DispatchAsync(localCommand);
     }

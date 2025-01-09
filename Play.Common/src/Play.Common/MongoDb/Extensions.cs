@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Play.Common.MongoDb.Serializers;
 using Play.Common.Settings;
 using Play.Common.SharedKernel.Types.Serializers;
 
@@ -13,8 +14,7 @@ public static class Extensions
 {
     public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
-        BsonSerializer.RegisterSerializer(new AggregateRootIdSerializer());
+        MongoDbSerializerConfig.Configure();
         
         var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
         if (mongoDbSettings.Enabled)
