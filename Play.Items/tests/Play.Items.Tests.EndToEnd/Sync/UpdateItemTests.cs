@@ -9,7 +9,7 @@ using Shouldly;
 
 namespace Play.Items.Tests.EndToEnd.Sync;
 
-[Collection("Database Tests")]
+[Collection("SyncTests")]
 public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     IClassFixture<MongoDbFixture<Item>>
 {
