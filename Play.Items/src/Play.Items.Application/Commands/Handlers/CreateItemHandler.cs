@@ -1,6 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
 using Play.Items.Application.Exceptions;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
 
@@ -32,8 +33,9 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
             // Continue processing the message
             item = new Item(command.ItemId, command.Name, command.Description, command.Price);
             await _itemRepository.CreateAsync(item);
-            // await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price),
-            //     context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
+            await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price),
+                //context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
+                Guid.Empty);
         }
         catch (ItemAlreadyExistException ex)
         {

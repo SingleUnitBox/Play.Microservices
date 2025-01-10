@@ -20,4 +20,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Play.Items.Tests.Shared\Play.Items.Tests.Shared.csproj" />
+    </ItemGroup>
+
 </Project>
