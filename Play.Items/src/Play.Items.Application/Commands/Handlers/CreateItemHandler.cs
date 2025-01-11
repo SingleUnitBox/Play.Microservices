@@ -7,7 +7,7 @@ using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class CreateItemHandler : ICommandHandler<CreateItem>
+public class CreateItemHandler : ICommandHandler<Contracts.Commands.CreateItem>
 {
     private readonly IItemRepository _itemRepository;
     private readonly IBusPublisher _busPublisher;
@@ -20,7 +20,7 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
         _busPublisher = busPublisher;
     }
 
-    public async Task HandleAsync(CreateItem command)
+    public async Task HandleAsync(Contracts.Commands.CreateItem command)
     {
         try
         {

@@ -8,6 +8,8 @@ using Play.Items.Application.Commands;
 using Play.Items.Contracts.Events;
 using Play.Items.Infra.Consumers.ContractsCommands;
 using Play.Items.Tests.Shared.Helpers;
+using ZstdSharp.Unsafe;
+using CreateItem = Play.Items.Contracts.Commands.CreateItem;
 
 namespace Play.Items.Tests.Shared.Fixtures;
 
@@ -23,16 +25,12 @@ public class RabbitMqFixture
         _serviceProvider = new ServiceCollection()
             .AddMassTransit(x =>
             {
-                //x.AddConsumer<CreateItemCommandConsumer>();
+                x.AddConsumer<ItemCreatedConsumer>();
                 x.UsingRabbitMq((ctx, config) =>
                 {
                     config.Host(rabbitMqSettings.Host);
                     config.ConfigureEndpoints(ctx,
                         new KebabCaseEndpointNameFormatter(false));
-                    config.ReceiveEndpoint("item-created", ep =>
-                    {
-                        
-                    });
                 });
             })
             .BuildServiceProvider();
@@ -45,12 +43,12 @@ public class RabbitMqFixture
         await _bus.Publish(message);
     }
 
-    public TaskCompletionSource<TEntity> SubscribeAndGet<TMessage, TEntity>(
-        Func<Guid, TaskCompletionSource<TEntity>> onMessageReceived, Guid id)
-    {
-        var tcs = new TaskCompletionSource<TEntity>();
-        _bus.ConnectConsumer()
-    }
+    // public TaskCompletionSource<TEntity> SubscribeAndGet<TMessage, TEntity>(
+    //     Func<Guid, TaskCompletionSource<TEntity>, Task> onMessageReceived, Guid id)
+    // {
+    //     var tcs = new TaskCompletionSource<TEntity>();
+    //
+    // }
 
     public Task WaitForMessageAsync(Guid itemId)
     {

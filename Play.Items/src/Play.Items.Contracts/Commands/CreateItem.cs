@@ -1,6 +1,8 @@
-﻿namespace Play.Items.Contracts.Commands;
+﻿using Play.Common.Abs.Commands;
 
-public record CreateItem(string Name, string Description, decimal Price)
+namespace Play.Items.Contracts.Commands;
+
+public record CreateItem(string Name, string Description, decimal Price) : ICommand
 {
-    public Guid Id { get; } = Guid.NewGuid();
+    public Guid ItemId { get; init; } = Guid.NewGuid();
 }

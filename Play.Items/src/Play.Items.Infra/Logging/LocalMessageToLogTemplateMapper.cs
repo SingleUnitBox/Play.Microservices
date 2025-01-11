@@ -11,10 +11,10 @@ public sealed class LocalMessageToLogTemplateMapper : IMessageToLogTemplateMappe
     private static readonly IReadOnlyDictionary<Type, HandlerLogTemplate> Templates =
         new Dictionary<Type, HandlerLogTemplate>
         {
-            [typeof(CreateItem)] = new HandlerLogTemplate()
+            [typeof(Contracts.Commands.CreateItem)] = new HandlerLogTemplate()
             {
-                Before = $"[{typeof(CreateItem)}] " + "Starting to create item with id '{ItemId}'." ,
-                After = $"[{typeof(CreateItem)}] " +"Created item with id '{ItemId}'.",
+                Before = $"[{typeof(Contracts.Commands.CreateItem)}] " + "Starting to create item with id '{ItemId}'." ,
+                After = $"[{typeof(Contracts.Commands.CreateItem)}] " +"Created item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemAlreadyExistException)] = "Item with id '{ItemId}' already exists."

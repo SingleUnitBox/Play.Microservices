@@ -49,7 +49,7 @@ public class MongoDbFixture<TEntity> : IDisposable where TEntity : AggregateRoot
     
     public void Dispose()
     {
-        _database.DropCollection("items");
+        //_database.DropCollection("items");
         _client.Dispose();
     }
 }

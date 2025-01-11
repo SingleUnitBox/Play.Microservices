@@ -22,7 +22,7 @@ public class Program
 
         // Play.Items
         // this is async, goes to RabbitMq
-        // app.MapCommandEndpointLocal<CreateItem>("play-items/items", HttpMethod.Post);
+        app.MapCommandEndpointLocal<CreateItem>("play-items/items", HttpMethod.Post);
         // app.MapCommandEndpointLocal<UpdateItem>("play-items/items", HttpMethod.Put);
         // app.MapDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
         // app.MapDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
