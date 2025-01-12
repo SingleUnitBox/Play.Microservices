@@ -8,29 +8,10 @@ using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Infra.Consumers.ContractsCommands;
 
-public class DeleteItemCommandConsumer(
-    IItemRepository itemRepository,
-    IBusPublisher busPublisher,
-    ICommandDispatcher commandDispatcher) : IConsumer<DeleteItem>
+public class DeleteItemCommandConsumer(ICommandHandler<DeleteItem> handler) : IConsumer<DeleteItem>
 {
     public async Task Consume(ConsumeContext<DeleteItem> context)
     {
-        var command = context.Message;
-        var localCommand = new Application.Commands.DeleteItem(command.ItemId);
-        
-        await commandDispatcher.DispatchAsync(localCommand);
+        await handler.HandleAsync(context.Message);
     }
-    
-    // public async Task Consume(ConsumeContext<DeleteItem> context)
-    // {
-    //     var command = context.Message;
-    //     var item = await itemRepository.GetByIdAsync(command.ItemId);
-    //     if (item is null)
-    //     {
-    //         throw new ItemNotFoundException(command.ItemId);
-    //     }
-    //
-    //     await itemRepository.DeleteAsync(item.Id);
-    //     await busPublisher.PublishAsync(new ItemDeleted(item.Id));
-    // }
 }

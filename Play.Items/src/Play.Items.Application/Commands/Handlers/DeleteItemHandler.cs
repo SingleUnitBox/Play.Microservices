@@ -8,9 +8,9 @@ namespace Play.Items.Application.Commands.Handlers;
 
 public class DeleteItemHandler(
     IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<DeleteItem>
+    IBusPublisher busPublisher) : ICommandHandler<Contracts.Commands.DeleteItem>
 {
-    public async Task HandleAsync(DeleteItem command)
+    public async Task HandleAsync(Contracts.Commands.DeleteItem command)
     {
         var item = await itemRepository.GetByIdAsync(command.ItemId);
         if (item is null)

@@ -1,3 +1,5 @@
-﻿namespace Play.Items.Contracts.Commands;
+﻿using Play.Common.Abs.Commands;
 
-public record UpdateItem(Guid ItemId, string Name, string Description, decimal Price);
+namespace Play.Items.Contracts.Commands;
+
+public record UpdateItem(Guid ItemId, string Name, string Description, decimal Price) : ICommand;

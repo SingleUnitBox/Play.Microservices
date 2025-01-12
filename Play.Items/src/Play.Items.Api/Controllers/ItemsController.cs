@@ -1,13 +1,10 @@
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Play.Common.Abs.Commands;
-using Play.Common.Abs.Messaging;
 using Play.Common.Abs.Queries;
 using Play.Common.Controllers;
-using Play.Items.Application.Commands;
 using Play.Items.Application.DTO;
 using Play.Items.Application.Queries;
-using Play.Items.Domain.Repositories;
+using Play.Items.Contracts.Commands;
 
 namespace Play.Items.Api.Controllers
 {
@@ -33,7 +30,7 @@ namespace Play.Items.Api.Controllers
         [HttpGet("{itemId}")]
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid itemId)
             => OkOrNotFound(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
-
+        
         [HttpPost]
         public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
         {

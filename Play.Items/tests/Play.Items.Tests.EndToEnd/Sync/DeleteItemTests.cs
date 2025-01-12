@@ -1,7 +1,4 @@
 ﻿using System.Net;
-using System.Text;
-using Newtonsoft.Json;
-using Play.Items.Application.Commands;
 using Play.Items.Domain.Entities;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
@@ -41,7 +38,6 @@ public class DeleteItemTests : IClassFixture<PlayItemsApplicationFactory>,
     private readonly HttpClient _httpClient;
     private readonly MongoDbFixture<Item> _mongoDbFixture;
     private readonly Guid _itemId;
-    private readonly DeleteItem _command;
     
 
     public DeleteItemTests(PlayItemsApplicationFactory factory,
@@ -51,12 +47,8 @@ public class DeleteItemTests : IClassFixture<PlayItemsApplicationFactory>,
         _httpClient = factory.CreateClient();
         _mongoDbFixture = mongoDbFixture;
         _itemId = Guid.NewGuid();
-        _command = new DeleteItem(_itemId);
     }
 
     private async Task InsertItemAsync()
         => _mongoDbFixture.InsertAsync(new Item(_itemId, "Potion", "Heals a bit of HP", 10));
-    
-    private StringContent GetContent(object value)
-        => new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json");
 }

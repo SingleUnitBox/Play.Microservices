@@ -1,12 +1,23 @@
 ﻿using MassTransit;
 using Play.Items.Contracts.Events;
+using Play.Items.Domain.Entities;
 
 namespace Play.Items.Tests.Shared.Fixtures;
 
 public class ItemCreatedConsumer : IConsumer<ItemCreated>
 {
-    public Task Consume(ConsumeContext<ItemCreated> context)
+    private readonly Func<Guid, TaskCompletionSource<Item>, Task> _onMessageReceived;
+    private readonly TaskCompletionSource<Item> _tcs;
+    
+    public ItemCreatedConsumer(Func<Guid, TaskCompletionSource<Item>, Task> onMessageReceived,
+        TaskCompletionSource<Item> tcs)
     {
-        return Task.CompletedTask;
+        _onMessageReceived = onMessageReceived;
+        _tcs = tcs;
+    }
+    
+    public async Task Consume(ConsumeContext<ItemCreated> context)
+    {
+        await _onMessageReceived(context.Message.ItemId, _tcs);
     }
 }

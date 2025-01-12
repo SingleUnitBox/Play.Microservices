@@ -1,3 +1,5 @@
-﻿namespace Play.Items.Contracts.Commands;
+﻿using Play.Common.Abs.Commands;
 
-public record DeleteItem(Guid ItemId);
+namespace Play.Items.Contracts.Commands;
+
+public record DeleteItem(Guid ItemId) : ICommand;

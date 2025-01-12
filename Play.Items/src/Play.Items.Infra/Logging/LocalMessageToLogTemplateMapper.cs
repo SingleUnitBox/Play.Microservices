@@ -20,10 +20,10 @@ public sealed class LocalMessageToLogTemplateMapper : IMessageToLogTemplateMappe
                     [typeof(ItemAlreadyExistException)] = "Item with id '{ItemId}' already exists."
                 }
             },
-            [typeof(UpdateItem)] = new HandlerLogTemplate()
+            [typeof(Contracts.Commands.UpdateItem)] = new HandlerLogTemplate()
             {
-                Before = $"[{typeof(UpdateItem)}] " + "Starting to update item with id '{ItemId}'.",
-                After = $"[{typeof(UpdateItem)}] " + "Updated item with id '{ItemId}'.",
+                Before = $"[{typeof(Contracts.Commands.UpdateItem)}] " + "Starting to update item with id '{ItemId}'.",
+                After = $"[{typeof(Contracts.Commands.UpdateItem)}] " + "Updated item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemNotFoundException)] = "Item with id '{ItemId}' was not found.",
@@ -31,17 +31,17 @@ public sealed class LocalMessageToLogTemplateMapper : IMessageToLogTemplateMappe
             },
             [typeof(DeleteItem)] = new()
             {
-                Before = $"[{typeof(DeleteItem)}] " + "Starting to delete item with id '{ItemId}'.",
-                After = $"[{typeof(DeleteItem)}] " + "Deleted item with id '{ItemId}'.",
+                Before = $"[{typeof(Contracts.Commands.DeleteItem)}] " + "Starting to delete item with id '{ItemId}'.",
+                After = $"[{typeof(Contracts.Commands.DeleteItem)}] " + "Deleted item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemNotFoundException)] = "Item with id '{ItemId}' was not found.",
                 }
             },
-            [typeof(DeleteItems)] = new()
+            [typeof(Contracts.Commands.DeleteItems)] = new()
             {
-                Before = $"[{typeof(DeleteItems)}] " + "Starting to delete all items.",
-                After = $"[{typeof(DeleteItems)}] " + "Deleted all items.",
+                Before = $"[{typeof(Contracts.Commands.DeleteItems)}] " + "Starting to delete all items.",
+                After = $"[{typeof(Contracts.Commands.DeleteItems)}] " + "Deleted all items.",
             },
             [typeof(GetItem)] = new HandlerLogTemplate()
             {

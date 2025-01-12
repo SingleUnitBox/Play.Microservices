@@ -8,9 +8,9 @@ namespace Play.Items.Application.Commands.Handlers;
 
 public class UpdateItemHandler(
     IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<UpdateItem>
+    IBusPublisher busPublisher) : ICommandHandler<Contracts.Commands.UpdateItem>
 {
-    public async Task HandleAsync(UpdateItem command)
+    public async Task HandleAsync(Contracts.Commands.UpdateItem command)
     {
         var item = await itemRepository.GetByIdAsync(command.ItemId);
         if (item is null)

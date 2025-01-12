@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using Newtonsoft.Json;
-using Play.Items.Application.Commands;
+using Play.Items.Contracts.Commands;
 using Play.Items.Domain.Entities;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;

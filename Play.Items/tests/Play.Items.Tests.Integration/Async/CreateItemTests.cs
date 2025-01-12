@@ -1,4 +1,5 @@
-﻿using Play.Items.Domain.Entities;
+﻿using Play.Items.Contracts.Events;
+using Play.Items.Domain.Entities;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
 using Shouldly;
@@ -15,17 +16,15 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     [Fact]
     public async Task create_item_command_should_add_document_with_given_id_to_database()
     {
-        //var command = new CreateItem("Potion", "Heals a bit of HP", 10);
-        var contractCommand = new CreateItem("Potion", "Heals a bit of HP", 10);
-        
-        await Act(contractCommand);
-        
-        //wait for completion
-        await _rabbitMqFixture.WaitForMessageAsync(contractCommand.ItemId);
+        var command = new CreateItem("Potion", "Heals a bit of HP", 10);
 
-        var document = await _mongoDbFixture.GetAsync(contractCommand.ItemId);
+        var tcs = _rabbitMqFixture.SubscribeAndGet<ItemCreated, Item>(_mongoDbFixture.GetAsync, command.ItemId);
+        
+        await Act(command);
+
+        var document = await tcs.Task;
         document.ShouldNotBeNull();
-        document.Id.Value.ShouldBe(contractCommand.ItemId);
+        document.Id.Value.ShouldBe(command.ItemId);
     }
 
     private readonly MongoDbFixture<Item> _mongoDbFixture;
