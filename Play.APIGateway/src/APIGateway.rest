@@ -1,6 +1,6 @@
 @url = http://localhost:5008
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MmU5ODQ4Yi1iYjBjLTRkODUtOGQ2Ny1iMzI3NjhkNmRlOGUiLCJ1bmlxdWVfbmFtZSI6IjUyZTk4NDhiLWJiMGMtNGQ4NS04ZDY3LWIzMjc2OGQ2ZGU4ZSIsImp0aSI6IjhhYjFkMGNjLTY4OWUtNGE5ZC05ZmY0LTZhOTcyNWU0MmEzNSIsImlhdCI6IjE3MzQyOTk1MjU1OTMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwidXQwZCI6WyJpdGVtcyIsImludmVudG9yeSJdLCJuYmYiOjE3MzQyOTk1MjUsImV4cCI6MTc0Mjg1MzEyNSwiaXNzIjoiUGxheS5Vc2VyLlNlcnZpY2UifQ.paE_LLbvOeXnKCEn1h6x-d65o_7UU2ocT-a_YgLPAxM
-@itemId = fade8bb1-27d0-476d-be7b-379e312a6360
+@itemId = 462d3e8a-656e-457c-9dd9-4d726660b0ab
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 
@@ -10,8 +10,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user3",
-  "email": "user3@play.com",
+  "username": "user9",
+  "email": "user9@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -55,7 +55,7 @@ Content-Type: application/json
 {
   "name": "sword",
   "description": "deals damage",
-  "price": 9
+  "price": 10
 }
 
 ### Update
@@ -63,9 +63,9 @@ PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
 {
-  "name": "Anti",
+  "name": "Antidote",
   "description": "Cures poison",
-  "price": 100
+  "price": 30
 }
 
 ### Delete

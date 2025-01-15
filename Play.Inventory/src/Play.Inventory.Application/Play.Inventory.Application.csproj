@@ -7,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Play.Inventory.Domain\Play.Inventory.Domain.csproj" />
+        <PackageReference Include="Play.Items.Contracts" Version="1.0.13" />
+        <PackageReference Include="Play.User.Contracts" Version="1.0.5" />
     </ItemGroup>
-
+    
     <ItemGroup>
-      <Folder Include="Events\External\Items\" />
+      <ProjectReference Include="..\Play.Inventory.Domain\Play.Inventory.Domain.csproj" />
     </ItemGroup>
 
 </Project>

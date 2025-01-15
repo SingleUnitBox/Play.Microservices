@@ -58,7 +58,8 @@ public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     }
     
     private async Task InsertItemAsync()
-        => await _mongoDbFixture.InsertAsync(new Item(_itemId, "Potion", "Red mixture", 20));
+        => _mongoDbFixture.InsertAsync(Item.Create(_itemId, "Potion",
+            "Heals a bit of HP", 10, DateTimeOffset.UtcNow));
     
     private StringContent GetContent(object value)
         => new StringContent(JsonConvert.SerializeObject(value), Encoding.UTF8, "application/json");

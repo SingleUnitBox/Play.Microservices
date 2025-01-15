@@ -53,9 +53,9 @@ public class Program
         });
 
         //caching
-        //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
+        builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         //builder.Services.AddMemoryCache();
-        //builder.Services.AddCaching();
+        builder.Services.AddCaching();
 
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, LocalMessageToLogTemplateMapper>();

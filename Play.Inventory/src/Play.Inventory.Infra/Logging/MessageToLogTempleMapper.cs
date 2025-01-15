@@ -1,8 +1,10 @@
 ﻿using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
+using Play.Inventory.Application.Events;
 using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Application.Queries;
 using Play.Items.Contracts.Events;
+using Play.User.Contracts.Events;
 
 namespace Play.Inventory.Infra.Logging;
 
@@ -12,31 +14,41 @@ public class MessageToLogTempleMapper : IMessageToLogTemplateMapper
     {
         [typeof(ItemCreated)] = new()
         {
-            Before = "Starting to create catalog item with id '{ItemId}'.",
-            After = "Created catalog item with id '{ItemId}'.",
+            Before = $"[{typeof(ItemCreated)}] " + "Starting to create catalog item '{Name}' with id '{ItemId}'.",
+            After = $"[{typeof(ItemCreated)}] " + "Created catalog item '{Name}' with id '{ItemId}'.",
         },
         [typeof(ItemUpdated)] = new()
         {
-            Before = "Starting to update catalog item with id '{ItemId}'.",
-            After = "Updated catalog item with id '{ItemId}'.",
+            Before = $"[{typeof(ItemUpdated)}] " + "Starting to update catalog '{Name}' item with id '{ItemId}'.",
+            After = $"[{typeof(ItemUpdated)}] " + "Updated catalog item '{Name}' with id '{ItemId}'.",
             OnError = new Dictionary<Type, string>()
             {
-                [typeof(CatalogItemNotFoundException)] = "Catalog item with id '{ItemId}' was not found.",
+                [typeof(CatalogItemNotFoundException)] = "Catalog item '{Name}' with id '{ItemId}' was not found.",
             }
         },
         [typeof(ItemDeleted)] = new()
         {
-            Before = "Starting to delete catalog item with id '{ItemId}'.",
-            After = "Deleted catalog item with id '{ItemId}'.",
+            Before = $"[{typeof(ItemDeleted)}] " + "Starting to delete catalog item '{Name}' with id '{ItemId}'.",
+            After = $"[{typeof(ItemDeleted)}] " + "Deleted catalog item '{Name}' with id '{ItemId}'.",
             OnError = new Dictionary<Type, string>()
             {
-                [typeof(CatalogItemNotFoundException)] = "Catalog item with id '{ItemId}' was not found.",
+                [typeof(CatalogItemNotFoundException)] = "Catalog item '{Name}' with id '{ItemId}' was not found.",
             }
         },
         [typeof(GetCatalogItems)] = new()
         {
-            Before = $"Starting query '{typeof(GetCatalogItems)}'.",
-            After = $"Completed query '{typeof(GetCatalogItems)}'.",
+            Before = $"[{typeof(GetCatalogItems)}] starting query.",
+            After = $"[{typeof(GetCatalogItems)}] completed query.",
+        },
+        [typeof(UserCreated)] = new()
+        {
+            Before = $"[{typeof(UserCreated)}] " + "Starting to create player '{Username}' with id '{UserId} '.",
+            After = $"[{typeof(UserCreated)}] " + "Created player '{Username}' with id '{UserId}'.",
+        },
+        [typeof(PlayerCreated)] = new()
+        {
+            Before = $"[{typeof(PlayerCreated)}] " + "Starting to create money bag for player with id '{PlayerId}'.",
+            After = $"[{typeof(PlayerCreated)}] " + "Created money bag for player with id '{PlayerId}'.",
         }
     };
     

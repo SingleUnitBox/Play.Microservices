@@ -10,8 +10,10 @@ using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra.Postgres;
 using Play.Inventory.Infra.Postgres.Repositories;
 using Play.Common.AppInitializer;
+using Play.Common.Events;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
+using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Settings;
 using Play.Inventory.Infra.Queries.Handlers;
@@ -34,37 +36,14 @@ builder.Services.AddPolicies();
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();
 builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddMessaging();
 builder.Services.AddQueries();
 builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTempleMapper>();
 builder.Services.AddLoggingQueryHandlerDecorator();
 builder.Services.AddCommands();
 builder.Services.AddLoggingCommandHandlerDecorator();
-// builder.Services.AddMassTransit(x =>
-// {
-//     //x.AddConsumer<CatalogItemCreatedConsumer>();
-//     x.AddConsumers(AppDomain.CurrentDomain.GetAssemblies());
-//     x.SetKebabCaseEndpointNameFormatter();
-//     //x.SetEndpointNameFormatter(new SnakeCaseEndpointNameFormatter("inventory", false));
-//
-//     x.UsingRabbitMq((context, cfg) =>
-//     {
-//         var rabbitmqSettings = builder.Configuration
-//             .GetSection(nameof(RabbitMqSettings))
-//             .Get<RabbitMqSettings>();
-//         cfg.Host(rabbitmqSettings.Host);
-//         cfg.ConfigureEndpoints(context);s
-//
-//         // cfg.ReceiveEndpoint("inventory-items", e =>
-//         // {
-//         //     e.ConfigureConsumer<CatalogItemCreatedConsumer>(context);
-//         //
-//         //     // Bind to the publisher's exchange
-//         //     e.Bind("Play.Items.Application.Events:ItemCreated");
-//         // });
-//     });
-// });
-//builder.Services.AddMassTransitHostedService();
-
+builder.Services.AddEvents();
+builder.Services.AddLoggingEventHandlerDecorator();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

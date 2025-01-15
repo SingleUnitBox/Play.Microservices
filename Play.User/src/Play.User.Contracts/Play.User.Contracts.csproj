@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Play.Common.Abs" Version="1.0.11" />
+  </ItemGroup>
+
 </Project>

@@ -1,3 +1,5 @@
-﻿namespace Play.Items.Contracts.Events;
+﻿using Play.Common.Abs.Events;
 
-public record ItemDeleted(Guid ItemId);
+namespace Play.Items.Contracts.Events;
+
+public record ItemDeleted(Guid ItemId) : IEvent;

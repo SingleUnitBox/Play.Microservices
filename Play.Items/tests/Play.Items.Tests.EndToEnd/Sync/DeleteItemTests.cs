@@ -50,5 +50,6 @@ public class DeleteItemTests : IClassFixture<PlayItemsApplicationFactory>,
     }
 
     private async Task InsertItemAsync()
-        => _mongoDbFixture.InsertAsync(new Item(_itemId, "Potion", "Heals a bit of HP", 10));
+        => _mongoDbFixture.InsertAsync(Item.Create(_itemId, "Potion",
+            "Heals a bit of HP", 10, DateTimeOffset.UtcNow));
 }

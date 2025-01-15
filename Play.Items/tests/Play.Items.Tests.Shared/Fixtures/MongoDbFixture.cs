@@ -37,17 +37,16 @@ public class MongoDbFixture<TEntity> : IDisposable where TEntity : AggregateRoot
     public async Task<TEntity> GetAsync(Guid id)
         => await _collection.Find(e => e.Id == new AggregateRootId(id)).SingleOrDefaultAsync();
 
-    public async Task GetAsync(Guid id, TaskCompletionSource<TEntity> receivedTask)
+    public async Task GetAsync(Guid id, TaskCompletionSource<TEntity> tcs)
     {
         var entity = await GetAsync(id);
         if (entity is null)
         {
-            receivedTask.TrySetCanceled();
+            tcs.TrySetCanceled();
             return;
         }
         
-        receivedTask.TrySetResult(entity);
-
+        tcs.TrySetResult(entity);
     }
 
     private void ConfigureSerializers()
@@ -64,5 +63,6 @@ public class MongoDbFixture<TEntity> : IDisposable where TEntity : AggregateRoot
     {
         _database.DropCollection("items");
         _client.Dispose();
+        Console.WriteLine("Disposing mnogoDb...");
     }
 }

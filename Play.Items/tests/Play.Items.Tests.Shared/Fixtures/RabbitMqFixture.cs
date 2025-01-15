@@ -7,6 +7,7 @@ using Play.Common.Settings;
 using Play.Items.Application.Commands;
 using Play.Items.Contracts.Events;
 using Play.Items.Infra.Consumers.ContractsCommands;
+using Play.Items.Tests.Shared.Fixtures.Consumers;
 using Play.Items.Tests.Shared.Helpers;
 using ZstdSharp.Unsafe;
 using CreateItem = Play.Items.Contracts.Commands.CreateItem;
@@ -17,10 +18,8 @@ public class RabbitMqFixture
 {
     private readonly RabbitMqSettings _rabbitMqSettings;
     private readonly IServiceProvider _serviceProvider;
-    private readonly IBus _bus;
-    private readonly ConcurrentDictionary<Guid, TaskCompletionSource<bool>> _completionSources= new();
+    private readonly IBusControl _busControl;
     
-
     public RabbitMqFixture()
     {
         _rabbitMqSettings = SettingsHelper.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
@@ -28,59 +27,37 @@ public class RabbitMqFixture
             .AddMassTransit(x =>
             {
                 x.AddConsumer<ItemCreatedConsumer>();
+                x.AddConsumer<ItemUpdatedConsumer>();
                 x.UsingRabbitMq((ctx, config) =>
                 {
                     config.Host(_rabbitMqSettings.Host);
-                    config.ConfigureEndpoints(ctx,
-                        new KebabCaseEndpointNameFormatter(false));
+                    config.ReceiveEndpoint("item-created-queue", ep 
+                        => ep.ConfigureConsumer<ItemCreatedConsumer>(ctx));
+                    config.ReceiveEndpoint("item-updated-queue", ep
+                        => ep.ConfigureConsumer<ItemUpdatedConsumer>(ctx));
                 });
             })
             .AddSingleton(this)
             .BuildServiceProvider();
-        _bus = _serviceProvider.GetRequiredService<IBus>();
+        
+        _busControl = _serviceProvider.GetRequiredService<IBusControl>();
+        _busControl.Start();
     }
 
     public async Task PublishAsync<TMessage>(TMessage message)
     {
-        _completionSources.TryAdd((message as CreateItem).ItemId, new TaskCompletionSource<bool>());
-        await _bus.Publish(message);
+        await _busControl.Publish(message);
     }
-
+    
     public TaskCompletionSource<TEntity> SubscribeAndGet<TMessage, TEntity>(
         Func<Guid, TaskCompletionSource<TEntity>, Task> onMessageReceived, Guid id)
     {
+        //create tcs
         var tcs = new TaskCompletionSource<TEntity>();
-
-        var bucControl = Bus.Factory.CreateUsingRabbitMq(config =>
-        {
-            config.Host(_rabbitMqSettings.Host);
-            config.ReceiveEndpoint("myTestQueue", ep =>
-            {
-                ep.Handler<ItemCreated>(async context =>
-                {
-                    await onMessageReceived(id, tcs);
-                });
-            });
-        });
-        
-        bucControl.Start();
-
+        //when ItemCreated arrives, got to GetAsync() to try GetItemById and set it as tcs.Result
+        // is that really needed?
+        onMessageReceived(id, tcs);
+        //return tcs with Item Task<Item> inside
         return tcs;
-    }
-
-    public Task WaitForMessageAsync(Guid itemId)
-    {
-        var tcs = new TaskCompletionSource<bool>();
-        _completionSources[itemId] = tcs;
-        
-        return Task.WhenAny(tcs.Task);
-    }
-
-    public void MessageProcessed(Guid itemId)
-    {
-        if (_completionSources.TryRemove(itemId, out var tcs))
-        {
-            tcs.SetResult(true);
-        }
     }
 }

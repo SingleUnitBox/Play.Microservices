@@ -7,6 +7,7 @@ using CreateItem = Play.Items.Contracts.Commands.CreateItem;
 
 namespace Play.Items.Tests.Integration.Async;
 
+[Collection("AsyncTests")]
 public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     IClassFixture<MongoDbFixture<Item>>,
     IClassFixture<RabbitMqFixture>
@@ -18,8 +19,10 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     {
         var command = new CreateItem("Potion", "Heals a bit of HP", 10);
 
-        var tcs = _rabbitMqFixture.SubscribeAndGet<ItemCreated, Item>(_mongoDbFixture.GetAsync, command.ItemId);
+        var tcs = _rabbitMqFixture
+            .SubscribeAndGet<ItemCreated, Item>(_mongoDbFixture.GetAsync, command.ItemId);
         
+        //send a command
         await Act(command);
 
         var document = await tcs.Task;

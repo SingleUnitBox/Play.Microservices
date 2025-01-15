@@ -1,3 +1,5 @@
-﻿namespace Play.User.Contracts.Events;
+﻿using Play.Common.Abs.Events;
 
-public record UserCreated(Guid UserId, string Username);
+namespace Play.User.Contracts.Events;
+
+public record UserCreated(Guid UserId, string Username) : IEvent;

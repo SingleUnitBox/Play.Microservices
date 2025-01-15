@@ -26,6 +26,6 @@ public class MoneyBagRepository : IMoneyBagRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<MoneyBag> GetMoneyBagByUserId(Guid playerId)
+    public Task<MoneyBag> GetMoneyBagByPlayerId(Guid playerId)
         => _moneyBags.SingleOrDefaultAsync(x => x.PlayerId == playerId);
 }

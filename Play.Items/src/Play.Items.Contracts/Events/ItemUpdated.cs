@@ -1,3 +1,5 @@
-﻿namespace Play.Items.Contracts.Events;
+﻿using Play.Common.Abs.Events;
 
-public record ItemUpdated(Guid ItemId, string Name, decimal Price);
+namespace Play.Items.Contracts.Events;
+
+public record ItemUpdated(Guid ItemId, string Name, decimal Price) : IEvent;

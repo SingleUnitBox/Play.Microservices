@@ -8,7 +8,12 @@ public class MoneyBag
     public Guid PlayerId { get; private set; }
     public decimal Gold { get; private set; }
 
-    public MoneyBag(Guid playerId, decimal gold)
+    private MoneyBag(Guid playerId) : this(playerId, 100)
+    {
+
+    }
+    
+    private MoneyBag(Guid playerId, decimal gold)
     {
         PlayerId = playerId;
         Gold = gold;
@@ -34,6 +39,6 @@ public class MoneyBag
         Gold -= amount;
     }
     
-    public static MoneyBag Create(Guid playerId, decimal gold)
-        => new MoneyBag(playerId, gold);
+    public static MoneyBag Create(Guid playerId)
+        => new MoneyBag(playerId);
 }

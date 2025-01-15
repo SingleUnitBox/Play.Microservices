@@ -102,7 +102,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
 
     private async Task<MoneyBag> ValidateMoneyBag(Guid userId)
     {
-        var moneyBag = await _moneyBagRepository.GetMoneyBagByUserId(userId);
+        var moneyBag = await _moneyBagRepository.GetMoneyBagByPlayerId(userId);
         if (moneyBag is null)
         {
             throw new MoneyBagNotFoundException(userId);

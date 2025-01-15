@@ -25,7 +25,7 @@ public class MoneyBagRepository : IMoneyBagRepository
         await _moneyBagCollection.ReplaceOneAsync(filter, moneyBag);
     }
 
-    public async Task<MoneyBag> GetMoneyBagByUserId(Guid playerId)
+    public async Task<MoneyBag> GetMoneyBagByPlayerId(Guid playerId)
     {
         var filter = _filterDefinitionBuilder.Eq(m => m.PlayerId, playerId);
         return await _moneyBagCollection.Find(filter).SingleOrDefaultAsync();

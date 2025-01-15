@@ -31,7 +31,8 @@ public class CreateItemHandler : ICommandHandler<Contracts.Commands.CreateItem>
             }
 
             // Continue processing the message
-            item = new Item(command.ItemId, command.Name, command.Description, command.Price);
+            item = new Item(command.ItemId, command.Name, command.Description,
+                command.Price, DateTimeOffset.UtcNow);
             await _itemRepository.CreateAsync(item);
             await _busPublisher.PublishAsync(new ItemCreated(item.Id, item.Name, item.Price),
                 //context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);

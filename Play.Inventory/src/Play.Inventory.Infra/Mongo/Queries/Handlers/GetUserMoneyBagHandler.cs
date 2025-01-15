@@ -25,7 +25,7 @@ public class GetUserMoneyBagHandler //: IQueryHandler<GetUserMoneyBag, UserMoney
             // ??
         }
 
-        var moneyBag = await _moneyBagRepository.GetMoneyBagByUserId(query.PlayerId);
+        var moneyBag = await _moneyBagRepository.GetMoneyBagByPlayerId(query.PlayerId);
         if (moneyBag is null)
         {
             throw new MoneyBagNotFoundException(query.PlayerId);

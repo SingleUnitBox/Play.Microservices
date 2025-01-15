@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.Events;
 using Play.Common.Abs.Queries;
 using Play.Common.Settings;
 using Serilog;
@@ -15,13 +16,13 @@ public static class Extensions
         services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
         return services;
     }
-
-    public static IServiceCollection AddLoggingCommandConsumerDecorator(this IServiceCollection services)
+    
+    public static IServiceCollection AddLoggingEventHandlerDecorator(this IServiceCollection services)
     {
-        services.TryDecorate(typeof(IConsumer<>), typeof(LoggingCommandConsumerDecorator<>));
+        services.TryDecorate(typeof(IEventHandler<>), typeof(LoggingEventHandlerDecorator<>));
         return services;
     }
-
+    
     public static IServiceCollection AddLoggingQueryHandlerDecorator(this IServiceCollection services)
     {
         services.TryDecorate(typeof(IQueryHandler<,>), typeof(LoggingQueryHandlerDecorator<,>));

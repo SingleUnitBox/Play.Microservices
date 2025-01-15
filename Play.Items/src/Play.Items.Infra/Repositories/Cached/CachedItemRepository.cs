@@ -5,21 +5,19 @@ using Newtonsoft.Json;
 using Play.Common.Abs.SharedKernel.Types;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
+using Play.Items.Infra.Repositories.Cached.Converters;
 
 namespace Play.Items.Infra.Repositories.Cached;
 
 public class CachedItemRepository : IItemRepository
 {
     private readonly ItemRepository _decoratedItemRepository;
-    private readonly IMemoryCache _memoryCache;
     private readonly IDistributedCache _distributedCache;
 
     public CachedItemRepository(ItemRepository decoratedItemRepository,
-        IMemoryCache memoryCache,
         IDistributedCache distributedCache)
     {
         _decoratedItemRepository = decoratedItemRepository;
-        _memoryCache = memoryCache;
         _distributedCache = distributedCache;
     }
 
@@ -42,6 +40,7 @@ public class CachedItemRepository : IItemRepository
     {
         string key = $"item-{id}";
         var cachedItem = await _distributedCache.GetStringAsync(key);
+        
         Item item;
         if (string.IsNullOrEmpty(cachedItem))
         {
@@ -54,13 +53,17 @@ public class CachedItemRepository : IItemRepository
             await _distributedCache.SetStringAsync(
                 key,
                 JsonConvert.SerializeObject(item));
-
-
+            
             return item;
         }
 
         // something is wrong with Item creation
-        item = JsonConvert.DeserializeObject<Item>(cachedItem);
+        item = JsonConvert.DeserializeObject<Item>(
+            cachedItem,
+            new JsonSerializerSettings
+            {
+                Converters = new List<JsonConverter> {new ItemJsonConverter()}
+            });
 
         return item;
 
