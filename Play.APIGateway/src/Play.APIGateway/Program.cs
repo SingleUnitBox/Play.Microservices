@@ -30,7 +30,7 @@ public class Program
         app.MapDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
-        app.MapCommandEndpoint<PurchaseItem>()
+        //app.MapCommandEndpoint<PurchaseItem>()
         app.Run();
     }
 }

@@ -51,7 +51,7 @@ public class MessageToLogTempleMapper : IMessageToLogTemplateMapper
                 [typeof(PlayerNotFoundException)] = "Player with id '{PlayerId}' was not found.",
                 [typeof(MoneyBagNotFoundException)] = "Money bag for player with id '{PlayerId}' was not found.",
                 [typeof(CatalogItemCannotBePurchasedException)] = "Catalog item with id '{ItemId}' cannot be purchased.",
-                [typeof(NotEnoughGoldToPurchaseException)] = "Not enough gold '{Gold}' to purchase item with id '{ItemId}'."
+                [typeof(NotEnoughGoldToPurchaseException)] = "Not enough gold to purchase item with id '{ItemId}'."
             }
         },
         [typeof(GetPlayerInventoryItems)] = new()

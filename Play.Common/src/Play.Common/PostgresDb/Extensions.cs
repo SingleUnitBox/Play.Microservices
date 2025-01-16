@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Abs.Commands;
 using Play.Common.PostgresDb.UnitOfWork;
+using Play.Common.PostgresDb.UnitOfWork.Decorators;
 using Play.Common.Settings;
 
 namespace Play.Common.PostgresDb;
@@ -32,6 +34,13 @@ public static class Extensions
     {
         services.AddScoped(typeof(TUnitOfWork), typeof(TImplementation));
         services.AddScoped(typeof(IUnitOfWork), typeof(TImplementation));
+        
+        return services;
+    }
+
+    public static IServiceCollection AddAPostgresCommandHandlerDecorator(this IServiceCollection services)
+    {
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
         
         return services;
     }

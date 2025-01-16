@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Play.Common.Abs.Commands;
 using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
@@ -15,6 +16,7 @@ using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.Messaging;
 using Play.Common.MongoDb;
+using Play.Common.PostgresDb.UnitOfWork.Decorators;
 using Play.Common.Settings;
 using Play.Inventory.Infra.Queries.Handlers;
 using Play.Inventory.Infra.Repositories;
@@ -43,8 +45,11 @@ builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTempleMap
 builder.Services.AddLoggingQueryHandlerDecorator();
 builder.Services.AddCommands();
 builder.Services.AddLoggingCommandHandlerDecorator();
+builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
 builder.Services.AddEvents();
 builder.Services.AddLoggingEventHandlerDecorator();
+
+builder.Services.AddAPostgresCommandHandlerDecorator();
 builder.Services.AddPostgresUnitOfWork<IInventoryUnitOfWork, InventoryPostgresUnitOfWork>();
 
 builder.Services.AddEndpointsApiExplorer();

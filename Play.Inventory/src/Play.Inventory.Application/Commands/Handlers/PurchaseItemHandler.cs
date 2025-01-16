@@ -31,7 +31,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
     
     public async Task HandleAsync(PurchaseItem command)
     {
-        var catalogItem = await ValidateCatalogItem(command.PlayerId);
+        var catalogItem = await ValidateCatalogItem(command.ItemId);
         var player = await ValidatePlayer(command.PlayerId);
         var moneyBag = await ValidateMoneyBag(command.PlayerId);
         var inventoryItem = await _inventoryItemRepository.GetInventory(i =>
@@ -61,7 +61,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         // second update, needs to be atomic with inventoryItem creation/update
         // or event ItemPurchased shall be generated and send by eventDispatcher
         await _moneyBagRepository.UpdateMoneyBag(moneyBag);
-    }
+     }
     
     private void CanCatalogItemBePurchased(IWeaponPurchasePolicy policy, CatalogItem catalogItem, InventoryItem inventoryItem)
     {
