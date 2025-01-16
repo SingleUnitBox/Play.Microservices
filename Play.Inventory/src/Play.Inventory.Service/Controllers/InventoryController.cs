@@ -14,6 +14,7 @@ using Play.Inventory.Domain.Repositories;
 
 namespace Play.Inventory.Service.Controllers;
 
+[Authorize]
 public class InventoryController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
@@ -30,18 +31,9 @@ public class InventoryController : BaseController
     }
 
     [HttpGet]
-    [Authorize]
     public async Task<ActionResult<IEnumerable<InventoryItemDto>>> GetAsync()
     {
         return Ok(await _queryDispatcher
             .QueryAsync(new GetPlayerInventoryItems(_context.IdentityContext.UserId)));
-    }
-
-    //[Authorize]
-    [HttpPost]
-    public async Task<ActionResult> PostAsync(PurchaseItem command)
-    {
-        await _commandDispatcher.DispatchAsync(command with { UserId = _context.IdentityContext.UserId });
-        return NoContent();
     }
 }

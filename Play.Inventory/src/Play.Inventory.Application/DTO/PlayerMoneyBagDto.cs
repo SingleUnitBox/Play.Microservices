@@ -1,6 +1,6 @@
 ﻿namespace Play.Inventory.Application.DTO;
 
-public class UserMoneyBagDto
+public class PlayerMoneyBagDto
 {
     public Guid PlayerId { get; set; }
     public string Username { get; set; }

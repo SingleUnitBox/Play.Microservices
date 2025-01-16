@@ -20,6 +20,7 @@ using Play.Inventory.Infra.Queries.Handlers;
 using Play.Inventory.Infra.Repositories;
 using Play.Common.Settings;
 using Play.Inventory.Infra.Logging;
+using Play.Inventory.Infra.Postgres.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,7 @@ builder.Services.AddCommands();
 builder.Services.AddLoggingCommandHandlerDecorator();
 builder.Services.AddEvents();
 builder.Services.AddLoggingEventHandlerDecorator();
+builder.Services.AddPostgresUnitOfWork<IInventoryUnitOfWork, InventoryPostgresUnitOfWork>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,5 +1,5 @@
 @url = http://localhost:5008
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1MmU5ODQ4Yi1iYjBjLTRkODUtOGQ2Ny1iMzI3NjhkNmRlOGUiLCJ1bmlxdWVfbmFtZSI6IjUyZTk4NDhiLWJiMGMtNGQ4NS04ZDY3LWIzMjc2OGQ2ZGU4ZSIsImp0aSI6IjhhYjFkMGNjLTY4OWUtNGE5ZC05ZmY0LTZhOTcyNWU0MmEzNSIsImlhdCI6IjE3MzQyOTk1MjU1OTMiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwidXQwZCI6WyJpdGVtcyIsImludmVudG9yeSJdLCJuYmYiOjE3MzQyOTk1MjUsImV4cCI6MTc0Mjg1MzEyNSwiaXNzIjoiUGxheS5Vc2VyLlNlcnZpY2UifQ.paE_LLbvOeXnKCEn1h6x-d65o_7UU2ocT-a_YgLPAxM
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 @itemId = 462d3e8a-656e-457c-9dd9-4d726660b0ab
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
@@ -10,8 +10,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user9",
-  "email": "user9@play.com",
+  "username": "user1",
+  "email": "user1@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -53,8 +53,8 @@ POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "sword",
-  "description": "deals damage",
+  "name": "Cape",
+  "description": "Gives nice look",
   "price": 10
 }
 
@@ -72,11 +72,21 @@ Content-Type: application/json
 DELETE {{url}}/play-items/items/{{itemId}}
 
 ### PLAY-INVENTORY ###
+### Browse Inventory
 GET {{url}}/play-inventory/inventory
 Authorization: Bearer {{accessToken}}
 
-###
+### Browse Catalog Items
 GET {{url}}/play-inventory/items
+
+### Purchase Item
+POST {{url}}/play-inventory/items/{{itemId}}/purchase
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "quantity": 4
+}
 
 ###
 POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=pending

@@ -3,6 +3,7 @@ using Play.Common.Logging.Mappers;
 using Play.Inventory.Application.Events;
 using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Application.Queries;
+using Play.Inventory.Contracts.Commands;
 using Play.Items.Contracts.Events;
 using Play.User.Contracts.Events;
 
@@ -39,6 +40,24 @@ public class MessageToLogTempleMapper : IMessageToLogTemplateMapper
         {
             Before = $"[{typeof(GetCatalogItems)}] starting query.",
             After = $"[{typeof(GetCatalogItems)}] completed query.",
+        },
+        [typeof(PurchaseItem)] = new()
+        {
+            Before = $"[{typeof(PurchaseItem)}] " + "Starting to purchase '{Quantity}' items with id '{ItemId}' by player '{PlayerId}'.",
+            After = $"[{typeof(PurchaseItem)}] " + "Purchased '{Quantity}' items with id '{ItemId}' by player '{PlayerId}'.",
+            OnError = new Dictionary<Type, string>()
+            {
+                [typeof(CatalogItemNotFoundException)] = "Catalog item with id '{ItemId}' was not found.",
+                [typeof(PlayerNotFoundException)] = "Player with id '{PlayerId}' was not found.",
+                [typeof(MoneyBagNotFoundException)] = "Money bag for player with id '{PlayerId}' was not found.",
+                [typeof(CatalogItemCannotBePurchasedException)] = "Catalog item with id '{ItemId}' cannot be purchased.",
+                [typeof(NotEnoughGoldToPurchaseException)] = "Not enough gold '{Gold}' to purchase item with id '{ItemId}'."
+            }
+        },
+        [typeof(GetPlayerInventoryItems)] = new()
+        {
+            Before = $"[{typeof(GetPlayerInventoryItems)}] starting query.",
+            After = $"[{typeof(GetPlayerInventoryItems)}] completed query.",
         },
         [typeof(UserCreated)] = new()
         {

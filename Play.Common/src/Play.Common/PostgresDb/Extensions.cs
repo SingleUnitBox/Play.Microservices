@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.PostgresDb.UnitOfWork;
 using Play.Common.Settings;
 
 namespace Play.Common.PostgresDb;
@@ -22,6 +23,15 @@ public static class Extensions
                 options.UseNpgsql(postgresOptions.ConnectionString);
             });
         }
+        
+        return services;
+    }
+
+    public static IServiceCollection AddPostgresUnitOfWork<TUnitOfWork, TImplementation>(this IServiceCollection services)
+    where TUnitOfWork : IUnitOfWork where TImplementation : TUnitOfWork
+    {
+        services.AddScoped(typeof(TUnitOfWork), typeof(TImplementation));
+        services.AddScoped(typeof(IUnitOfWork), typeof(TImplementation));
         
         return services;
     }

@@ -1,5 +1,6 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Inventory.Application.Exceptions;
+using Play.Inventory.Contracts.Commands;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Policies;
 using Play.Inventory.Domain.Policies.Factories;
@@ -27,12 +28,12 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         _playerRepository = playerRepository;
         _policyFactory = policyFactory;
     }
-
+    
     public async Task HandleAsync(PurchaseItem command)
     {
-        var catalogItem = await ValidateCatalogItem(command.ItemId);
-        var player = await ValidateUser(command.UserId);
-        var moneyBag = await ValidateMoneyBag(command.UserId);
+        var catalogItem = await ValidateCatalogItem(command.PlayerId);
+        var player = await ValidatePlayer(command.PlayerId);
+        var moneyBag = await ValidateMoneyBag(command.PlayerId);
         var inventoryItem = await _inventoryItemRepository.GetInventory(i =>
             i.PlayerId == player.Id && i.CatalogItemId == command.ItemId);
         
@@ -57,6 +58,8 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         }
 
         moneyBag.SubtractGold(command.Quantity * catalogItem.Price);
+        // second update, needs to be atomic with inventoryItem creation/update
+        // or event ItemPurchased shall be generated and send by eventDispatcher
         await _moneyBagRepository.UpdateMoneyBag(moneyBag);
     }
     
@@ -89,7 +92,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         return catalogItem;
     }
     
-    private async Task<Player> ValidateUser(Guid userId)
+    private async Task<Player> ValidatePlayer(Guid userId)
     {
         var user = await _playerRepository.GetByIdAsync(userId);
         if (user is null)

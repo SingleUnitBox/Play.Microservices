@@ -12,6 +12,6 @@ public class MoneyBagController(IQueryDispatcher queryDispatcher, IContext conte
 {
     [Authorize]
     [HttpGet]
-    public async Task<ActionResult<UserMoneyBagDto>> GetUserMoneyBag()
-        => OkOrNotFound(await queryDispatcher.QueryAsync(new GetUserMoneyBag(context.IdentityContext.UserId)));
+    public async Task<ActionResult<PlayerMoneyBagDto>> GetUserMoneyBag()
+        => OkOrNotFound(await queryDispatcher.QueryAsync(new GetPlayerMoneyBag(context.IdentityContext.UserId)));
 }
