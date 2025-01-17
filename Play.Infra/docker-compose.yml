@@ -50,6 +50,16 @@ services:
     volumes:
       - seqdata:/data
 
+  play-items-app:
+    image: play-items-app
+    container_name: play-items-app
+    depends_on: 
+      - rabbitmq
+    ports: 
+      - 5022:8080
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+
 
 volumes:
   mongodbdata: 
