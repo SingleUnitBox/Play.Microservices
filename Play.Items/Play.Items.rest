@@ -1,8 +1,8 @@
-@url = http://localhost:5008
+@url = http://localhost:5002
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
-@itemId = 462d3e8a-656e-457c-9dd9-4d726660b0ab
+@itemId = 7b16cadf-8ee8-4ceb-b7a5-5c370c401a71
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 
@@ -39,22 +39,22 @@ Authorization: Bearer {{accessToken}}
 
 ### PLAY-ITEMS ###
 ### Get Items
-GET {{url}}/play-items/items
+GET {{url}}/items
 
 ### Get Items
-GET {{url}}/play-items
+GET {{url}}
 
 ### Get
 GET {{url}}/items/{{itemId}}
 
 ### Delete All Items sync
-DELETE {{url}}/play-items/items
+DELETE {{url}}/items
 
 ### Delete All Items async
-DELETE {{url}}/play-items/items/delete
+DELETE {{url}}/items/delete
 
 ### Create
-POST {{url}}/play-items/items
+POST {{url}}/items
 Content-Type: application/json
 
 {
@@ -64,7 +64,7 @@ Content-Type: application/json
 }
 
 ### Update
-PUT {{url}}/play-items/items/{{itemId}}
+PUT {{url}}/items/{{itemId}}
 Content-Type: application/json
 
 {
@@ -74,7 +74,7 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE {{url}}/play-items/items/{{itemId}}
+DELETE {{url}}/items/{{itemId}}
 
 ### PLAY-INVENTORY ###
 ### Browse Inventory

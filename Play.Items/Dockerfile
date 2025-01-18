@@ -16,6 +16,8 @@ COPY tests/Play.Items.Tests.Shared/Play.Items.Tests.Shared.csproj tests/Play.Ite
 COPY tests/Play.Items.Tests.EndToEnd/Play.Items.Tests.EndToEnd.csproj tests/Play.Items.Tests.EndToEnd/
 COPY tests/Play.Items.Tests.Integration/Play.Items.Tests.Integration.csproj tests/Play.Items.Tests.Integration/
 
+RUN dotnet nuget locals all --clear
+
 # Step 4: Copy the local NuGet packages directory to the container
 COPY ./packages /root/.nuget/packages
 

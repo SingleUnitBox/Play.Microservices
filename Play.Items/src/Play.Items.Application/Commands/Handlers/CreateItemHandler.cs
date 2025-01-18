@@ -40,12 +40,14 @@ public class CreateItemHandler : ICommandHandler<Contracts.Commands.CreateItem>
         }
         catch (ItemAlreadyExistException ex)
         {
+            throw;
             //var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
             // await _busPublisher.PublishAsync(rejectedEvent, 
             //     context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
         }
         catch (Exception ex)
         {
+            throw;
             // General exception handling
             // You could log, publish a fault message, etc.
         }

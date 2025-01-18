@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -15,10 +16,13 @@ public static class Extensions
     public static IServiceCollection AddMongoDb(this IServiceCollection services, IConfiguration configuration)
     {
         MongoDbSerializerConfig.Configure();
+        var loggerFactory = services.BuildServiceProvider().GetRequiredService<ILoggerFactory>();
+        var logger = loggerFactory.CreateLogger(nameof(MongoDbSettings));
         
         var mongoDbSettings = configuration.GetSection(nameof(MongoDbSettings)).Get<MongoDbSettings>();
         if (mongoDbSettings.Enabled)
         {
+            logger.LogInformation($"MongoDb enabled: {mongoDbSettings.Enabled}, host: {mongoDbSettings.Host}, port: {mongoDbSettings.Port}");
             services.AddSingleton(sp =>
             {
                 var serviceSettings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>();

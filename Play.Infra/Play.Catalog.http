@@ -1,4 +1,0 @@
-@url = http://localhost:5125
-
-###
-GET {{url}}/items
