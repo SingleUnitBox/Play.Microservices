@@ -1,10 +1,10 @@
 ﻿using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Inventory.Application.Events;
+using Play.Inventory.Application.Events.External.Items;
 using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Application.Queries;
 using Play.Inventory.Contracts.Commands;
-using Play.Items.Contracts.Events;
 using Play.User.Contracts.Events;
 
 namespace Play.Inventory.Infra.Logging;

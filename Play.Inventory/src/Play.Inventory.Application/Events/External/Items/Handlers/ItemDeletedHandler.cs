@@ -1,9 +1,8 @@
 ﻿using Play.Common.Abs.Events;
 using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Domain.Repositories;
-using Play.Items.Contracts.Events;
 
-namespace Play.Inventory.Application.Events.Handlers.External.Items;
+namespace Play.Inventory.Application.Events.External.Items.Handlers;
 
 public class ItemDeletedHandler(ICatalogItemRepository catalogItemRepository) : IEventHandler<ItemDeleted>
 {

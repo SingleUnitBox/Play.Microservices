@@ -12,7 +12,7 @@ public class CreateItemHandler : ICommandHandler<Contracts.Commands.CreateItem>
     private readonly IItemRepository _itemRepository;
     private readonly IBusPublisher _busPublisher;
     
-
+    
     public CreateItemHandler(IItemRepository itemRepository,
         IBusPublisher busPublisher)
     {

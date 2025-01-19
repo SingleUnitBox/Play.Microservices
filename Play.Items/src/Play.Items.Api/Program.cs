@@ -1,25 +1,23 @@
 using MassTransit;
-using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
+using Play.Common.Abs.Events;
 using Play.Common.Cache;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
-using Play.Common.MassTransit;
 using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
 using Play.Common.Settings;
+using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Consumers.ContractsCommands;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
 using Play.Items.Infra.Repositories.Cached;
-using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Play.Items.Api;
 
@@ -33,7 +31,19 @@ public class Program
         builder.Services.AddExceptionHandling();
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
-        builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
+        builder.Services.AddMassTransit(configure =>
+        {
+            configure.AddConsumer<CreateItemCommandConsumer>();
+            configure.UsingRabbitMq((ctx, config) =>
+            {
+                var rabbitMqSettings = builder.Configuration.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
+                config.Host(rabbitMqSettings.Host);
+                config.Publish<IEvent>(p => p.Exclude = true);
+                
+                config.ConfigureEndpoints(ctx);
+            });
+        });
+        builder.Services.AddMassTransitHostedService();
         builder.Services.AddContext();
         builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
@@ -98,22 +108,3 @@ public class Program
         app.Run();
     }
 }
-
-
-// builder.Services.AddMassTransit(configure =>
-// {
-//     configure.SetKebabCaseEndpointNameFormatter();
-//     configure.UsingRabbitMq((ctx, cfg) =>
-//     {
-//         var rabbitMqSettings = builder.Configuration
-//             .GetSection(nameof(RabbitMqSettings))
-//             .Get<RabbitMqSettings>();
-//         cfg.Host(rabbitMqSettings.Host);
-//     
-//         // cfg.Message<ItemCreated>(e =>
-//         // {
-//         //     e.SetEntityName("Items.ItemCreated");
-//         // });
-//         cfg.ConfigureEndpoints(ctx);
-//     });
-// });

@@ -1,6 +1,6 @@
 ﻿using MassTransit;
 using Play.Common.Abs.Events;
-using Play.Items.Contracts.Events;
+using Play.Inventory.Application.Events.External.Items;
 
 namespace Play.Inventory.Infra.Consumer.Events.Items;
 

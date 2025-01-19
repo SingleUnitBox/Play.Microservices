@@ -3,11 +3,11 @@ using MassTransit;
 using MassTransit.Definition;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Abs.Events;
 using Play.Common.Logging;
 using Play.Common.Settings;
 
 namespace Play.Common.MassTransit;
-
 public static class Extensions
 {
     public static IServiceCollection AddMassTransitWithRabbitMq(this IServiceCollection services, IConfiguration configuration,
@@ -15,7 +15,7 @@ public static class Extensions
     {
         services.AddMassTransit(configure =>
         {
-            configure.AddConsumers(assemblies);
+            //configure.AddConsumers(assemblies);
             configure.UsingRabbitMq((ctx, cfg) =>
             {
                 var rabbitMqSettings = configuration
@@ -26,6 +26,15 @@ public static class Extensions
                     .Get<ServiceSettings>();
                 
                 cfg.Host(rabbitMqSettings.Host);
+                
+                // var eventTypes = assemblies.SelectMany(a => a.GetTypes())
+                //     .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
+                // foreach (var eventType in eventTypes)
+                // {
+                //     cfg.Message<IEvent>(x =>
+                //         x.SetEntityName(eventType.Name));
+                // }
+
                 cfg.ConfigureEndpoints(ctx, 
                     new KebabCaseEndpointNameFormatter(serviceSettings.ServiceName, false));
                 

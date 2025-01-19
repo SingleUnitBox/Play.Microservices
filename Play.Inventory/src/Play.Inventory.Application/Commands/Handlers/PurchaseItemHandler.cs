@@ -1,4 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
+using Play.Common.Abs.Events;
+using Play.Common.Abs.Messaging;
+using Play.Inventory.Application.Events;
 using Play.Inventory.Application.Exceptions;
 using Play.Inventory.Contracts.Commands;
 using Play.Inventory.Domain.Entities;
@@ -15,18 +18,21 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
     private readonly IMoneyBagRepository _moneyBagRepository;
     private readonly IPlayerRepository _playerRepository;
     private readonly IWeaponPurchasePolicyFactory _policyFactory;
-    
+    private readonly IEventDispatcher _eventDispatcher;
+
     public PurchaseItemHandler(ICatalogItemRepository catalogItemRepository,
         IInventoryItemRepository inventoryItemRepository, 
         IMoneyBagRepository moneyBagRepository, 
         IPlayerRepository playerRepository,
-        IWeaponPurchasePolicyFactory policyFactory)
+        IWeaponPurchasePolicyFactory policyFactory,
+        IEventDispatcher eventDispatcher)
     {
         _catalogItemRepository = catalogItemRepository;
         _inventoryItemRepository = inventoryItemRepository;
         _moneyBagRepository = moneyBagRepository;
         _playerRepository = playerRepository;
         _policyFactory = policyFactory;
+        _eventDispatcher = eventDispatcher;
     }
     
     public async Task HandleAsync(PurchaseItem command)
@@ -56,12 +62,16 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
             inventoryItem.AddQuantity(command.Quantity);
             await _inventoryItemRepository.UpdateAsync(inventoryItem);
         }
-
-        moneyBag.SubtractGold(command.Quantity * catalogItem.Price);
-        // second update, needs to be atomic with inventoryItem creation/update
+        
+        // 1st approach
+        // second update in handler, needs to be atomic with inventoryItem creation/update
         // or event ItemPurchased shall be generated and send by eventDispatcher
-        await _moneyBagRepository.UpdateMoneyBag(moneyBag);
-     }
+        // moneyBag.SubtractGold(command.Quantity * catalogItem.Price);
+        // await _moneyBagRepository.UpdateMoneyBag(moneyBag);
+        
+        // 2nd approach
+        await _eventDispatcher.HandleAsync(new ItemPurchased(player.Id, catalogItem.Id, command.Quantity));
+    }
     
     private void CanCatalogItemBePurchased(IWeaponPurchasePolicy policy, CatalogItem catalogItem, InventoryItem inventoryItem)
     {

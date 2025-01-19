@@ -2,7 +2,7 @@
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
-@itemId = 462d3e8a-656e-457c-9dd9-4d726660b0ab
+@itemId = 7b16cadf-8ee8-4ceb-b7a5-5c370c401a71
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 
@@ -38,14 +38,14 @@ GET {{url}}/play-user
 Authorization: Bearer {{accessToken}}
 
 ### PLAY-ITEMS ###
+### HomePage
+GET {{url}}/play-items
+
 ### Get Items
 GET {{url}}/play-items/items
 
-### Get Items
-GET {{url}}/play-items
-
 ### Get
-GET {{url}}/items/{{itemId}}
+GET {{url}}/play-items/items/{{itemId}}
 
 ### Delete All Items sync
 DELETE {{url}}/play-items/items
@@ -58,9 +58,9 @@ POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "Sword",
+  "name": "XXL Potion",
   "description": "Easy damage",
-  "price": 27.52
+  "price": 66.99
 }
 
 ### Update
@@ -68,16 +68,18 @@ PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
 {
-  "name": "Antidoteeeeeee",
-  "description": "Cures poison",
-  "price": 30
+  "name": "Scroll",
+  "description": "Easy spells",
+  "price": 29.99
 }
 
 ### Delete
 DELETE {{url}}/play-items/items/{{itemId}}
 
 ### PLAY-INVENTORY ###
-### Browse Inventory
+### Browse Inventory+
+GET {{url}}/play-inventory
+
 GET {{url}}/play-inventory/inventory
 Authorization: Bearer {{accessToken}}
 
