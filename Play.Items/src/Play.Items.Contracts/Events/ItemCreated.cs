@@ -1,7 +1,8 @@
-﻿using MassTransit.Topology;
+﻿using MassTransit;
 using Play.Common.Abs.Events;
 
 namespace Play.Items.Contracts.Events;
 
-[EntityName("ItemCreatedNameFromAttribute")]
+//[EntityName("ItemCreatedNameFromAttribute")]
+[MessageUrn("ItemCreated")]
 public record ItemCreated(Guid ItemId, string Name, decimal Price) : IEvent;

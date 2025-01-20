@@ -1,8 +1,6 @@
-using Play.Common.Commands;
+using Microsoft.AspNetCore.Mvc;
+using Play.APIGateway.Commands;
 using Play.Common.Logging;
-using Play.Common.MassTransit;
-using Play.Common.Messaging;
-using Play.Items.Contracts.Commands;
 
 namespace Play.APIGateway;
 
@@ -13,21 +11,23 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-        builder.Services.AddMessaging();
-        builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-
+        builder.Services.AddRabbitMq();
         builder.Host.UseSerilogWithSeq();
         var app = builder.Build();
         
         app.UseRouting();
         app.MapReverseProxy();
+        app.MapGet("publishCreateItem", async ([FromServices] CommandPublisher publisher) =>
+        {
+            await publisher.PublishCommand(new CreateItem("Potion", "Heals HP", 10.2m));
+        });
 
         // Play.Items
         // this is async, goes to RabbitMq
-        app.MapCommandEndpointLocal<CreateItem>("play-items/items", HttpMethod.Post);
-        app.MapCommandEndpointLocal<UpdateItem>("play-items/items", HttpMethod.Put);
-        app.MapDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
-        app.MapDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
+        app.PublishCommandEndpointLocal<CreateItem>("play-items/items", HttpMethod.Post);
+        // app.PublishCommandEndpointLocal<UpdateItem>("play-items/items", HttpMethod.Put);
+        // app.PublishDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
+        // app.PublishDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
         //app.MapCommandEndpoint<PurchaseItem>()

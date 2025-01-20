@@ -11,7 +11,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Play.Common" Version="1.1.15"/>
+        <PackageReference Include="Play.Common" Version="1.1.16"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Consumers\ContractsCommands\" />
     </ItemGroup>
 
 

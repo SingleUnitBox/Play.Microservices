@@ -6,24 +6,24 @@ using Play.Items.Application.Queries;
 
 namespace Play.Items.Infra.Logging;
 
-public sealed class LocalMessageToLogTemplateMapper : IMessageToLogTemplateMapper
+public sealed class MessageToLogTemplateMapper : IMessageToLogTemplateMapper
 {
     private static readonly IReadOnlyDictionary<Type, HandlerLogTemplate> Templates =
         new Dictionary<Type, HandlerLogTemplate>
         {
-            [typeof(Contracts.Commands.CreateItem)] = new HandlerLogTemplate()
+            [typeof(CreateItem)] = new HandlerLogTemplate()
             {
-                Before = $"[{typeof(Contracts.Commands.CreateItem)}] " + "Starting to create item with id '{ItemId}'." ,
-                After = $"[{typeof(Contracts.Commands.CreateItem)}] " +"Created item with id '{ItemId}'.",
+                Before = $"[{typeof(CreateItem)}] " + "Starting to create item with id '{ItemId}'." ,
+                After = $"[{typeof(CreateItem)}] " +"Created item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemAlreadyExistException)] = "Item with id '{ItemId}' already exists."
                 }
             },
-            [typeof(Contracts.Commands.UpdateItem)] = new HandlerLogTemplate()
+            [typeof(UpdateItem)] = new HandlerLogTemplate()
             {
-                Before = $"[{typeof(Contracts.Commands.UpdateItem)}] " + "Starting to update item with id '{ItemId}'.",
-                After = $"[{typeof(Contracts.Commands.UpdateItem)}] " + "Updated item with id '{ItemId}'.",
+                Before = $"[{typeof(UpdateItem)}] " + "Starting to update item with id '{ItemId}'.",
+                After = $"[{typeof(UpdateItem)}] " + "Updated item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemNotFoundException)] = "Item with id '{ItemId}' was not found.",
@@ -31,17 +31,17 @@ public sealed class LocalMessageToLogTemplateMapper : IMessageToLogTemplateMappe
             },
             [typeof(DeleteItem)] = new()
             {
-                Before = $"[{typeof(Contracts.Commands.DeleteItem)}] " + "Starting to delete item with id '{ItemId}'.",
-                After = $"[{typeof(Contracts.Commands.DeleteItem)}] " + "Deleted item with id '{ItemId}'.",
+                Before = $"[{typeof(DeleteItem)}] " + "Starting to delete item with id '{ItemId}'.",
+                After = $"[{typeof(DeleteItem)}] " + "Deleted item with id '{ItemId}'.",
                 OnError = new Dictionary<Type, string>()
                 {
                     [typeof(ItemNotFoundException)] = "Item with id '{ItemId}' was not found.",
                 }
             },
-            [typeof(Contracts.Commands.DeleteItems)] = new()
+            [typeof(DeleteItems)] = new()
             {
-                Before = $"[{typeof(Contracts.Commands.DeleteItems)}] " + "Starting to delete all items.",
-                After = $"[{typeof(Contracts.Commands.DeleteItems)}] " + "Deleted all items.",
+                Before = $"[{typeof(DeleteItems)}] " + "Starting to delete all items.",
+                After = $"[{typeof(DeleteItems)}] " + "Deleted all items.",
             },
             [typeof(GetItem)] = new HandlerLogTemplate()
             {

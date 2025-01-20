@@ -1,32 +1,24 @@
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
+using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
-using Play.Common.Exceptions;
-using Play.Common.MassTransit;
-using Play.Common.PostgresDb;
-using Play.Common.Queries;
-using Play.Inventory.Domain.Policies;
-using Play.Inventory.Infra.Postgres;
-using Play.Inventory.Infra.Postgres.Repositories;
-using Play.Common.AppInitializer;
 using Play.Common.Events;
+using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.Messaging;
-using Play.Common.MongoDb;
+using Play.Common.PostgresDb;
 using Play.Common.PostgresDb.UnitOfWork.Decorators;
+using Play.Common.Queries;
 using Play.Common.Settings;
-using Play.Inventory.Infra.Queries.Handlers;
-using Play.Inventory.Infra.Repositories;
-using Play.Common.Settings;
-using Play.Inventory.Application.Events.External.Items;
-using Play.Inventory.Application.Events.External.Items.Handlers;
+using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra.Consumer.Events.Items;
 using Play.Inventory.Infra.Logging;
+using Play.Inventory.Infra.Postgres;
+using Play.Inventory.Infra.Postgres.Repositories;
 using Play.Inventory.Infra.Postgres.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -52,7 +44,8 @@ builder.Services.AddMassTransit((configure) =>
         config.ConfigureEndpoints(ctx);
     });
 });
-builder.Services.AddMassTransitHostedService();
+//auto registered now?
+//builder.Services.AddMassTransitHostedService();
 
 builder.Services.AddPolicies();
 builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);

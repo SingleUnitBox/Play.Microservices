@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿
+using MassTransit;
 using Play.Common.Abs.Events;
 
 namespace Play.Inventory.Application.Events.External.Items;

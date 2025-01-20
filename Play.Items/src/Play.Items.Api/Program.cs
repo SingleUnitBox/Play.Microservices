@@ -1,6 +1,5 @@
-using MassTransit;
 using MongoDB.Driver;
-using Play.Common.Abs.Events;
+using Play.APIGateway.Commands;
 using Play.Common.Cache;
 using Play.Common.Commands;
 using Play.Common.Context;
@@ -11,9 +10,7 @@ using Play.Common.Messaging;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
 using Play.Common.Settings;
-using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
-using Play.Items.Infra.Consumers.ContractsCommands;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
@@ -26,34 +23,19 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-
+        
         builder.Services.AddExceptionHandling();
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
-        //builder.Services.AddCustomExceptionToResponseMapper<CatalogExceptionMapper>();
-        builder.Services.AddMassTransit(configure =>
-        {
-            configure.AddConsumer<CreateItemCommandConsumer>();
-            configure.UsingRabbitMq((ctx, config) =>
-            {
-                var rabbitMqSettings = builder.Configuration.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
-                config.Host(rabbitMqSettings.Host);
-                config.Publish<IEvent>(p => p.Exclude = true);
-                
-                config.ConfigureEndpoints(ctx);
-            });
-        });
-        builder.Services.AddMassTransitHostedService();
+
         builder.Services.AddContext();
-        builder.Services.AddMessaging();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
         builder.Services.AddLoggingCommandHandlerDecorator();
-
         builder.Services.AddQueries();
         builder.Services.AddLoggingQueryHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+        builder.Services.AddRabbitMq();
         
         builder.Services.AddMongoDb(builder.Configuration);
         builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
@@ -72,7 +54,7 @@ public class Program
         builder.Services.AddCaching();
 
         builder.Host.UseSerilogWithSeq();
-        builder.Services.AddSingleton<IMessageToLogTemplateMapper, LocalMessageToLogTemplateMapper>();
+        builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();
 
         //app.UseExceptionHandling();

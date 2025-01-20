@@ -7,12 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Humanizer" Version="3.0.0-beta.54" />
         <PackageReference Include="MassTransit" Version="7.3.1"/>
         <PackageReference Include="MassTransit.RabbitMQ" Version="7.3.1"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11"/>
         <PackageReference Include="Play.Common" Version="1.1.8" />
         <PackageReference Include="Play.Items.Contracts" Version="1.0.7"/>
         <PackageReference Include="Play.User.Contracts" Version="1.0.2"/>
+        <PackageReference Include="RabbitMQ.Client" Version="7.1.0-alpha.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0"/>
     </ItemGroup>

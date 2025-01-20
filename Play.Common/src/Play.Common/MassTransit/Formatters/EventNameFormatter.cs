@@ -1,4 +1,4 @@
-﻿using MassTransit.Topology;
+﻿using MassTransit;
 
 namespace Play.Common.MassTransit.Formatters;
 

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.3.1" />
+        <PackageReference Include="MassTransit" Version="8.3.5-develop.2176" />
         <PackageReference Include="Play.Inventory.Contracts" Version="1.0.3" />
         <PackageReference Include="Play.User.Contracts" Version="1.0.5" />
     </ItemGroup>

@@ -5,7 +5,7 @@ namespace Play.APIGateway;
 
 public static class Extensions
 {
-    public static WebApplication MapCommandEndpointLocal<TCommand>(this WebApplication app,
+    public static WebApplication PublishCommandEndpointLocal<TCommand>(this WebApplication app,
         string route,
         HttpMethod method)
         where TCommand : class
@@ -33,7 +33,7 @@ public static class Extensions
         return app;
     }
 
-    public static WebApplication MapDeleteCommandEndpointLocal<TCommand>(this WebApplication app,
+    public static WebApplication PublishDeleteCommandEndpointLocal<TCommand>(this WebApplication app,
         string route)
         where TCommand : class
     {

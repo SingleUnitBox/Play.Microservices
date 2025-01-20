@@ -1,5 +1,4 @@
-﻿using MassTransit.Transformation.TransformConfigurators;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Play.Items.Tests.Shared.Helpers;
 

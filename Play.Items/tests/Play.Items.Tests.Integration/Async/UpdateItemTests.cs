@@ -1,9 +1,6 @@
-﻿using Play.Items.Contracts.Commands;
-using Play.Items.Contracts.Events;
-using Play.Items.Domain.Entities;
+﻿using Play.Items.Domain.Entities;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
-using Shouldly;
 
 namespace Play.Items.Tests.Integration.Async;
 
@@ -12,7 +9,7 @@ public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     IClassFixture<RabbitMqFixture>,
     IClassFixture<MongoDbFixture<Item>>
 {
-    private Task Act(UpdateItem command) => _rabbitMqFixture.PublishAsync(command);
+    //private Task Act(UpdateItem command) => _rabbitMqFixture.PublishAsync(command);
 
     // [Fact]
     // public async Task update_item_command_should_update_document_with_given_id_and_data()

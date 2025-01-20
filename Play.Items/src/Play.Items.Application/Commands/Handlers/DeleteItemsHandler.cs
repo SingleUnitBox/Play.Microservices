@@ -1,15 +1,15 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
-using Play.Items.Contracts.Events;
+using Play.Items.Application.Events;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
 public class DeleteItemsHandler(
     IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<Contracts.Commands.DeleteItems>
+    IBusPublisher busPublisher) : ICommandHandler<DeleteItems>
 {
-    public async Task HandleAsync(Contracts.Commands.DeleteItems command)
+    public async Task HandleAsync(DeleteItems command)
     {
         var items = await itemRepository.GetAllAsync();
         if (items is not null && items.Any())

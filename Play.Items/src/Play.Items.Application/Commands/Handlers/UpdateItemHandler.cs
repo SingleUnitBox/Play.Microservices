@@ -1,16 +1,16 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
+using Play.Items.Application.Events;
 using Play.Items.Application.Exceptions;
-using Play.Items.Contracts.Events;
 using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
 public class UpdateItemHandler(
     IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<Contracts.Commands.UpdateItem>
+    IBusPublisher busPublisher) : ICommandHandler<UpdateItem>
 {
-    public async Task HandleAsync(Contracts.Commands.UpdateItem command)
+    public async Task HandleAsync(UpdateItem command)
     {
         var item = await itemRepository.GetByIdAsync(command.ItemId);
         if (item is null)
