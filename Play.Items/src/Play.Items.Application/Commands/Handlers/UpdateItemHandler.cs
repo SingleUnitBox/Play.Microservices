@@ -6,9 +6,7 @@ using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class UpdateItemHandler(
-    IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<UpdateItem>
+public class UpdateItemHandler(IItemRepository itemRepository) : ICommandHandler<UpdateItem>
 {
     public async Task HandleAsync(UpdateItem command)
     {
@@ -23,7 +21,7 @@ public class UpdateItemHandler(
         item.Price = command.Price;
 
         await itemRepository.UpdateAsync(item);
-        await busPublisher.PublishAsync(new ItemUpdated(
-            item.Id, item.Name, item.Price));
+        // await busPublisher.PublishAsync(new ItemUpdated(
+        //     item.Id, item.Name, item.Price));
     }
 }

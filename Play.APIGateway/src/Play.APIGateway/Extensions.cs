@@ -1,19 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Play.APIGateway.Commands;
+using Play.Common.Abs.Commands;
 using Play.Common.Abs.Messaging;
 
 namespace Play.APIGateway;
 
 public static class Extensions
 {
-    public static WebApplication PublishCommandEndpointLocal<TCommand>(this WebApplication app,
+    public static WebApplication PublishCommand<TCommand>(this WebApplication app,
         string route,
         HttpMethod method)
-        where TCommand : class
+        where TCommand : class, ICommand
     {
         app.MapMethods(route + "/{id?}", new[] { method.Method },
             async (
                 [FromBody] TCommand command,
-                [FromServices] IBusPublisher busPublisher,
+                [FromServices] CommandPublisher commandPublisher,
                 [FromRoute] Guid? id) =>
             {
                 if (id.HasValue)
@@ -26,7 +28,7 @@ public static class Extensions
                     }
                 }
 
-                await busPublisher.PublishAsync(command, Guid.NewGuid());
+                await commandPublisher.PublishCommand<TCommand>(command);
                 return Results.Accepted();
             });
 

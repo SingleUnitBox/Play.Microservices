@@ -7,8 +7,7 @@ using Play.Items.Domain.Repositories;
 namespace Play.Items.Application.Commands.Handlers;
 
 public class DeleteItemHandler(
-    IItemRepository itemRepository,
-    IBusPublisher busPublisher) : ICommandHandler<DeleteItem>
+    IItemRepository itemRepository) : ICommandHandler<DeleteItem>
 {
     public async Task HandleAsync(DeleteItem command)
     {
@@ -19,6 +18,6 @@ public class DeleteItemHandler(
         }
 
         await itemRepository.DeleteAsync(item.Id);
-        await busPublisher.PublishAsync(new ItemDeleted(item.Id));
+        // await busPublisher.PublishAsync(new ItemDeleted(item.Id));
     }
 }

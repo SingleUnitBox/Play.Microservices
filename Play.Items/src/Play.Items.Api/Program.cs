@@ -35,7 +35,7 @@ public class Program
         builder.Services.AddLoggingQueryHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
-        builder.Services.AddRabbitMq();
+        builder.Services.AddRabbitMqConsumers();
         
         builder.Services.AddMongoDb(builder.Configuration);
         builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(

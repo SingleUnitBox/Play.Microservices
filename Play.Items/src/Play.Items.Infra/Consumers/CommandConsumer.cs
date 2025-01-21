@@ -1,9 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Humanizer;
-using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
-using Play.Items.Application.Commands;
+using Play.Common.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -11,22 +10,19 @@ namespace Play.Items.Infra.Consumers;
 
 public class CommandConsumer
 {
-    private readonly RabbitMqClient _rabbitMqClient;
-    private readonly IServiceProvider _serviceProvider;
+    private readonly IRabbitMqClient _rabbitMqClient;
     private readonly ICommandDispatcher _commandDispatcher;
 
-    public CommandConsumer(RabbitMqClient rabbitMqClient,
-        IServiceProvider serviceProvider,
+    public CommandConsumer(IRabbitMqClient rabbitMqClient,
         ICommandDispatcher commandDispatcher)
     {
         _rabbitMqClient = rabbitMqClient;
-        _serviceProvider = serviceProvider;
         _commandDispatcher = commandDispatcher;
     }
 
     public async Task ConsumeCommand<TCommand>() where TCommand : class, ICommand
     {
-        using var channel = await _rabbitMqClient.CreateChannelAsync();
+        using var channel = await _rabbitMqClient.CreateChannel();
 
         var queueName = $"{typeof(TCommand).Name.Underscore()}_queue";
         await channel.QueueDeclareAsync(queueName, true, false, false);

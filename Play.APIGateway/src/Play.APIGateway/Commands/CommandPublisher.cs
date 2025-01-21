@@ -15,20 +15,20 @@ public class CommandPublisher
         _rabbitMqClient = rabbitMqClient;
     }
     
-    public async Task PublishCommand<TCommand>(TCommand command) where TCommand : class, ICommand
+    public async Task PublishCommand<TCommand>(TCommand command) where TCommand : ICommand
     {
         using var channel = await _rabbitMqClient.CreateChannelAsync();
         
         //declare exchange
-        var exchangeName = $"{typeof(TCommand).FullName}_exchange";
+        var exchangeName = $"{command.GetType().Name.Underscore()}_exchange";
         await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct);
 
         //declare queue
-        var queueName = $"{typeof(TCommand).Name.Underscore()}_queue";
+        var queueName = $"{command.GetType().Name.Underscore()}_queue";
         await channel.QueueDeclareAsync(queueName, durable: true, exclusive: false, autoDelete: false);
 
         //binding
-        var routingKey = typeof(TCommand).Name.Underscore();
+        var routingKey = command.GetType().Name.Underscore();
         await channel.QueueBindAsync(queueName, exchangeName, routingKey: routingKey);
             
         //serializing

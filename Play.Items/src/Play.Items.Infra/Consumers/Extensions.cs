@@ -1,16 +1,14 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Play.Common.RabbitMq;
 using Play.Items.Infra.Consumers;
 
 namespace Play.APIGateway.Commands;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services)
+    public static IServiceCollection AddRabbitMqConsumers(this IServiceCollection services)
     {
-        services.AddSingleton<RabbitMqClient>(sp =>
-            new RabbitMqClient(sp.GetRequiredService<IConfiguration>()));
-
+        services.AddRabbitMq();
         services.AddSingleton<CommandConsumer>();
         services.AddHostedService<CommandConsumerService>();
         

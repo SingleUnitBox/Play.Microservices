@@ -17,17 +17,17 @@ public class Program
         
         app.UseRouting();
         app.MapReverseProxy();
-        app.MapGet("publishCreateItem", async ([FromServices] CommandPublisher publisher) =>
-        {
-            await publisher.PublishCommand(new CreateItem("Potion", "Heals HP", 10.2m));
-        });
+        // app.MapGet("publishCreateItem", async ([FromServices] CommandPublisher publisher) =>
+        // {
+        //     await publisher.PublishCommand(new CreateItem("Sword", "Good damage", 100.2m));
+        // });
 
         // Play.Items
         // this is async, goes to RabbitMq
-        app.PublishCommandEndpointLocal<CreateItem>("play-items/items", HttpMethod.Post);
-        // app.PublishCommandEndpointLocal<UpdateItem>("play-items/items", HttpMethod.Put);
-        // app.PublishDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
-        // app.PublishDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
+        app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
+        app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
+        app.PublishDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
+        app.PublishDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
         //app.MapCommandEndpoint<PurchaseItem>()

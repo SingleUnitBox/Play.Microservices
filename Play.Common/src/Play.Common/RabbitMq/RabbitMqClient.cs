@@ -2,9 +2,9 @@
 using Play.Common.Settings;
 using RabbitMQ.Client;
 
-namespace Play.Items.Infra.Consumers;
+namespace Play.Common.RabbitMq;
 
-public class RabbitMqClient : IDisposable
+public class RabbitMqClient : IRabbitMqClient, IDisposable
 {
     private readonly ConnectionFactory _connectionFactory;
     private IConnection _connection;
@@ -17,7 +17,7 @@ public class RabbitMqClient : IDisposable
         };
     }
 
-    public async Task<IConnection> GetConnectionAsync()
+    public async Task<IConnection> GetConnection()
     {
         if (_connection is null || !_connection.IsOpen)
         {
@@ -27,9 +27,9 @@ public class RabbitMqClient : IDisposable
         return _connection;
     }
 
-    public async Task<IChannel> CreateChannelAsync()
+    public async Task<IChannel> CreateChannel()
     {
-        var connection = await GetConnectionAsync();
+        var connection = await GetConnection();
         return await connection.CreateChannelAsync();
     }
 
