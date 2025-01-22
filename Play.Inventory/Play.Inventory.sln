@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Inventory.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Inventory.Infra", "src\Play.Inventory.Infra\Play.Inventory.Infra.csproj", "{F519D58C-0C3D-4D8C-8E6B-CAFAF14EB991}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Inventory.Contracts", "src\Play.Inventory.Contracts\Play.Inventory.Contracts.csproj", "{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{F519D58C-0C3D-4D8C-8E6B-CAFAF14EB991}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F519D58C-0C3D-4D8C-8E6B-CAFAF14EB991}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F519D58C-0C3D-4D8C-8E6B-CAFAF14EB991}.Release|Any CPU.Build.0 = Release|Any CPU
-		{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -50,7 +44,6 @@ Global
 		{DC868353-8819-402D-8996-F0AF42DD5279} = {D162681F-4EE0-4862-BC7A-5AA6C932E1FF}
 		{00E1EB01-38E0-4194-8D90-E92C948A2CE7} = {D162681F-4EE0-4862-BC7A-5AA6C932E1FF}
 		{F519D58C-0C3D-4D8C-8E6B-CAFAF14EB991} = {D162681F-4EE0-4862-BC7A-5AA6C932E1FF}
-		{287A8B9E-EF83-4A01-9410-A2EA3C59FC6B} = {D162681F-4EE0-4862-BC7A-5AA6C932E1FF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {706541DA-E582-4C86-8440-0438FCF03723}

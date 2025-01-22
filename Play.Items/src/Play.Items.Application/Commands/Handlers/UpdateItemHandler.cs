@@ -3,10 +3,12 @@ using Play.Common.Abs.Messaging;
 using Play.Items.Application.Events;
 using Play.Items.Application.Exceptions;
 using Play.Items.Domain.Repositories;
+using IBusPublisher = Play.Common.Abs.RabbitMq.IBusPublisher;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class UpdateItemHandler(IItemRepository itemRepository) : ICommandHandler<UpdateItem>
+public class UpdateItemHandler(IItemRepository itemRepository,
+    IBusPublisher busPublisher) : ICommandHandler<UpdateItem>
 {
     public async Task HandleAsync(UpdateItem command)
     {
@@ -21,7 +23,6 @@ public class UpdateItemHandler(IItemRepository itemRepository) : ICommandHandler
         item.Price = command.Price;
 
         await itemRepository.UpdateAsync(item);
-        // await busPublisher.PublishAsync(new ItemUpdated(
-        //     item.Id, item.Name, item.Price));
+        await busPublisher.Publish(new ItemUpdated(item.Id, item.Name, item.Price));
     }
 }

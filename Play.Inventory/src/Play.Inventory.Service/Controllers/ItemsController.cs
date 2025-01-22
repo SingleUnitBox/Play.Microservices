@@ -3,9 +3,9 @@ using Play.Common.Abs.Commands;
 using Play.Common.Abs.Queries;
 using Play.Common.Context;
 using Play.Common.Controllers;
+using Play.Inventory.Application.Commands;
 using Play.Inventory.Application.DTO;
 using Play.Inventory.Application.Queries;
-using Play.Inventory.Contracts.Commands;
 
 namespace Play.Inventory.Service.Controllers;
 

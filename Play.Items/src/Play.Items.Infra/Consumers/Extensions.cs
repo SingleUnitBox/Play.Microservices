@@ -11,6 +11,8 @@ public static class Extensions
         services.AddRabbitMq();
         services.AddSingleton<CommandConsumer>();
         services.AddHostedService<CommandConsumerService>();
+        services.AddSingleton<IEventConsumer, EventConsumer>();
+        services.AddHostedService<EventConsumerService>();
         
         return services;
     }

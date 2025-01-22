@@ -10,4 +10,8 @@
       <PackageReference Include="Play.Common.Abs" Version="1.0.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands\" />
+    </ItemGroup>
+
 </Project>

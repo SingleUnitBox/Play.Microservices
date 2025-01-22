@@ -1,9 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
-using Play.Common.Abs.Messaging;
 using Play.Inventory.Application.Events;
 using Play.Inventory.Application.Exceptions;
-using Play.Inventory.Contracts.Commands;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Policies;
 using Play.Inventory.Domain.Policies.Factories;

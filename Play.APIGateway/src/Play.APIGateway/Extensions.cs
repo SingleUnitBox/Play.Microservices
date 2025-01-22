@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Play.APIGateway.Commands;
 using Play.Common.Abs.Commands;
-using Play.Common.Abs.Messaging;
+using Play.Common.Abs.RabbitMq;
 
 namespace Play.APIGateway;
 
@@ -15,7 +14,7 @@ public static class Extensions
         app.MapMethods(route + "/{id?}", new[] { method.Method },
             async (
                 [FromBody] TCommand command,
-                [FromServices] CommandPublisher commandPublisher,
+                [FromServices] IBusPublisher commandPublisher,
                 [FromRoute] Guid? id) =>
             {
                 if (id.HasValue)
@@ -28,7 +27,7 @@ public static class Extensions
                     }
                 }
 
-                await commandPublisher.PublishCommand<TCommand>(command);
+                await commandPublisher.Publish<TCommand>(command);
                 return Results.Accepted();
             });
 
@@ -63,7 +62,7 @@ public static class Extensions
                 
                 command = (TCommand)constructor.Invoke(args.ToArray());
                 
-                await busPublisher.PublishAsync(command, Guid.NewGuid());
+                await busPublisher.Publish(command);
                 return Results.Accepted();
             });
 

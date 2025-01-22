@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
-using Play.Common.Abs.Messaging;
+using Play.Common.Abs.RabbitMq;
 
 namespace Play.Common.Commands;
 
@@ -45,7 +45,7 @@ public static class Extensions
                     }
                 }
                 
-                await busPublisher.PublishAsync(command, Guid.NewGuid());
+                await busPublisher.Publish(command);
                 return Results.Accepted();
             });
         
