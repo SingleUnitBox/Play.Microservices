@@ -1,14 +1,12 @@
 ﻿using System.Text;
 using System.Text.Json;
-using Humanizer;
 using Play.Common.Abs.Commands;
-using Play.Common.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Play.Items.Infra.Consumers;
+namespace Play.Common.RabbitMq.Consumers;
 
-public class CommandConsumer
+public class CommandConsumer : ICommandConsumer
 {
     private readonly IConnection _connection;
     private readonly ICommandDispatcher _commandDispatcher;
@@ -52,5 +50,10 @@ public class CommandConsumer
         
         await channel.BasicConsumeAsync(queueName, false, consumer);
         await Task.Delay(Timeout.Infinite);
+    }
+
+    public Task ConsumeEvent<TCommand>() where TCommand : class, ICommand
+    {
+        throw new NotImplementedException();
     }
 }

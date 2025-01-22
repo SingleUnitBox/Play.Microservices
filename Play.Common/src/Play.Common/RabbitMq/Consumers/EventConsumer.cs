@@ -5,7 +5,7 @@ using Play.Common.Abs.Events;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace Play.Common.RabbitMq;
+namespace Play.Common.RabbitMq.Consumers;
 
 public class EventConsumer(
     IConnection connection,

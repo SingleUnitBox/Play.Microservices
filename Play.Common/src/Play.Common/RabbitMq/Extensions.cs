@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.Consumers;
 using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
@@ -21,6 +22,14 @@ public static class Extensions
         return services;
     }
 
+    public static IServiceCollection WithCommandConsumer(this IServiceCollection services)
+    {
+        services.AddSingleton<ICommandConsumer, CommandConsumer>();
+        services.AddHostedService<CommandConsumerService>();
+        
+        return services;
+    }
+    
     public static IServiceCollection WithEventConsumer(this IServiceCollection services)
     {
         services.AddSingleton<IEventConsumer, EventConsumer>();

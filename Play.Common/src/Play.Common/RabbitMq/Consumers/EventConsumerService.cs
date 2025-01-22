@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Events;
 
-namespace Play.Common.RabbitMq;
+namespace Play.Common.RabbitMq.Consumers;
 
 public class EventConsumerService(IEventConsumer eventConsumer) : BackgroundService
 {

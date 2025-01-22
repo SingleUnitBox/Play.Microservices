@@ -1,6 +1,6 @@
 ﻿using Play.Common.Abs.Events;
 
-namespace Play.Common.RabbitMq;
+namespace Play.Common.RabbitMq.Consumers;
 
 public interface IEventConsumer
 {
