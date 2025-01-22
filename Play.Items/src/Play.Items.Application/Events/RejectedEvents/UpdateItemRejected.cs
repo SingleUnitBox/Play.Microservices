@@ -1,4 +1,4 @@
-﻿namespace Play.Items.Contracts.Events.RejectedEvents;
+﻿namespace Play.Items.Application.Events.RejectedEvents;
 
 public class UpdateItemRejected
 {
