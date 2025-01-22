@@ -10,23 +10,26 @@ namespace Play.Items.Infra.Consumers;
 
 public class CommandConsumer
 {
-    private readonly IRabbitMqClient _rabbitMqClient;
+    private readonly IConnection _connection;
     private readonly ICommandDispatcher _commandDispatcher;
 
-    public CommandConsumer(IRabbitMqClient rabbitMqClient,
-        ICommandDispatcher commandDispatcher)
+    public CommandConsumer(IConnection connection, ICommandDispatcher commandDispatcher)
     {
-        _rabbitMqClient = rabbitMqClient;
+        _connection = connection;
         _commandDispatcher = commandDispatcher;
     }
 
     public async Task ConsumeCommand<TCommand>() where TCommand : class, ICommand
     {
-        using var channel = await _rabbitMqClient.CreateChannel();
+        using var channel = await _connection.CreateChannelAsync();
 
-        var queueName = $"{typeof(TCommand).Name.Underscore()}_queue";
+        var queueName = typeof(TCommand).GetQueueName();
         await channel.QueueDeclareAsync(queueName, true, false, false);
-            
+        
+        var exchangeName = typeof(TCommand).GetExchangeName();
+        var routingKey = typeof(TCommand).GetRoutingKey();
+        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {

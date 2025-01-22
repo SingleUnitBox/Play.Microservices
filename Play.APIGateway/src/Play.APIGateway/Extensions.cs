@@ -14,7 +14,7 @@ public static class Extensions
         app.MapMethods(route + "/{id?}", new[] { method.Method },
             async (
                 [FromBody] TCommand command,
-                [FromServices] IBusPublisher commandPublisher,
+                [FromServices] IBusPublisher busPublisher,
                 [FromRoute] Guid? id) =>
             {
                 if (id.HasValue)
@@ -27,14 +27,14 @@ public static class Extensions
                     }
                 }
 
-                await commandPublisher.Publish<TCommand>(command);
+                await busPublisher.Publish<TCommand>(command);
                 return Results.Accepted();
             });
 
         return app;
     }
 
-    public static WebApplication PublishDeleteCommandEndpointLocal<TCommand>(this WebApplication app,
+    public static WebApplication PublishDeleteCommand<TCommand>(this WebApplication app,
         string route)
         where TCommand : class
     {

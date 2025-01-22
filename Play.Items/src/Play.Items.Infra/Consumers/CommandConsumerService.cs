@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
 using Play.Items.Application.Commands;
+using RabbitMQ.Client;
 
 namespace Play.Items.Infra.Consumers;
 
@@ -16,7 +17,13 @@ public class CommandConsumerService : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var commandTypes = new[] { typeof(CreateItem), typeof(UpdateItem), typeof(DeleteItem), typeof(DeleteItems) };
+        var commandTypes = new[]
+        {
+            typeof(CreateItem), 
+            typeof(UpdateItem), 
+            typeof(DeleteItem), 
+            typeof(DeleteItems)
+        };
         var consumeTasks = commandTypes
             .Select(type =>
             {

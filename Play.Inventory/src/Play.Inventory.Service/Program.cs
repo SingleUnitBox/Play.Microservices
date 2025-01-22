@@ -23,7 +23,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHostedService<AppInitializer>();
 builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
-builder.Services.AddRabbitMq();
+builder.Services.AddRabbitMq()
+    .WithEventConsumer();
 
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();
@@ -41,8 +42,6 @@ builder.Services.AddLoggingCommandHandlerDecorator();
 builder.Services.AddEvents();
 builder.Services.AddLoggingEventHandlerDecorator();
 builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
-builder.Services.AddEvents();
-builder.Services.AddLoggingEventHandlerDecorator();
 
 builder.Services.AddAPostgresCommandHandlerDecorator();
 builder.Services.AddPostgresUnitOfWork<IInventoryUnitOfWork, InventoryPostgresUnitOfWork>();

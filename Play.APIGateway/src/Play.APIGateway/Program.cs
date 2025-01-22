@@ -27,8 +27,8 @@ public class Program
         // this is async, goes to RabbitMq
         app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
         app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
-        // app.PublishDeleteCommandEndpointLocal<DeleteItem>("play-items/items");
-        // app.PublishDeleteCommandEndpointLocal<DeleteItems>("play-items/items/delete");
+        app.PublishDeleteCommand<DeleteItem>("play-items/items");
+        app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
         //app.MapCommandEndpoint<PurchaseItem>()

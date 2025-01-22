@@ -1,5 +1,4 @@
 using MongoDB.Driver;
-using Play.APIGateway.Commands;
 using Play.Common.Cache;
 using Play.Common.Commands;
 using Play.Common.Context;
@@ -9,8 +8,10 @@ using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.MongoDb;
 using Play.Common.Queries;
+using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Items.Domain.Repositories;
+using Play.Items.Infra.Consumers;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
@@ -51,9 +52,9 @@ public class Program
         });
 
         //caching
-        builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
+        //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         //builder.Services.AddMemoryCache();
-        builder.Services.AddCaching();
+        //builder.Services.AddCaching();
 
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();

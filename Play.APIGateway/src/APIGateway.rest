@@ -2,7 +2,7 @@
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
-@itemId = 9af587bf-5a52-4661-8784-87ae28f8a451
+@itemId = 1095dd7b-ffe6-4cd7-aaba-8273bc0dcc53
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 ###
@@ -60,7 +60,7 @@ POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "XXL Potion",
+  "name": "XXXXXL Potion",
   "description": "Easy damage",
   "price": 66.99
 }
@@ -70,9 +70,9 @@ PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
 {
-  "name": "Scroll",
+  "name": "Scr",
   "description": "Easy spells",
-  "price": 29.99
+  "price": 35.99
 }
 
 ### Delete

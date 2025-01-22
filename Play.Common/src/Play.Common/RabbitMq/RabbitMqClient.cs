@@ -14,6 +14,7 @@ public class RabbitMqClient : IRabbitMqClient, IDisposable
         _connectionFactory = new ConnectionFactory
         {
             HostName = configuration.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings)).Host,
+            ClientProvidedName = configuration.GetSettings<ServiceSettings>(nameof(ServiceSettings)).ServiceName
         };
     }
 

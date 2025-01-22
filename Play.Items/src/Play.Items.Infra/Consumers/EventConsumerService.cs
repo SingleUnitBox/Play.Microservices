@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Events;
+using Play.Common.RabbitMq;
 
 namespace Play.Items.Infra.Consumers;
 

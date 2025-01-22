@@ -8,12 +8,12 @@ using RabbitMQ.Client.Events;
 namespace Play.Items.Infra.Consumers;
 
 public class EventConsumer(
-    IRabbitMqClient rabbitMqClient,
+    IConnection connection,
     IEventDispatcher eventDispatcher) : IEventConsumer
 {
     public async Task ConsumeEvent<TEvent>() where TEvent : class, IEvent
     {
-        using var channel = await rabbitMqClient.CreateChannel();
+        using var channel = await connection.CreateChannelAsync();
 
         var queueName = typeof(TEvent).GetQueueName();
         await channel.QueueDeclareAsync(queueName, true, false, false);

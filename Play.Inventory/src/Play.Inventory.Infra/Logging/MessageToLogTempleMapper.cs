@@ -29,11 +29,11 @@ public class MessageToLogTempleMapper : IMessageToLogTemplateMapper
         },
         [typeof(ItemDeleted)] = new()
         {
-            Before = $"[{typeof(ItemDeleted)}] " + "Starting to delete catalog item '{Name}' with id '{ItemId}'.",
-            After = $"[{typeof(ItemDeleted)}] " + "Deleted catalog item '{Name}' with id '{ItemId}'.",
+            Before = $"[{typeof(ItemDeleted)}] " + "Starting to delete catalog item with id '{ItemId}'.",
+            After = $"[{typeof(ItemDeleted)}] " + "Deleted catalog item with id '{ItemId}'.",
             OnError = new Dictionary<Type, string>()
             {
-                [typeof(CatalogItemNotFoundException)] = "Catalog item '{Name}' with id '{ItemId}' was not found.",
+                [typeof(CatalogItemNotFoundException)] = "Catalog item with id '{ItemId}' was not found.",
             }
         },
         [typeof(GetCatalogItems)] = new()

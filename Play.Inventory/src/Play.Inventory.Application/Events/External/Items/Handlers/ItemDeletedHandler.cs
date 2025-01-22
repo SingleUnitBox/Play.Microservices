@@ -13,7 +13,7 @@ public class ItemDeletedHandler(ICatalogItemRepository catalogItemRepository) : 
         {
             throw new CatalogItemNotFoundException(@event.ItemId);
         }
-
-        await catalogItemRepository.DeleteAsync(item.Id);
+        
+        await catalogItemRepository.DeleteAsync(@event.ItemId);
     }
 }

@@ -5,11 +5,11 @@ using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
 
-public class BusPublisher(IRabbitMqClient rabbitMqClient) : IBusPublisher
+public class  BusPublisher(IConnection connection) : IBusPublisher
 {
     public async Task Publish<TMessage>(TMessage message) where TMessage : class
     {
-        using var channel = await rabbitMqClient.CreateChannel();
+        using var channel = await connection.CreateChannelAsync();
 
         //create_item_exchange
         var exchangeName = message.GetExchangeName();
@@ -21,7 +21,7 @@ public class BusPublisher(IRabbitMqClient rabbitMqClient) : IBusPublisher
 
         //create_item
         var routingKey = message.GetRoutingKey();
-        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        // await channel.QueueBindAsync(queueName, exchangeName, routingKey);
 
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
