@@ -1,9 +1,9 @@
 @url = http://localhost:5008
 
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OWQ4ZWQxNS1lMmMyLTRmYWQtOGQ1ZS1hNTEwNWU2OGI5NmEiLCJ1bmlxdWVfbmFtZSI6Ijk5ZDhlZDE1LWUyYzItNGZhZC04ZDVlLWE1MTA1ZTY4Yjk2YSIsImp0aSI6IjE0MWM5NmY5LTQ2YjktNDBmNS1hMDk5LTU2M2NkZTUzMmM5MCIsImlhdCI6IjE3Mzc2NjgxODExODEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM3NjY4MTgxLCJleHAiOjE3NDYyMjE3ODEsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.bX9BeVUOMB7fH-k3O-CkpfjfDTWP34eg2NKznllo8LY
 
-@itemId = 1095dd7b-ffe6-4cd7-aaba-8273bc0dcc53
-@userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
+@itemId = c1e08c5b-d401-447c-9ce8-d724bfbca7e1
+@userId = 99d8ed15-e2c2-4fad-8d5e-a5105e68b96a
 
 ###
 GET {{url}}/publishCreateItem
@@ -14,8 +14,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user1",
-  "email": "user1@play.com",
+  "username": "user2",
+  "email": "user2@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -31,7 +31,7 @@ POST {{url}}/play-user/signIn
 Content-Type: application/json
 
 {
-    "email": "user1@play.com",
+    "email": "user2@play.com",
     "password": "secret"
 }
 
@@ -76,7 +76,7 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE {{url}}/play-items/items/{{itemId}}
+DELETE {{url}}/play-items/items/be39f46e-62ec-4e12-8720-b83920c3a719
 
 ### PLAY-INVENTORY ###
 ### Browse Inventory+

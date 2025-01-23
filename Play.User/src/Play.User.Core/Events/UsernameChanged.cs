@@ -1,3 +1,3 @@
-﻿namespace Play.User.Contracts.Events;
+﻿namespace Play.User.Core.Events;
 
 public record UsernameChanged(Guid UserId, string Username);

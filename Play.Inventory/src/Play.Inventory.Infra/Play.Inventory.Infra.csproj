@@ -9,14 +9,14 @@
     <ItemGroup>
       <ProjectReference Include="..\Play.Inventory.Application\Play.Inventory.Application.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="Play.Common" Version="1.1.36" />
-    </ItemGroup>
-
+    
     <ItemGroup>
       <Folder Include="Mongo\" />
       <Folder Include="Repositories\UnitOfWork\" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <PackageReference Include="Play.Common" Version="1.1.52" />
     </ItemGroup>
 
 </Project>

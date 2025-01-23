@@ -7,7 +7,7 @@ public class PlayHub : Hub
 {
     public async Task InitializeAsync(string userId)
     {
-        if (string.IsNullOrWhiteSpace(userId))
+            if (string.IsNullOrWhiteSpace(userId))
         {
             await DisconnectAsync();
         }

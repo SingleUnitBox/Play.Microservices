@@ -7,14 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Play.Common" Version="1.0.76" />
-    <PackageReference Include="Play.Items.Contracts" Version="1.0.6" />
+    <PackageReference Include="Play.Common" Version="1.1.52" />
   </ItemGroup>
 
   <ItemGroup>
     <_ContentIncludedByDefault Remove="wwwroot\css\site.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\signalr\dist\browser\signalr.js" />
     <_ContentIncludedByDefault Remove="wwwroot\js\signalr\dist\browser\signalr.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Events\RejectedEvents\" />
   </ItemGroup>
 
 </Project>

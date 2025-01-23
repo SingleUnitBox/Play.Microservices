@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Events;
+using Play.Common.Logging.Attributes;
 
 namespace Play.Common.Events;
 
@@ -10,7 +11,8 @@ public static class Extensions
         services.AddSingleton<IEventDispatcher, EventDispatcher>();
         var assemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.Scan(a => a.FromAssemblies(assemblies)
-            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>)))
+            .AddClasses(c => c.AssignableTo(typeof(IEventHandler<>))
+                .WithoutAttribute<LoggingDecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         

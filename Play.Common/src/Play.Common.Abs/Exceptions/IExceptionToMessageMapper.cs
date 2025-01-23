@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Exceptions.Mappers;
+﻿namespace Play.Common.Abs.Exceptions;
 
 public interface IExceptionToMessageMapper
 {

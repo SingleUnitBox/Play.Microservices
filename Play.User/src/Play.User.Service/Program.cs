@@ -1,8 +1,7 @@
 using Play.Common.Auth;
 using Play.Common.Context;
-using Play.Common.MassTransit;
-using Play.Common.Messaging;
 using Play.Common.MongoDb;
+using Play.Common.RabbitMq;
 using Play.User.Core.Auth;
 using Play.User.Core.Repositories;
 
@@ -15,8 +14,7 @@ builder.Services.AddContext();
 builder.Services.AddMongoDb(builder.Configuration);
 builder.Services.AddMongoRepository<IUserRepository, UserMongoRepository>(
     db => new UserMongoRepository(db, "users"));
-builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddMessaging();
+builder.Services.AddRabbitMq();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

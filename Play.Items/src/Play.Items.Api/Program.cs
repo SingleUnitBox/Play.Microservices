@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using Play.Common.Cache;
+using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Events;
@@ -11,11 +11,9 @@ using Play.Common.Queries;
 using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Items.Domain.Repositories;
-using Play.Items.Infra.Consumers;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Repositories;
-using Play.Items.Infra.Repositories.Cached;
 
 namespace Play.Items.Api;
 
@@ -27,7 +25,8 @@ public class Program
         
         builder.Services.AddExceptionHandling();
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
-
+        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+        
         builder.Services.AddContext();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddCommands();
@@ -38,7 +37,11 @@ public class Program
         builder.Services.AddLoggingEventHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
-        builder.Services.AddRabbitMqConsumers();
+        builder.Services.AddRabbitMq()
+            .AddCommandConsumer()
+            //.AddEventConsumer()
+            .Build();
+
         
         builder.Services.AddMongoDb(builder.Configuration);
         builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
@@ -67,7 +70,9 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseAuthentication();
         app.UseRouting();
+        app.UseAuthorization();
 #pragma warning disable ASP0014
         app.UseEndpoints(endpoints =>
         {

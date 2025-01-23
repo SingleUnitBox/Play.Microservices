@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Abs.Exceptions;
 using Play.Common.Exceptions.Mappers;
 
 namespace Play.Common.Exceptions;

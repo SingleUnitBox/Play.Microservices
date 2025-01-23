@@ -2,5 +2,5 @@
 
 public interface IUnitOfWork
 {
-    Task ExecuteAsync(Func<object, Task> action);
+    Task ExecuteAsync(Func<Task> action);
 }

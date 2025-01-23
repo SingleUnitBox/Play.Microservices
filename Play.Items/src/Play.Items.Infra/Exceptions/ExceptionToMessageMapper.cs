@@ -1,4 +1,4 @@
-﻿using Play.Common.Exceptions.Mappers;
+﻿using Play.Common.Abs.Exceptions;
 
 namespace Play.Items.Infra.Exceptions;
 

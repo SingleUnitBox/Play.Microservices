@@ -64,11 +64,11 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         // 1st approach
         // second update in handler, needs to be atomic with inventoryItem creation/update
         // or event ItemPurchased shall be generated and send by eventDispatcher
-        // moneyBag.SubtractGold(command.Quantity * catalogItem.Price);
-        // await _moneyBagRepository.UpdateMoneyBag(moneyBag);
+        moneyBag.SubtractGold(command.Quantity * catalogItem.Price);
+        await _moneyBagRepository.UpdateMoneyBag(moneyBag);
         
         // 2nd approach
-        await _eventDispatcher.HandleAsync(new ItemPurchased(player.Id, catalogItem.Id, command.Quantity));
+        //await _eventDispatcher.HandleAsync(new ItemPurchased(player.Id, catalogItem.Id, command.Quantity));
     }
     
     private void CanCatalogItemBePurchased(IWeaponPurchasePolicy policy, CatalogItem catalogItem, InventoryItem inventoryItem)

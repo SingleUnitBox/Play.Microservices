@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Play.APIGateway.Commands;
+using Play.APIGateway.Commands.Inventory;
+using Play.APIGateway.Commands.Items;
 using Play.Common.Logging;
 using Play.Common.RabbitMq;
 
@@ -31,7 +33,7 @@ public class Program
         app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
-        //app.MapCommandEndpoint<PurchaseItem>()
+        //app.PublishCommand<PurchaseItem>("play-inventory/items", HttpMethod.Post);
         app.Run();
     }
 }

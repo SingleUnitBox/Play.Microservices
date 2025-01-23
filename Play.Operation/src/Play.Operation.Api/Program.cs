@@ -1,14 +1,15 @@
-using Play.Common.MassTransit;
-using Play.Common.Messaging;
+using Play.Common.Events;
+using Play.Common.RabbitMq;
 using Play.Operation.Api.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddRazorPages();
-builder.Services.AddMassTransitWithRabbitMq(builder.Configuration, AppDomain.CurrentDomain.GetAssemblies());
-builder.Services.AddMessaging();
 builder.Services.AddSignalR();
+builder.Services.AddEvents();
+builder.Services.AddRabbitMq()
+    .AddEventConsumer();
 
 var app = builder.Build();
 

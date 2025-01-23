@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Play.Common.Abs.Auth;
-using Play.Common.Abs.Messaging;
-using Play.User.Contracts.Events;
+using Play.Common.Abs.RabbitMq;
 using Play.User.Core.DTO;
 using Play.User.Core.Repositories;
+using UserCreated = Play.User.Core.Events.UserCreated;
+using UsernameChanged = Play.User.Core.Events.UsernameChanged;
 
 namespace Play.User.Core.Auth;
 
@@ -43,7 +44,7 @@ public class UserService : IUserService
             dto.Claims is null ? emptyClaims : dto.Claims);
         
         await _userRepository.CreateUser(user);
-        await _busPublisher.PublishAsync(new UserCreated(user.Id, user.Username));
+        await _busPublisher.Publish(new UserCreated(user.Id, user.Username));
     }
 
     public async Task<JwtToken> SignIn(SignInDto dto)
@@ -92,6 +93,6 @@ public class UserService : IUserService
         
         user.Username = dto.NewUsername;
         await _userRepository.UpdateUser(user);
-        await _busPublisher.PublishAsync(new UsernameChanged(user.Id, user.Username));
+        await _busPublisher.Publish(new UsernameChanged(user.Id, user.Username));
     }
 }

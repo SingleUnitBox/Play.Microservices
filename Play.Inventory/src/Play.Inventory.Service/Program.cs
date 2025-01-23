@@ -24,7 +24,8 @@ builder.Services.AddHostedService<AppInitializer>();
 builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 builder.Services.AddRabbitMq()
-    .WithEventConsumer();
+    .AddCommandConsumer()
+    .AddEventConsumer();
 
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.Logging.Attributes;
 
 namespace Play.Common.Commands;
 
@@ -17,7 +18,8 @@ public static class Extensions
             .Where(t => typeof(ICommandHandler<>).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
         services.Scan(a => a.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
-            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>)))
+            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
+                .WithoutAttribute<LoggingDecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         

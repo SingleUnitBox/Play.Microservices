@@ -1,7 +1,9 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
+using Play.Common.Abs.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -10,7 +12,8 @@ namespace Play.Common.RabbitMq.Consumers;
 public class EventConsumer(
     IConnection connection,
     IEventDispatcher eventDispatcher,
-    ILogger<EventConsumer> logger) : IEventConsumer
+    ILogger<EventConsumer> logger,
+    IServiceProvider serviceProvider) : IEventConsumer
 {
     public async Task ConsumeEvent<TEvent>() where TEvent : class, IEvent
     {
@@ -26,6 +29,10 @@ public class EventConsumer(
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {
+            var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
+            var correlationContextAccessor = serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
+            correlationContextAccessor.CorrelationContext = new CorrelationContext.CorrelationContext(Guid.Parse(correlationId));
+            
             try
             {
                 var body = ea.Body.ToArray();

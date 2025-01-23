@@ -6,9 +6,9 @@ namespace Play.Common.RabbitMq.Consumers;
 
 public class CommandConsumerService : BackgroundService
 {
-    private readonly CommandConsumer _commandConsumer;
+    private readonly ICommandConsumer _commandConsumer;
     
-    public CommandConsumerService(CommandConsumer commandConsumer)
+    public CommandConsumerService(ICommandConsumer commandConsumer)
     {
         _commandConsumer = commandConsumer;
     }

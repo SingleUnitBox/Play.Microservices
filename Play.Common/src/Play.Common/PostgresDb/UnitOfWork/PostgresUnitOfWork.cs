@@ -11,12 +11,18 @@ public abstract class PostgresUnitOfWork<TDbContext> : IUnitOfWork where TDbCont
         _dbContext = dbContext;
     }
     
-    public async Task ExecuteAsync(Func<object, Task> action)
+    public async Task ExecuteAsync(Func<Task> action)
     {
+        if (_dbContext.Database.CurrentTransaction != null)
+        {
+            await action();
+            return;
+        }
+
         using var transaction = _dbContext.Database.BeginTransaction();
         try
         {
-            await action(_dbContext);
+            await action();
             await transaction.CommitAsync();
         }
         catch (Exception e)

@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Queries;
+using Play.Common.Logging.Attributes;
 using Play.Common.Logging.Mappers;
 using SmartFormat;
 
 namespace Play.Common.Logging;
 
+[LoggingDecorator]
 public class LoggingQueryHandlerDecorator<TQuery, TResult> : IQueryHandler<TQuery, TResult>
     where TQuery : class, IQuery<TResult>
 {

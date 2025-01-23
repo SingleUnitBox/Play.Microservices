@@ -18,6 +18,6 @@ public class UnitOfWorkCommandHandlerDecorator<TCommand> : ICommandHandler<TComm
 
     public async Task HandleAsync(TCommand command)
     {
-        await _unitOfWork.ExecuteAsync(_ => _commandHandler.HandleAsync(command));
+        await _unitOfWork.ExecuteAsync(() => _commandHandler.HandleAsync(command));
     }
 }

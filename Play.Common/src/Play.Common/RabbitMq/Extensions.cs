@@ -2,14 +2,16 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.Builder;
 using Play.Common.RabbitMq.Consumers;
+using Play.Common.RabbitMq.CorrelationContext;
 using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services)
+    public static IRabbitMqBuilder AddRabbitMq(this IServiceCollection services)
     {
         services.AddSingleton<IRabbitMqClient>(sp =>
             new RabbitMqClient(sp.GetRequiredService<IConfiguration>()));
@@ -19,25 +21,12 @@ public static class Extensions
             return rabbitMqClient.GetConnection().GetAwaiter().GetResult();
         });
         services.AddSingleton<IBusPublisher, BusPublisher>();
-        return services;
-    }
-
-    public static IServiceCollection WithCommandConsumer(this IServiceCollection services)
-    {
-        services.AddSingleton<ICommandConsumer, CommandConsumer>();
-        services.AddHostedService<CommandConsumerService>();
-        
-        return services;
+        var builder = new RabbitMqBuilder(services);
+        services.AddSingleton(builder);
+        services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+        return builder;
     }
     
-    public static IServiceCollection WithEventConsumer(this IServiceCollection services)
-    {
-        services.AddSingleton<IEventConsumer, EventConsumer>();
-        services.AddHostedService<EventConsumerService>();
-        
-        return services;
-    }
-
     public static string GetExchangeName<TMessage>(this TMessage message)
         => message.GetType().GetExchangeName();
 

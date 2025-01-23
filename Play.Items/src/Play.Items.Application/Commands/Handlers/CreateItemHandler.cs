@@ -1,4 +1,5 @@
 ﻿using Play.Common.Abs.Commands;
+using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Items.Application.Events;
 using Play.Items.Application.Exceptions;
@@ -11,12 +12,16 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
 {
     private readonly IItemRepository _itemRepository;
     private readonly IBusPublisher _busPublisher;
+    private readonly ICorrelationContext _correlationContext;
+    private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
     
     public CreateItemHandler(IItemRepository itemRepository,
-        IBusPublisher busPublisher)
+        IBusPublisher busPublisher,
+        ICorrelationContextAccessor correlationContextAccessor)
     {
         _itemRepository = itemRepository;
         _busPublisher = busPublisher;
+        _correlationContext = correlationContextAccessor.CorrelationContext;
     }
 
     public async Task HandleAsync(CreateItem command)
@@ -33,16 +38,14 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
             item = new Item(command.ItemId, command.Name, command.Description,
                 command.Price, DateTimeOffset.UtcNow);
             await _itemRepository.CreateAsync(item);
-            await _busPublisher.Publish(new ItemCreated(item.Id, item.Name, item.Price));
-            //context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
-            //Guid.Empty);
+            await _busPublisher.Publish(new ItemCreated(item.Id, item.Name, item.Price),
+                _correlationContext);
         }
         catch (ItemAlreadyExistException ex)
         {
+            var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
+            await _busPublisher.Publish(rejectedEvent, _correlationContext);
             throw;
-            //var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
-            // await _busPublisher.PublishAsync(rejectedEvent, 
-            //     context.CorrelationId.HasValue ? context.CorrelationId.Value : Guid.Empty);
         }
         catch (Exception ex)
         {

@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -10,11 +12,13 @@ public class CommandConsumer : ICommandConsumer
 {
     private readonly IConnection _connection;
     private readonly ICommandDispatcher _commandDispatcher;
+    private readonly IServiceProvider _serviceProvider;
 
-    public CommandConsumer(IConnection connection, ICommandDispatcher commandDispatcher)
+    public CommandConsumer(IConnection connection, ICommandDispatcher commandDispatcher, IServiceProvider serviceProvider)
     {
         _connection = connection;
         _commandDispatcher = commandDispatcher;
+        _serviceProvider = serviceProvider;
     }
 
     public async Task ConsumeCommand<TCommand>() where TCommand : class, ICommand
@@ -31,6 +35,10 @@ public class CommandConsumer : ICommandConsumer
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {
+            var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
+            var correlationContextAccessor = _serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
+            correlationContextAccessor.CorrelationContext = new CorrelationContext.CorrelationContext(Guid.Parse(correlationId));
+            
             try
             {
                 var body = ea.Body.ToArray();
@@ -44,16 +52,12 @@ public class CommandConsumer : ICommandConsumer
             catch (Exception e)
             {
                 await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                throw;
             }
 
         };
         
         await channel.BasicConsumeAsync(queueName, false, consumer);
         await Task.Delay(Timeout.Infinite);
-    }
-
-    public Task ConsumeEvent<TCommand>() where TCommand : class, ICommand
-    {
-        throw new NotImplementedException();
     }
 }

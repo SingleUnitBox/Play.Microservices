@@ -33,7 +33,7 @@ public static class Extensions
 
         return app;
     }
-
+    
     public static WebApplication PublishDeleteCommand<TCommand>(this WebApplication app,
         string route)
         where TCommand : class
