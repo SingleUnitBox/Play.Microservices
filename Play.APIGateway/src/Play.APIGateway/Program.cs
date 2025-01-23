@@ -33,7 +33,7 @@ public class Program
         app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
 
         // Play.Inventory
-        //app.PublishCommand<PurchaseItem>("play-inventory/items", HttpMethod.Post);
+        app.PublishCommand<PurchaseItem>("play-inventory/items", HttpMethod.Post);
         app.Run();
     }
 }

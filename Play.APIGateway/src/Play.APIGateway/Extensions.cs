@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.CorrelationContext;
 
 namespace Play.APIGateway;
 
@@ -15,7 +16,8 @@ public static class Extensions
             async (
                 [FromBody] TCommand command,
                 [FromServices] IBusPublisher busPublisher,
-                [FromRoute] Guid? id) =>
+                [FromRoute] Guid? id,
+                HttpContext context) =>
             {
                 if (id.HasValue)
                 {
@@ -26,9 +28,12 @@ public static class Extensions
                         idProperty.SetValue(command, id);
                     }
                 }
-
-                await busPublisher.Publish<TCommand>(command);
-                return Results.Accepted();
+                
+                var correlationId = Guid.NewGuid();
+                await busPublisher.Publish<TCommand>(command, new CorrelationContext(correlationId));
+                
+                context.Response.Headers["Request-Id"] = correlationId.ToString();
+                return Results.Accepted($"play-operations/{correlationId}");
             });
 
         return app;
