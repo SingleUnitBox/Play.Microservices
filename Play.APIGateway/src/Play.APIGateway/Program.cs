@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Play.APIGateway.Commands;
 using Play.APIGateway.Commands.Inventory;
 using Play.APIGateway.Commands.Items;
+using Play.Common.Auth;
+using Play.Common.Context;
 using Play.Common.Logging;
 using Play.Common.RabbitMq;
 
@@ -16,6 +18,8 @@ public class Program
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         builder.Services.AddRabbitMq();
         builder.Host.UseSerilogWithSeq();
+        builder.Services.AddContext();
+        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
         var app = builder.Build();
         
         app.UseRouting();

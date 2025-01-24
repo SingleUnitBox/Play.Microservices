@@ -8,7 +8,8 @@ namespace Play.Common.RabbitMq;
 
 public class  BusPublisher(IConnection connection) : IBusPublisher
 {
-    public async Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null) where TMessage : class
+    public async Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null,
+        Guid? userId = null) where TMessage : class
     {
         using var channel = await connection.CreateChannelAsync();
 
@@ -31,6 +32,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         basicProperties.CorrelationId = string.IsNullOrWhiteSpace(correlationContext?.CorrelationId.ToString())
             ? Guid.NewGuid().ToString()
             : correlationContext.CorrelationId.ToString();
+        basicProperties.UserId = userId.ToString();
 
         await channel.BasicPublishAsync(
             exchangeName,
@@ -39,5 +41,4 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
             basicProperties,
             body);
     }
-    
 }

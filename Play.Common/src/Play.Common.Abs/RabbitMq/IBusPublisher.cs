@@ -2,6 +2,7 @@
 
 public interface IBusPublisher
 {
-    //Task Publish<TMessage>(TMessage message) where TMessage : class;
-    Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null) where TMessage : class;
+    Task Publish<TMessage>(TMessage message,
+        ICorrelationContext correlationContext = null,
+        Guid? userId = null) where TMessage : class;
 }

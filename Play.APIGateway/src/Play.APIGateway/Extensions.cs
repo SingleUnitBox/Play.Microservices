@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.Context;
 using Play.Common.RabbitMq.CorrelationContext;
 
 namespace Play.APIGateway;
@@ -17,8 +18,10 @@ public static class Extensions
                 [FromBody] TCommand command,
                 [FromServices] IBusPublisher busPublisher,
                 [FromRoute] Guid? id,
-                HttpContext context) =>
+                HttpContext context,
+                [FromServices] IContext idContext) =>
             {
+                var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
                 if (id.HasValue)
                 {
                     var idProperty = typeof(TCommand).GetProperties()
