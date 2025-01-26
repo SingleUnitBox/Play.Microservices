@@ -7,14 +7,16 @@ public class PlayHub : Hub
 {
     public async Task InitializeAsync(string userId)
     {
-            if (string.IsNullOrWhiteSpace(userId))
+        if (string.IsNullOrWhiteSpace(userId))
         {
             await DisconnectAsync();
         }
+        
         try
         {
             var group = Guid.Parse(userId).ToUserGroup();
             await Groups.AddToGroupAsync(Context.ConnectionId, group);
+            Console.WriteLine($"User {userId} added to group {group}");
             await ConnectAsync();
         }
         catch
@@ -55,8 +57,8 @@ public class PlayHub : Hub
         await Clients.Client(Context.ConnectionId).SendAsync("connected");
     }
 
-    private async Task DisconnectAsync()
+    public async Task DisconnectAsync()
     {
-        await Clients.Client(Context.ConnectionId).SendAsync("disconnected");
+        await Clients.Caller.SendAsync("disconnected");
     }
 }

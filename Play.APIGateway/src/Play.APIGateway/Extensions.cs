@@ -19,9 +19,9 @@ public static class Extensions
                 [FromServices] IBusPublisher busPublisher,
                 [FromRoute] Guid? id,
                 HttpContext context,
-                [FromServices] IContext idContext) =>
+                [FromServices] IContext idContext
+                ) =>
             {
-                var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
                 if (id.HasValue)
                 {
                     var idProperty = typeof(TCommand).GetProperties()
@@ -33,7 +33,9 @@ public static class Extensions
                 }
                 
                 var correlationId = Guid.NewGuid();
-                await busPublisher.Publish<TCommand>(command, new CorrelationContext(correlationId));
+                var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
+                await busPublisher.Publish<TCommand>(command, new CorrelationContext(correlationId),
+                    userId);
                 
                 context.Response.Headers["Request-Id"] = correlationId.ToString();
                 return Results.Accepted($"play-operations/{correlationId}");

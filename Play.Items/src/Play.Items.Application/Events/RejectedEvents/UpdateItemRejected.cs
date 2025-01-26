@@ -1,6 +1,8 @@
-﻿namespace Play.Items.Application.Events.RejectedEvents;
+﻿using Play.Common.Abs.Events;
 
-public class UpdateItemRejected
+namespace Play.Items.Application.Events.RejectedEvents;
+
+public class UpdateItemRejected : IRejectedEvent
 {
     public Guid ItemId { get; }
     public string Reason { get; }

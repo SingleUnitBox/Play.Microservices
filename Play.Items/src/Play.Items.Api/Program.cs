@@ -63,7 +63,7 @@ public class Program
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();
 
-        //app.UseExceptionHandling();
+        app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

@@ -17,10 +17,12 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
     
     public CreateItemHandler(IItemRepository itemRepository,
         IBusPublisher busPublisher,
-        ICorrelationContextAccessor correlationContextAccessor)
+        ICorrelationContextAccessor correlationContextAccessor,
+        IExceptionToMessageMapper exceptionToMessageMapper)
     {
         _itemRepository = itemRepository;
         _busPublisher = busPublisher;
+        _exceptionToMessageMapper = exceptionToMessageMapper;
         _correlationContext = correlationContextAccessor.CorrelationContext;
     }
 
@@ -28,11 +30,13 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
     {
         try
         {
+            //throw new ItemAlreadyExistException(command.ItemId);
             var item = await _itemRepository.GetByIdAsync(command.ItemId);
-            if (item != null)
-            {
-                throw new ItemAlreadyExistException(item.Id);
-            }
+             if (item != null)
+             {
+                 throw new ItemAlreadyExistException(item.Id);
+             }
+             
 
             // Continue processing the message
             item = new Item(command.ItemId, command.Name, command.Description,

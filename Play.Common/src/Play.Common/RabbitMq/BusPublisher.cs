@@ -8,8 +8,8 @@ namespace Play.Common.RabbitMq;
 
 public class  BusPublisher(IConnection connection) : IBusPublisher
 {
-    public async Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null,
-        Guid? userId = null) where TMessage : class
+    public async Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null)
+        where TMessage : class
     {
         using var channel = await connection.CreateChannelAsync();
 
@@ -22,7 +22,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         await channel.QueueDeclareAsync(queueName, true, false, false);
         
         var routingKey = message.GetRoutingKey();
-        // await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
 
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
@@ -32,7 +32,11 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         basicProperties.CorrelationId = string.IsNullOrWhiteSpace(correlationContext?.CorrelationId.ToString())
             ? Guid.NewGuid().ToString()
             : correlationContext.CorrelationId.ToString();
-        basicProperties.UserId = userId.ToString();
+        basicProperties.Headers = new Dictionary<string, object?>
+        {
+            { "UserId", correlationContext?.UserId.ToString() ?? Guid.Empty.ToString() }
+        };
+        
 
         await channel.BasicPublishAsync(
             exchangeName,

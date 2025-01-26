@@ -36,8 +36,20 @@ public class CommandConsumer : ICommandConsumer
         consumer.ReceivedAsync += async (model, ea) =>
         {
             var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
+            var userIdString = string.Empty;
+            if (ea.BasicProperties?.Headers?.TryGetValue("UserId", out var userIdHeader) == true &&
+                userIdHeader is byte[] userIdBytes)
+            {
+                userIdString = Encoding.UTF8.GetString(userIdBytes);
+            }
+            
+            var userId = Guid.TryParse(userIdString, out var userIdGuid)
+                    ? userIdGuid
+                    : Guid.Empty;
+
             var correlationContextAccessor = _serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
-            correlationContextAccessor.CorrelationContext = new CorrelationContext.CorrelationContext(Guid.Parse(correlationId));
+            correlationContextAccessor.CorrelationContext = 
+                new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
             
             try
             {
@@ -46,12 +58,12 @@ public class CommandConsumer : ICommandConsumer
                 var command = JsonSerializer.Deserialize<TCommand>(message);
 
                 await _commandDispatcher.DispatchAsync(command);
-            
+                
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception e)
             {
-                await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                await channel.BasicNackAsync(ea.DeliveryTag, false, false);
                 throw;
             }
 

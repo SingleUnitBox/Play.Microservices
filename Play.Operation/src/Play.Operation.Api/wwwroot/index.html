@@ -1,26 +1,23 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Play.Operation SignalR</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayHub Simplified</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.3/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script src="ui/js/signalr-client.js" defer></script>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-lg-12">
-            <h3>Play.Operation SignalR messages</h3>
-            <div class="form-group">
-                <input type="text" class="form-control" id="jwt" placeholder="JWT">
-            </div>
-            <button id="connect" class="btn btn-primary">Connect</button>
-            <hr/>
-            <ul class="list-group" id="messages">
-            </ul>
-        </div>
+<div class="container mt-5">
+    <h1>PlayHub Operations</h1>
+    <div class="mb-3">
+        <label for="userId" class="form-label">User ID</label>
+        <input type="text" id="userId" class="form-control" placeholder="Enter User ID">
     </div>
+    <button id="connect" class="btn btn-primary">Connect</button>
+    <ul id="messages" class="list-group mt-4"></ul>
 </div>
-<script src="js/signalr.js"></script>
-<script src="js/app.js"></script>
 </body>
 </html>
+

@@ -30,8 +30,20 @@ public class EventConsumer(
         consumer.ReceivedAsync += async (model, ea) =>
         {
             var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
+            var userIdString = string.Empty;
+            if (ea.BasicProperties?.Headers?.TryGetValue("UserId", out var userIdHeader) == true &&
+                userIdHeader is byte[] userIdBytes)
+            {
+                userIdString = Encoding.UTF8.GetString(userIdBytes);
+            }
+            
+            var userId = Guid.TryParse(userIdString, out var userIdGuid)
+                ? userIdGuid
+                : Guid.Empty;
+            
             var correlationContextAccessor = serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
-            correlationContextAccessor.CorrelationContext = new CorrelationContext.CorrelationContext(Guid.Parse(correlationId));
+            correlationContextAccessor.CorrelationContext = 
+                new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
             
             try
             {

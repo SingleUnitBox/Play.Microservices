@@ -3,4 +3,5 @@
 public interface ICorrelationContext
 {
     Guid CorrelationId { get; }
+    Guid UserId { get; }
 }

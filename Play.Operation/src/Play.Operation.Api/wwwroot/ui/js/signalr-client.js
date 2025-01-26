@@ -29,11 +29,21 @@
             });
     };
 
+    // Updated Event Listeners
     connection.on("connected", () => appendMessage("Connected.", "primary"));
     connection.on("disconnected", () => appendMessage("Disconnected: invalid user ID.", "danger"));
-    connection.on("operation_pending", (operation) => appendMessage("Operation pending.", "light", operation));
-    connection.on("operation_completed", (operation) => appendMessage("Operation completed.", "success", operation));
-    connection.on("operation_rejected", (operation) => appendMessage("Operation rejected.", "danger", operation));
+
+    connection.on("OperationStatusUpdated", (userId, correlationId, status, reason) => {
+        console.log("Received OperationStatusUpdated:", { correlationId, status, reason });
+        appendMessage(`Status updated: ${status}`, "info", { correlationId, reason });
+    });
+
+    connection.on("operation_pending", (correlationId, status)=>
+        appendMessage("Operation pending.", "light", { correlationId, status }));
+    connection.on("operation_completed", (correlationId, status) =>
+        appendMessage("Operation completed.", "success", { correlationId, status }));
+    connection.on("operation_rejected", (correlationId, status) =>
+        appendMessage("Operation rejected.", "danger", { correlationId, status }));
 
     function appendMessage(message, type = "info", data = null) {
         const listItem = document.createElement("li");
