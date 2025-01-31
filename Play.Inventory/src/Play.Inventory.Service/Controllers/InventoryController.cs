@@ -1,16 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Play.Common;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Queries;
 using Play.Common.Context;
 using Play.Common.Controllers;
-using Play.Inventory.Application;
-using Play.Inventory.Application.Commands;
 using Play.Inventory.Application.DTO;
 using Play.Inventory.Application.Queries;
-using Play.Inventory.Domain.Entities;
-using Play.Inventory.Domain.Repositories;
 
 namespace Play.Inventory.Service.Controllers;
 

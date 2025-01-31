@@ -32,15 +32,15 @@ public class OperationStatusService : IOperationStatusService
         //await _hubContext.Clients.Group(group).SendAsync("OperationStatusUpdated", correlationId, status, reason);
         switch (status)
         {
-            case "Pending": 
+            case nameof(OperationState.Pending): 
                 await _hubContext.Clients.Group(group)
                 .SendAsync("operation_pending", correlationId, status, reason);
                 break;
-            case "Completed":
+            case nameof(OperationState.Completed):
                 await _hubContext.Clients.Group(group)
                     .SendAsync("operation_completed", correlationId, status, reason);
                 break;
-            case "Rejected":
+            case nameof(OperationState.Rejected):
                 await _hubContext.Clients.Group(group)
                     .SendAsync("operation_rejected", correlationId, status, reason);
                 break;

@@ -1,6 +1,6 @@
 @url = http://localhost:5008
 
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OWQ4ZWQxNS1lMmMyLTRmYWQtOGQ1ZS1hNTEwNWU2OGI5NmEiLCJ1bmlxdWVfbmFtZSI6Ijk5ZDhlZDE1LWUyYzItNGZhZC04ZDVlLWE1MTA1ZTY4Yjk2YSIsImp0aSI6IjE0MWM5NmY5LTQ2YjktNDBmNS1hMDk5LTU2M2NkZTUzMmM5MCIsImlhdCI6IjE3Mzc2NjgxODExODEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM3NjY4MTgxLCJleHAiOjE3NDYyMjE3ODEsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.bX9BeVUOMB7fH-k3O-CkpfjfDTWP34eg2NKznllo8LY
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmFkZGZiNS0wMjI3LTQ4MDUtODA1YS0yMTQwNDIxZTZkZTUiLCJ1bmlxdWVfbmFtZSI6IjlmYWRkZmI1LTAyMjctNDgwNS04MDVhLTIxNDA0MjFlNmRlNSIsImp0aSI6IjE5ZDc3ZDExLTQxZmYtNDcwNC04MDhiLTFiOWRkMTJhOTI3MCIsImlhdCI6IjE3Mzc2NzIzNjc3MzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM3NjcyMzY3LCJleHAiOjE3NDYyMjU5NjcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.w4L6OMqS1Unb0X28N8AQi_8eWMpW1RYqKunvNSAnmc4
 
 @itemId = c1e08c5b-d401-447c-9ce8-d724bfbca7e1
 @userId = 99d8ed15-e2c2-4fad-8d5e-a5105e68b96a
@@ -14,8 +14,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user2",
-  "email": "user2@play.com",
+  "username": "user4",
+  "email": "user4@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -31,7 +31,7 @@ POST {{url}}/play-user/signIn
 Content-Type: application/json
 
 {
-    "email": "user2@play.com",
+    "email": "user3@play.com",
     "password": "secret"
 }
 
@@ -57,6 +57,7 @@ DELETE {{url}}/play-items/items/delete
 
 ### Create
 POST {{url}}/play-items/items
+Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 {
