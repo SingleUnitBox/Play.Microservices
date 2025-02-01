@@ -18,7 +18,7 @@ internal sealed class ItemJsonConverter : JsonConverter<Item>
         
         var id = jsonObject["Id"]?["Value"]?.ToObject<Guid>() ?? Guid.Empty;
         
-        return new Item(id, name, description, price, createdDate);
+        return Item.Create(id, name, description, price, createdDate);
     }
     
     public override void WriteJson(JsonWriter writer, Item? value, JsonSerializer serializer)

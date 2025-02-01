@@ -39,7 +39,7 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
              
 
             // Continue processing the message
-            item = new Item(command.ItemId, command.Name, command.Description,
+            item = Item.Create(command.ItemId, command.Name, command.Description,
                 command.Price, DateTimeOffset.UtcNow);
             await _itemRepository.CreateAsync(item);
             await _busPublisher.Publish(new ItemCreated(item.Id, item.Name, item.Price),

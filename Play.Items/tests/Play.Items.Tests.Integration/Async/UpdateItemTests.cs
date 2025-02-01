@@ -36,6 +36,6 @@ public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
         factory.Server.AllowSynchronousIO = true;
         _rabbitMqFixture = rabbitMqFixture;
         _mongoDbFixture = mongoDbFixture;
-        _item = new Item("Book", "New spells every day", 15, DateTimeOffset.UtcNow);
+        _item = Item.Create("Book", "New spells every day", 15, DateTimeOffset.UtcNow);
     }
 }

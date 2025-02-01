@@ -9,9 +9,17 @@ public class Crafter
     public CrafterName Name { get; }
     public IReadOnlyCollection<Item> Items { get; } = new List<Item>();
 
-    public Crafter(Guid crafterId, string crafterName)
+    private Crafter()
     {
-        CrafterId = crafterId;
+        
+    }
+    
+    private Crafter(string crafterName)
+    {
+        CrafterId = Guid.NewGuid();
         Name = crafterName;
     }
+
+    public static Crafter Create(string crafterName)
+        => new Crafter(crafterName);
 }

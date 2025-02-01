@@ -7,12 +7,14 @@ using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.MongoDb;
+using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
+using Play.Items.Infra.Postgres;
 using Play.Items.Infra.Repositories;
 
 namespace Play.Items.Api;
@@ -42,17 +44,17 @@ public class Program
             //.AddEventConsumer()
             .Build();
 
-        
-        builder.Services.AddMongoDb(builder.Configuration);
-        builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
-            db => new ItemRepository(db, "items"));
-        builder.Services.AddScoped<ItemRepository>(sp =>
-        {
-            var db = sp.GetRequiredService<IMongoDatabase>();
-            var itemRepository = new ItemRepository(db, "items");
-
-            return itemRepository;
-        });
+        builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
+        // builder.Services.AddMongoDb(builder.Configuration);
+        // builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
+        //     db => new ItemRepository(db, "items"));
+        // builder.Services.AddScoped<ItemRepository>(sp =>
+        // {
+        //     var db = sp.GetRequiredService<IMongoDatabase>();
+        //     var itemRepository = new ItemRepository(db, "items");
+        //
+        //     return itemRepository;
+        // });
 
         //caching
         //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
