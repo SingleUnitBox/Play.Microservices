@@ -17,9 +17,9 @@ public class UpdateItemHandler(IItemRepository itemRepository,
             throw new ItemNotFoundException(command.ItemId);
         }
 
-        item.Name = command.Name;
-        item.Description = command.Description;
-        item.Price = command.Price;
+        item.UpdateName(command.Name);
+        item.UpdateDescription(command.Description);
+        item.UpdatePrice(command.Price);
 
         await itemRepository.UpdateAsync(item);
         await busPublisher.Publish(new ItemUpdated(item.Id, item.Name, item.Price));

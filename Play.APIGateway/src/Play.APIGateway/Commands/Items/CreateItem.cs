@@ -2,4 +2,4 @@
 
 namespace Play.APIGateway.Commands.Items;
 
-public record CreateItem(string Name, string Description, Decimal Price) : ICommand;
+public record CreateItem(string Name, string Description, Decimal Price, Guid CrafterId) : ICommand;

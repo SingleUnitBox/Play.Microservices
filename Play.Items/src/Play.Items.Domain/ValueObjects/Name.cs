@@ -5,7 +5,7 @@ namespace Play.Items.Domain.ValueObjects;
 public class Name
 {
     public string Value { get; }
-
+    
     public Name(string value)
     {
         if (string.IsNullOrWhiteSpace(value))

@@ -8,7 +8,10 @@ namespace Play.Common.RabbitMq;
 
 public class  BusPublisher(IConnection connection) : IBusPublisher
 {
-    public async Task Publish<TMessage>(TMessage message, ICorrelationContext correlationContext = null)
+    public async Task Publish<TMessage>(
+        TMessage message,
+        string messageId = null,
+        ICorrelationContext correlationContext = null)
         where TMessage : class
     {
         using var channel = await connection.CreateChannelAsync();

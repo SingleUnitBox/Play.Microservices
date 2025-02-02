@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Humanizer" Version="3.0.0-beta.54" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11"/>
-        <PackageReference Include="Play.Common" Version="1.1.61" />
+        <PackageReference Include="Play.Common" Version="1.1.73" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
         <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0"/>
     </ItemGroup>

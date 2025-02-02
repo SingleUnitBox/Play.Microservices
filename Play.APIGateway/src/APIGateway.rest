@@ -3,7 +3,10 @@
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmFkZGZiNS0wMjI3LTQ4MDUtODA1YS0yMTQwNDIxZTZkZTUiLCJ1bmlxdWVfbmFtZSI6IjlmYWRkZmI1LTAyMjctNDgwNS04MDVhLTIxNDA0MjFlNmRlNSIsImp0aSI6IjE5ZDc3ZDExLTQxZmYtNDcwNC04MDhiLTFiOWRkMTJhOTI3MCIsImlhdCI6IjE3Mzc2NzIzNjc3MzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM3NjcyMzY3LCJleHAiOjE3NDYyMjU5NjcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.w4L6OMqS1Unb0X28N8AQi_8eWMpW1RYqKunvNSAnmc4
 
 @itemId = c1e08c5b-d401-447c-9ce8-d724bfbca7e1
+@crafterId = db1ed409-a217-461d-a49f-c75dcf675709
 @userId = 99d8ed15-e2c2-4fad-8d5e-a5105e68b96a
+
+99d8ed15-e2c2-4fad-8d5e-a5105e68b96b
 
 ###
 GET {{url}}/publishCreateItem
@@ -63,7 +66,8 @@ Content-Type: application/json
 {
   "name": "XXXXXL Potion",
   "description": "Easy damage",
-  "price": 66.99
+  "price": 66.99,
+  "crafterId": {{crafterId}}
 }
 
 ### Update

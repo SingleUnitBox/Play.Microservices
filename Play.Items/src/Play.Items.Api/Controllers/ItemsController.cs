@@ -30,9 +30,16 @@ namespace Play.Items.Api.Controllers
         [HttpGet("{itemId}")]
         public async Task<ActionResult<ItemDto>> GetByIdAsync(Guid itemId)
             => OkOrNotFound(await _queryDispatcher.QueryAsync(new GetItem(itemId)));
-        
+
+        [HttpPost("crafter")]
+        public async Task<ActionResult> CreateItemWithCrafter(CreateItemWithCrafter command)
+        {
+            await _commandDispatcher.DispatchAsync(command);
+            return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.ItemId }, null);
+        }
+
         [HttpPost]
-        public async Task<ActionResult<ItemDto>> CreateItemAsync(CreateItem command)
+        public async Task<ActionResult> CreateItemAsync(CreateItem command)
         {
             await _commandDispatcher.DispatchAsync(command);
             return CreatedAtAction(nameof(GetByIdAsync), new { itemId = command.ItemId }, null);

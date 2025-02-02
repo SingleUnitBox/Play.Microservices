@@ -2,7 +2,7 @@
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
-@itemId = 7b16cadf-8ee8-4ceb-b7a5-5c370c401a71
+@itemId = 54a811b2-ba74-409b-9cb8-b01a026b27a2
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
 
 
@@ -61,6 +61,17 @@ Content-Type: application/json
   "name": "Sword",
   "description": "Easy damage",
   "price": 27.52
+}
+
+### Create with Crafter
+POST {{url}}/items/crafter
+Content-Type: application/json
+
+{
+  "name": "Sword",
+  "description": "Easy damage",
+  "price": 27.52,
+  "crafterName": "DinFoon"
 }
 
 ### Update

@@ -1,4 +1,5 @@
 using MongoDB.Driver;
+using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
@@ -12,9 +13,11 @@ using Play.Common.Queries;
 using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Items.Domain.Repositories;
+using Play.Items.Infra;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Postgres;
+using Play.Items.Infra.Postgres.Repositories;
 using Play.Items.Infra.Repositories;
 
 namespace Play.Items.Api;
@@ -26,6 +29,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         
         builder.Services.AddExceptionHandling();
+        builder.Services.AddHostedService<AppInitializer>();
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
         
@@ -43,8 +47,10 @@ public class Program
             .AddCommandConsumer()
             //.AddEventConsumer()
             .Build();
+        builder.Services.AddInfra();
 
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
+        builder.Services.AddPostgresRepositories();
         // builder.Services.AddMongoDb(builder.Configuration);
         // builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
         //     db => new ItemRepository(db, "items"));
@@ -65,7 +71,7 @@ public class Program
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();
 
-        app.UseExceptionHandling();
+        //app.UseExceptionHandling();
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();

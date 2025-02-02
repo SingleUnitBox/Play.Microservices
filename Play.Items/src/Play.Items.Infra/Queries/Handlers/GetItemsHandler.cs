@@ -7,20 +7,20 @@ using Play.Items.Domain.Entities;
 
 namespace Play.Items.Infra.Queries.Handlers;
 
-public class GetItemsHandler : IQueryHandler<GetItems, IEnumerable<ItemDto>>
+public class GetItemsHandler //: IQueryHandler<GetItems, IEnumerable<ItemDto>>
 {
-    private readonly IMongoCollection<Item> _itemsCollection;
-
-    public GetItemsHandler(IMongoDatabase database)
-    {
-        _itemsCollection = database.GetCollection<Item>("items");
-    }
-
-    public async Task<IEnumerable<ItemDto>> QueryAsync(GetItems query)
-    {
-        var items = await _itemsCollection.Find(i => true).ToListAsync();
-        return items is not null
-            ? items.Select(i => i.AsDto()).ToList()
-            : new List<ItemDto>();
-    }
+    // private readonly IMongoCollection<Item> _itemsCollection;
+    //
+    // public GetItemsHandler(IMongoDatabase database)
+    // {
+    //     _itemsCollection = database.GetCollection<Item>("items");
+    // }
+    //
+    // public async Task<IEnumerable<ItemDto>> QueryAsync(GetItems query)
+    // {
+    //     var items = await _itemsCollection.Find(i => true).ToListAsync();
+    //     return items is not null
+    //         ? items.Select(i => i.AsDto()).ToList()
+    //         : new List<ItemDto>();
+    // }
 }

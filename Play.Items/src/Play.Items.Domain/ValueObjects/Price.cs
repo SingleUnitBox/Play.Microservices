@@ -6,6 +6,11 @@ public class Price
 {
     public decimal Value { get; }
 
+    private Price()
+    {
+        
+    }
+    
     public Price(decimal value)
     {
         if (value < 0 || value > 1_000)

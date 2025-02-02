@@ -34,10 +34,10 @@ public static class Extensions
                 
                 var correlationId = Guid.NewGuid();
                 var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
-                await busPublisher.Publish<TCommand>(command, new CorrelationContext(correlationId),
-                    userId);
+                await busPublisher.Publish<TCommand>(command,
+                    correlationContext: new CorrelationContext(correlationId, userId));
                 
-                context.Response.Headers["Request-Id"] = correlationId.ToString();
+                context.Response.Headers["RequestId"] = correlationId.ToString();
                 return Results.Accepted($"play-operations/{correlationId}");
             });
 
