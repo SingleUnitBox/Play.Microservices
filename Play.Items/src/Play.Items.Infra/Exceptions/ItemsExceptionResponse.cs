@@ -3,9 +3,9 @@ using Play.Common.Exceptions;
 
 namespace Play.Items.Infra.Exceptions;
 
-public class CatalogExceptionResponse : ExceptionResponse
+public class ItemsExceptionResponse : ExceptionResponse
 {
-    public CatalogExceptionResponse(Error error, HttpStatusCode httpStatusCode)
+    public ItemsExceptionResponse(Error error, HttpStatusCode httpStatusCode)
         : base(error, httpStatusCode)
     {
     }

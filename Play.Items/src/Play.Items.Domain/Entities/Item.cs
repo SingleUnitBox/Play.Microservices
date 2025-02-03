@@ -7,10 +7,10 @@ namespace Play.Items.Domain.Entities
 {
     public class Item : AggregateRoot
     {
-        public Name Name { get; set; }
-        public Description Description { get; set; }
-        public Price Price { get; set; }
-        public DateTimeOffset CreatedDate { get; set; }
+        public Name Name { get; private set; }
+        public Description Description { get; private set; }
+        public Price Price { get; private set; }
+        public DateTimeOffset CreatedDate { get; private set; }
         public Crafter Crafter { get; private set; }
 
         private Item()
@@ -35,9 +35,9 @@ namespace Play.Items.Domain.Entities
         private Item(Guid itemId, string name, string description, decimal price, DateTimeOffset createdDate)
             : this(itemId)
         {
-            UpdateName(name);
-            UpdateDescription(description);
-            UpdatePrice(price);
+            Name = name;
+            Description = description;
+            Price = price;
             CreatedDate = createdDate;
             AddEvent(new ItemCreated(Id, Name, Price));
         }
@@ -46,37 +46,23 @@ namespace Play.Items.Domain.Entities
             : this(name, description, price, createdDate)
         {
             Crafter = crafter;
+            AddEvent(new ItemCreated(Id, Name, Price));
         }
 
         public void UpdateName(Name newName)
         {
-            if (string.IsNullOrWhiteSpace(newName.Value))
-            {
-                throw new EmptyNameException();
-            }
-
             Name = newName;
             AddEvent(new NameUpdated(Id, Name, Price));
         }
         
         public void UpdateDescription(Description newDescription)
         {
-            if (string.IsNullOrWhiteSpace(newDescription))
-            {
-                throw new EmptyDescriptionException();
-            }
-
             Description = newDescription;
             AddEvent(new DescriptionUpdated(Id, Name, Price));
         }
 
         public void UpdatePrice(Price newPrice)
         {
-            if (newPrice < 0)
-            {
-                throw new InvalidPriceException(newPrice);
-            }
-
             Price = newPrice;
             AddEvent(new PriceUpdated(Id, Name, Price));
         }

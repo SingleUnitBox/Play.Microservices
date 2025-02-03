@@ -31,7 +31,53 @@ internal sealed class EventProcessor : IEventProcessor
         {
             return;
         }
+
+        var integrationEvents = await HandleDomainEventsAsync(domainEvents);
+        if (!integrationEvents.Any())
+        {
+            return;
+        }
         
+        await _messageBroker.PublishAsync(integrationEvents);
+    }
+
+    private async Task<List<IEvent>> HandleDomainEventsAsync(IEnumerable<IDomainEvent> domainEvents)
+    {
+        var integrationEvents = new List<IEvent>();
+        using var scope = _serviceScopeFactory.CreateScope();
+        foreach (var domainEvent in domainEvents)
+        {
+            if (domainEvent == null)
+            {
+                continue;
+            }
+
+            // var domainEventType = domainEvent.GetType();
+            // var domainEventHandlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEventType);
+            // var domainEventHandlers = scope.ServiceProvider.GetServices(domainEventHandlerType);
+            // foreach (var handler in domainEventHandlers)
+            // {
+            //     await (Task)domainEventHandlerType.GetMethod(nameof(IDomainEventHandler<IDomainEvent>.HandleAsync))
+            //         ?.Invoke(handler, new object[] { domainEvent })!;
+            // }
+            
+            var domainEventType = domainEvent.GetType();
+            var domainEventHandlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEventType);
+            dynamic domainEventHandlers = scope.ServiceProvider.GetServices(domainEventHandlerType);
+            foreach (var handler in domainEventHandlers)
+            {
+                await handler.HandleAsync((dynamic) domainEvent);
+            }
+            
+            var integrationEvent = _eventMapper.Map(domainEvent);
+            if (integrationEvent is null)
+            {
+                continue;
+            }
+            
+            integrationEvents.Add(integrationEvent);
+        }
         
+        return integrationEvents;
     }
 }

@@ -19,8 +19,7 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
     private readonly ICorrelationContext _correlationContext;
     private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
     
-    private readonly IMessageBroker _messageBroker;
-    private readonly IEventMapper _eventMapper;
+    private readonly IEventProcessor _eventProcessor;
     
     public CreateItemHandler(
         IItemRepository itemRepository,
@@ -30,17 +29,16 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
         ICorrelationContextAccessor correlationContextAccessor,
         IExceptionToMessageMapper exceptionToMessageMapper,
         
-        IMessageBroker messageBroker,
-        IEventMapper eventMapper)
+        IEventProcessor eventProcessor)
     {
         _itemRepository = itemRepository;
+        _crafterRepository = crafterRepository;
+        
         _busPublisher = busPublisher;
         _exceptionToMessageMapper = exceptionToMessageMapper;
         _correlationContext = correlationContextAccessor.CorrelationContext;
         
-        _messageBroker = messageBroker;
-        _eventMapper = eventMapper;
-        _crafterRepository = crafterRepository;
+        _eventProcessor = eventProcessor;
     }
 
     public async Task HandleAsync(CreateItem command)
@@ -55,16 +53,19 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
              }
              
             // Continue processing the message
-            item = Item.Create(command.ItemId, command.Name, command.Description,
-                command.Price, DateTimeOffset.UtcNow);
+            item = Item.Create(
+                command.ItemId,
+                command.Name,
+                command.Description,
+                command.Price,
+                DateTimeOffset.UtcNow);
             var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
             item.SetCrafter(crafter);
             await _itemRepository.CreateAsync(item);
             
             // await _busPublisher.Publish(new ItemCreated(item.Id, item.Name, item.Price),
             //     correlationContext: _correlationContext);
-            var events = _eventMapper.MapAll(item.Events);
-            await _messageBroker.PublishAsync(events);
+            await _eventProcessor.Process(item.Events);
         }
         catch (ItemAlreadyExistException ex)
         {

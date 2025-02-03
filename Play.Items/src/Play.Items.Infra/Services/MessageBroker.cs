@@ -31,7 +31,7 @@ internal sealed class MessageBroker : IMessageBroker
             }
 
             var messageId = Guid.NewGuid().ToString("N");
-            await _busPublisher.Publish(@events, messageId);
+            await _busPublisher.Publish(@event, messageId);
         }
     }
 }

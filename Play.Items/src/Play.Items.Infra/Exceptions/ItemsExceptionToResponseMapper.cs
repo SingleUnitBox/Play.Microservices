@@ -6,14 +6,14 @@ using Play.Common.Exceptions.Mappers;
 
 namespace Play.Items.Infra.Exceptions;
 
-public class CatalogExceptionMapper : IExceptionToResponseMapper
+public class ItemsExceptionToResponseMapper : IExceptionToResponseMapper
 {
     public ExceptionResponse Map(Exception exception)
         => exception switch
         {
-            PlayException => new CatalogExceptionResponse(new Error(exception.GetType().Name, exception.Message),
+            PlayException => new ItemsExceptionResponse(new Error(exception.GetType().Name, exception.Message),
                 HttpStatusCode.BadRequest),
-            _ => new CatalogExceptionResponse(new Error("catalog_error", "There was a catalog_error."),
+            _ => new ItemsExceptionResponse(new Error("Play.Items_error", "There was a Play.Items_error."),
                 HttpStatusCode.InternalServerError)
         };
 }
