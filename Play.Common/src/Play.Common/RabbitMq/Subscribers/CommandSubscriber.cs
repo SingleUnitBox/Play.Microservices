@@ -1,6 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.Exceptions;
+using Play.Common.Abs.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -10,11 +12,19 @@ public class CommandSubscriber : ICommandSubscriber
 {
     private readonly IConnection _connection;
     private readonly ICommandDispatcher _commandDispatcher;
+    private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
+    private readonly IBusPublisher _busPublisher;
 
-    public CommandSubscriber(IConnection connection, ICommandDispatcher commandDispatcher)
+    public CommandSubscriber(
+        IConnection connection,
+        ICommandDispatcher commandDispatcher,
+        IExceptionToMessageMapper exceptionToMessageMapper,
+        IBusPublisher busPublisher)
     {
         _connection = connection;
         _commandDispatcher = commandDispatcher;
+        _exceptionToMessageMapper = exceptionToMessageMapper;
+        _busPublisher = busPublisher;
     }
 
     public async Task SubscribeCommand<TCommand>() where TCommand : class, ICommand
@@ -31,19 +41,22 @@ public class CommandSubscriber : ICommandSubscriber
         var consumer = new AsyncEventingBasicConsumer(channel);
         consumer.ReceivedAsync += async (model, ea) =>
         {
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            var command = JsonSerializer.Deserialize<TCommand>(message);
+            
             try
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var command = JsonSerializer.Deserialize<TCommand>(message);
-
                 await _commandDispatcher.DispatchAsync(command);
             
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception e)
             {
+                // here I can add mapping of rejected events, as it will come from faulty commandHandler
+                var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
                 await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                await _busPublisher.Publish(rejectedEvent);
             }
 
         };

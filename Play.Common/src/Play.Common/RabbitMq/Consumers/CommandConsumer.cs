@@ -2,6 +2,7 @@
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -13,12 +14,21 @@ public class CommandConsumer : ICommandConsumer
     private readonly IConnection _connection;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IServiceProvider _serviceProvider;
+    private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
+    private readonly IBusPublisher _busPublisher;
 
-    public CommandConsumer(IConnection connection, ICommandDispatcher commandDispatcher, IServiceProvider serviceProvider)
+    public CommandConsumer(
+        IConnection connection,
+        ICommandDispatcher commandDispatcher,
+        IServiceProvider serviceProvider,
+        IExceptionToMessageMapper exceptionToMessageMapper,
+        IBusPublisher busPublisher)
     {
         _connection = connection;
         _commandDispatcher = commandDispatcher;
         _serviceProvider = serviceProvider;
+        _exceptionToMessageMapper = exceptionToMessageMapper;
+        _busPublisher = busPublisher;
     }
 
     public async Task ConsumeCommand<TCommand>() where TCommand : class, ICommand
@@ -51,20 +61,20 @@ public class CommandConsumer : ICommandConsumer
             correlationContextAccessor.CorrelationContext = 
                 new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
             
+            var body = ea.Body.ToArray();
+            var message = Encoding.UTF8.GetString(body);
+            var command = JsonSerializer.Deserialize<TCommand>(message);
+            
             try
             {
-                var body = ea.Body.ToArray();
-                var message = Encoding.UTF8.GetString(body);
-                var command = JsonSerializer.Deserialize<TCommand>(message);
-
                 await _commandDispatcher.DispatchAsync(command);
-                
                 await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception e)
             {
-                await channel.BasicNackAsync(ea.DeliveryTag, false, false);
-                throw;
+                var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
+                await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                await _busPublisher.Publish(rejectedEvent);
             }
 
         };

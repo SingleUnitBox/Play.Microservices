@@ -43,41 +43,21 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
 
     public async Task HandleAsync(CreateItem command)
     {
-        try
-        {
-            //throw new ItemAlreadyExistException(command.ItemId);
-            var item = await _itemRepository.GetByIdAsync(command.ItemId);
-             if (item != null)
-             {
-                 throw new ItemAlreadyExistException(item.Id);
-             }
-             
-            // Continue processing the message
-            item = Item.Create(
-                command.ItemId,
-                command.Name,
-                command.Description,
-                command.Price,
-                DateTimeOffset.UtcNow);
-            var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
-            item.SetCrafter(crafter);
-            await _itemRepository.CreateAsync(item);
-            
-            // await _busPublisher.Publish(new ItemCreated(item.Id, item.Name, item.Price),
-            //     correlationContext: _correlationContext);
-            await _eventProcessor.Process(item.Events);
-        }
-        catch (ItemAlreadyExistException ex)
-        {
-            var rejectedEvent = _exceptionToMessageMapper.Map(ex, command);
-            await _busPublisher.Publish(rejectedEvent, correlationContext: _correlationContext);
-            throw;
-        }
-        catch (Exception ex)
-        {
-            throw;
-            // General exception handling
-            // You could log, publish a fault message, etc.
-        }
+        var item = await _itemRepository.GetByIdAsync(command.ItemId);
+         if (item != null)
+         {
+             throw new ItemAlreadyExistException(item.Id);
+         }
+         
+        item = Item.Create(
+            command.ItemId,
+            command.Name,
+            command.Description,
+            command.Price,
+            DateTimeOffset.UtcNow);
+        var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
+        item.SetCrafter(crafter);
+        await _itemRepository.CreateAsync(item);
+        await _eventProcessor.Process(item.Events);
     }
 }
