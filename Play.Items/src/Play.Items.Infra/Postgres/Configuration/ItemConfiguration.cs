@@ -19,5 +19,6 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
             .HasConversion(n => n.Value, value => new(value));
         builder.Property(i => i.Price)
             .HasConversion(n => n.Value, value => new(value));
+        builder.HasOne(i => i.Element);
     }
 }

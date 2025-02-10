@@ -12,6 +12,7 @@ namespace Play.Items.Domain.Entities
         public Price Price { get; private set; }
         public DateTimeOffset CreatedDate { get; private set; }
         public Crafter Crafter { get; private set; }
+        public Element Element { get; private set; }
 
         private Item()
         {
@@ -70,6 +71,11 @@ namespace Play.Items.Domain.Entities
         public void SetCrafter(Crafter crafter)
         {
             Crafter = crafter;
+        }
+
+        public void SetElement(Element element)
+        {
+            Element = element;
         }
 
         public static Item Create(string name, string description, decimal price, DateTimeOffset createdDate)

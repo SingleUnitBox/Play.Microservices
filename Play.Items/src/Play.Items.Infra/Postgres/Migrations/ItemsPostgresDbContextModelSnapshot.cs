@@ -37,6 +37,20 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.ToTable("Crafters", "play.items");
                 });
 
+            modelBuilder.Entity("Play.Items.Domain.Entities.Element", b =>
+                {
+                    b.Property<Guid>("ElementId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ElementName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ElementId");
+
+                    b.ToTable("Elements", "play.items");
+                });
+
             modelBuilder.Entity("Play.Items.Domain.Entities.Item", b =>
                 {
                     b.Property<Guid>("Id")
@@ -52,6 +66,9 @@ namespace Play.Items.Infra.Postgres.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ElementId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -66,6 +83,8 @@ namespace Play.Items.Infra.Postgres.Migrations
 
                     b.HasIndex("CrafterId");
 
+                    b.HasIndex("ElementId");
+
                     b.ToTable("Items", "play.items");
                 });
 
@@ -77,7 +96,15 @@ namespace Play.Items.Infra.Postgres.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Play.Items.Domain.Entities.Element", "Element")
+                        .WithMany()
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Crafter");
+
+                    b.Navigation("Element");
                 });
 
             modelBuilder.Entity("Play.Items.Domain.Entities.Crafter", b =>

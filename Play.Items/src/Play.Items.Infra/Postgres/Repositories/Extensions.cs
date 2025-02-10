@@ -9,6 +9,7 @@ public static class Extensions
     {
         services.AddScoped<IItemRepository, ItemRepository>();
         services.AddScoped<ICrafterRepository, CrafterRepository>();
+        services.AddScoped<IElementRepository, ElementRepository>();
         
         return services;
     }
