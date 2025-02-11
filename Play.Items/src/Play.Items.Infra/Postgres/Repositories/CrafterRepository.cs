@@ -6,10 +6,12 @@ namespace Play.Items.Infra.Postgres.Repositories;
 
 public class CrafterRepository : ICrafterRepository
 {
+    private readonly ItemsPostgresDbContext _dbContext;
     private readonly DbSet<Crafter> _crafters;
 
     public CrafterRepository(ItemsPostgresDbContext dbContext)
     {
+        _dbContext = dbContext;
         _crafters = dbContext.Crafters;
     }
 
@@ -20,5 +22,11 @@ public class CrafterRepository : ICrafterRepository
                 .SingleOrDefaultAsync();
         
         return crafter;
+    }
+
+    public async Task AddCrafter(Crafter crafter)
+    {
+        await _crafters.AddAsync(crafter);
+        await _dbContext.SaveChangesAsync();
     }
 }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Play.Items.Infra.Postgres;
@@ -11,9 +12,11 @@ using Play.Items.Infra.Postgres;
 namespace Play.Items.Infra.Postgres.Migrations
 {
     [DbContext(typeof(ItemsPostgresDbContext))]
-    partial class ItemsPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250211201737_SeedCrafters")]
+    partial class SeedCrafters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -136,22 +139,22 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.HasData(
                         new
                         {
-                            SkillId = new Guid("4e3ab89c-944c-4dea-ab47-2a4c2d88766b"),
+                            SkillId = new Guid("9366cd4d-1615-47cb-ba90-695c46814a83"),
                             SkillName = "Forging"
                         },
                         new
                         {
-                            SkillId = new Guid("00488f14-e7c9-4044-9388-8a231ee8d5d8"),
+                            SkillId = new Guid("c12b527c-8b5b-4344-94b0-76e65ccc6a78"),
                             SkillName = "Mixing"
                         },
                         new
                         {
-                            SkillId = new Guid("e44a27bd-f845-4d91-b052-af025412f947"),
+                            SkillId = new Guid("e5f4a62c-8f49-49d3-b9a4-9e89acd685fa"),
                             SkillName = "Weaving"
                         },
                         new
                         {
-                            SkillId = new Guid("edf68ffe-e9bf-4a44-87a4-64362c3753f6"),
+                            SkillId = new Guid("e9c81cb6-810a-439c-bb9f-aaea0b4bcd77"),
                             SkillName = "Griding"
                         });
                 });

@@ -8,6 +8,7 @@ public class ItemsPostgresDbContext : DbContext
     public DbSet<Item> Items { get; set; }
     public DbSet<Crafter> Crafters { get; set; }
     public DbSet<Element> Elements { get; set; }
+    public DbSet<Skill> Skills { get; set; }
 
     public ItemsPostgresDbContext(DbContextOptions<ItemsPostgresDbContext> options)
         : base(options)

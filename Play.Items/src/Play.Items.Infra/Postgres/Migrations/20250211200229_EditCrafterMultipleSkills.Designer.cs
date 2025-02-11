@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Play.Items.Infra.Postgres;
@@ -11,9 +12,11 @@ using Play.Items.Infra.Postgres;
 namespace Play.Items.Infra.Postgres.Migrations
 {
     [DbContext(typeof(ItemsPostgresDbContext))]
-    partial class ItemsPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250211200229_EditCrafterMultipleSkills")]
+    partial class EditCrafterMultipleSkills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,23 +53,6 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.HasKey("CrafterId");
 
                     b.ToTable("Crafters", "play.items");
-
-                    b.HasData(
-                        new
-                        {
-                            CrafterId = new Guid("b69f5ef7-bf93-4de2-a62f-064652d8dd19"),
-                            Name = "Din Foo"
-                        },
-                        new
-                        {
-                            CrafterId = new Guid("33364e25-6544-48bd-b87d-37760ee27911"),
-                            Name = "Arrgond"
-                        },
-                        new
-                        {
-                            CrafterId = new Guid("8ce6633f-c318-4017-acef-369b86fd981d"),
-                            Name = "Bleatcher"
-                        });
                 });
 
             modelBuilder.Entity("Play.Items.Domain.Entities.Element", b =>
@@ -132,28 +118,6 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.HasKey("SkillId");
 
                     b.ToTable("Skills", "play.items");
-
-                    b.HasData(
-                        new
-                        {
-                            SkillId = new Guid("4e3ab89c-944c-4dea-ab47-2a4c2d88766b"),
-                            SkillName = "Forging"
-                        },
-                        new
-                        {
-                            SkillId = new Guid("00488f14-e7c9-4044-9388-8a231ee8d5d8"),
-                            SkillName = "Mixing"
-                        },
-                        new
-                        {
-                            SkillId = new Guid("e44a27bd-f845-4d91-b052-af025412f947"),
-                            SkillName = "Weaving"
-                        },
-                        new
-                        {
-                            SkillId = new Guid("edf68ffe-e9bf-4a44-87a4-64362c3753f6"),
-                            SkillName = "Griding"
-                        });
                 });
 
             modelBuilder.Entity("CrafterSkill", b =>

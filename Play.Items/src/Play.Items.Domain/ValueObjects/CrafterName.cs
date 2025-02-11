@@ -17,4 +17,5 @@ public class CrafterName
     }
     
     public static implicit operator CrafterName(string value) => new CrafterName(value);
+    public static implicit operator string(CrafterName value) => value.Value;
 }

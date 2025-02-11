@@ -52,6 +52,11 @@ public sealed class MessageToLogTemplateMapper : IMessageToLogTemplateMapper
             {
                 Before = $"[{typeof(GetItem)}] starting query.",
                 After = $"[{typeof(GetItem)}] completed query.",
+            },
+            [typeof(GetCrafter)] = new HandlerLogTemplate()
+            {
+                Before = $"[{typeof(GetCrafter)}] " + "Starting to query crafter with id '{CrafterId}'.",
+                After = $"[{typeof(GetCrafter)}] " + "Stopping to query crafter with id '{CrafterId}'."
             }
         };
 

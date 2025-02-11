@@ -7,11 +7,18 @@ public class Crafter
 {
     public CrafterId CrafterId { get; }
     public CrafterName Name { get; }
+    public IReadOnlyCollection<Skill> Skills { get; } = new List<Skill>();
     public IReadOnlyCollection<Item> Items { get; } = new List<Item>();
 
     private Crafter()
     {
         
+    }
+
+    private Crafter(Guid crafterId, string crafterName)
+    {
+        CrafterId = crafterId;
+        Name = crafterName;
     }
     
     private Crafter(string crafterName)
@@ -22,4 +29,7 @@ public class Crafter
 
     public static Crafter Create(string crafterName)
         => new Crafter(crafterName);
+    
+    public static Crafter Create(Guid crafterId, string crafterName)
+        => new Crafter(crafterId, crafterName);
 }

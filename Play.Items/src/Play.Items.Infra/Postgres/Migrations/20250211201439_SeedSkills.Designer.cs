@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Play.Items.Infra.Postgres;
@@ -11,9 +12,11 @@ using Play.Items.Infra.Postgres;
 namespace Play.Items.Infra.Postgres.Migrations
 {
     [DbContext(typeof(ItemsPostgresDbContext))]
-    partial class ItemsPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250211201439_SeedSkills")]
+    partial class SeedSkills
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,23 +53,6 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.HasKey("CrafterId");
 
                     b.ToTable("Crafters", "play.items");
-
-                    b.HasData(
-                        new
-                        {
-                            CrafterId = new Guid("b69f5ef7-bf93-4de2-a62f-064652d8dd19"),
-                            Name = "Din Foo"
-                        },
-                        new
-                        {
-                            CrafterId = new Guid("33364e25-6544-48bd-b87d-37760ee27911"),
-                            Name = "Arrgond"
-                        },
-                        new
-                        {
-                            CrafterId = new Guid("8ce6633f-c318-4017-acef-369b86fd981d"),
-                            Name = "Bleatcher"
-                        });
                 });
 
             modelBuilder.Entity("Play.Items.Domain.Entities.Element", b =>
@@ -136,22 +122,22 @@ namespace Play.Items.Infra.Postgres.Migrations
                     b.HasData(
                         new
                         {
-                            SkillId = new Guid("4e3ab89c-944c-4dea-ab47-2a4c2d88766b"),
+                            SkillId = new Guid("73b87248-cfb3-46d7-ab9d-b4c137cd949a"),
                             SkillName = "Forging"
                         },
                         new
                         {
-                            SkillId = new Guid("00488f14-e7c9-4044-9388-8a231ee8d5d8"),
+                            SkillId = new Guid("4cf680c0-52d4-4f5b-abda-8a02f8fe920b"),
                             SkillName = "Mixing"
                         },
                         new
                         {
-                            SkillId = new Guid("e44a27bd-f845-4d91-b052-af025412f947"),
+                            SkillId = new Guid("70882a3c-fd9f-4ad5-8c15-db07584512eb"),
                             SkillName = "Weaving"
                         },
                         new
                         {
-                            SkillId = new Guid("edf68ffe-e9bf-4a44-87a4-64362c3753f6"),
+                            SkillId = new Guid("72ab1a67-1807-4b60-b13d-9eafcdb3c09e"),
                             SkillName = "Griding"
                         });
                 });
