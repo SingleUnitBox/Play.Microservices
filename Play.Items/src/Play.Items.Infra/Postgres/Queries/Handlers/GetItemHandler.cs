@@ -33,8 +33,7 @@ public class GetItemHandler : IQueryHandler<GetItem, ItemDto>
             item.Name,
             item.Description,
             item.Price,
-            item.CreatedDate,
-            item.Version
+            item.CreatedDate
         );
     }
 }

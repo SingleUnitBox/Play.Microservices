@@ -16,4 +16,7 @@ public class Element
         ElementId = Guid.NewGuid();
         ElementName = elementName;
     }
+    
+    public static Element Create(string elementName)
+        => new Element(elementName);
 }

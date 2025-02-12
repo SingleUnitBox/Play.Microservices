@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using MongoDB.Driver;
 using Play.Common.AppInitializer;
 using Play.Common.Auth;
@@ -32,6 +33,13 @@ public class Program
         builder.Services.AddHostedService<AppInitializer>();
         builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+        builder.Services.AddApiVersioning(options =>
+        {
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        });
         
         builder.Services.AddContext();
         builder.Services.AddEndpointsApiExplorer();
@@ -66,7 +74,7 @@ public class Program
         //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
-
+        
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();

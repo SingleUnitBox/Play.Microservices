@@ -7,15 +7,13 @@ public class ItemDto
     public string Description { get; set; }
     public decimal Price { get; set; }
     public DateTimeOffset CreatedDate { get; set; }
-    public int Version { get; set; }
 
-    public ItemDto(Guid id, string name, string description, decimal price, DateTimeOffset createdDate, int version)
+    public ItemDto(Guid id, string name, string description, decimal price, DateTimeOffset createdDate)
     {
         Id = id;
         Name = name;
         Description = description;
         Price = price;
         CreatedDate = createdDate;
-        Version = version;
     }
 }

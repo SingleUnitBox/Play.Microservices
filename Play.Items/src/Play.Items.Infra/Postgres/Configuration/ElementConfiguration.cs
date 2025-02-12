@@ -14,5 +14,12 @@ public class ElementConfiguration : IEntityTypeConfiguration<Element>
             .HasConversion(e => e.Value, value => new ElementId(value));
         builder.Property(e => e.ElementName)
             .HasConversion(e => e.Value, value => new(value));
+
+        builder.HasData(
+            Element.Create("Earth"),
+            Element.Create("Wind"),
+            Element.Create("Water"),
+            Element.Create("Fire")
+            );
     }
 }

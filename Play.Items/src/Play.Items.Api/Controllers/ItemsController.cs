@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Queries;
@@ -8,6 +9,7 @@ using Play.Items.Application.Queries;
 
 namespace Play.Items.Api.Controllers
 {
+    [ApiVersion("1.0")]
     public class ItemsController : BaseController
     {
         private readonly ICommandDispatcher _commandDispatcher;
