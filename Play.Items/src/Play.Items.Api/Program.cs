@@ -28,6 +28,14 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAngularUI",
+                builder => builder.WithOrigins("http://localhost:4200")
+                    .AllowAnyHeader()
+                    .AllowAnyMethod());
+        });
         
         builder.Services.AddExceptionHandling();
         builder.Services.AddHostedService<AppInitializer>();
@@ -86,6 +94,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.UseCors("AllowAngularUI");
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();

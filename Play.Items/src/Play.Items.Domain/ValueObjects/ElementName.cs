@@ -18,4 +18,10 @@ public struct ElementName
     }
 
     public static implicit operator ElementName(string value) => new(value);
+    
+    public static bool operator ==(ElementName left, ElementName right)
+        => left.Value == right.Value;
+    
+    public static bool operator !=(ElementName left, ElementName right)
+        => !(left == right);
 }

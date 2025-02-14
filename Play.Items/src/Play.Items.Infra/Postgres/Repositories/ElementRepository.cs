@@ -21,6 +21,7 @@ internal sealed class ElementRepository : IElementRepository
         await _dbContext.SaveChangesAsync();
     }
 
-    public Task<Element> GetElement(Guid elementId)
-        => _elements.SingleOrDefaultAsync(e => e.ElementId == elementId);
+    public Task<Element> GetElement(string elementName)
+        => _elements.Where(e => e.ElementName == elementName)
+            .FirstOrDefaultAsync();
 }

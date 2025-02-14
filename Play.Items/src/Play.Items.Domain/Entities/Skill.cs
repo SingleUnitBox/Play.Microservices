@@ -12,12 +12,12 @@ public class Skill
         
     }
     
-    private Skill(string skillName)
+    private Skill(Guid skillId, string skillName)
     {
-        SkillId = Guid.NewGuid();
+        SkillId = skillId;
         SkillName = skillName;
     }
     
-    public static Skill Create(string skillName)
-        => new Skill(skillName);
+    public static Skill Create(Guid skillId, string skillName)
+        => new Skill(skillId, skillName);
 }

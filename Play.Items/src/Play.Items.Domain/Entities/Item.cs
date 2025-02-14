@@ -84,8 +84,5 @@ namespace Play.Items.Domain.Entities
         public static Item Create(Guid itemId, string name, string description, decimal price,
             DateTimeOffset createdDate)
             => new Item(itemId, name, description, price, createdDate);
-                
-        public static Item Create(string name, string description, decimal price, DateTimeOffset createdDate, Crafter crafter)
-            => new(name, description, price, createdDate, crafter);
     }
 }

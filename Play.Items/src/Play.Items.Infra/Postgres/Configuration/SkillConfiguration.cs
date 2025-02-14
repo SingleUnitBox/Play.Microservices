@@ -15,10 +15,10 @@ public class SkillConfiguration : IEntityTypeConfiguration<Skill>
             .HasConversion(s => s.Value, value => new(value));
 
         builder.HasData(
-            Skill.Create("Forging"),
-            Skill.Create("Mixing"),
-            Skill.Create("Weaving"),
-            Skill.Create("Griding")
+            Skill.Create(Guid.Parse("4b392707-748b-4f62-9545-e93feb1827cf"), "Forging"),
+            Skill.Create(Guid.Parse("5eb6e794-28a0-47ad-bec8-d4ce7612f7c2"),"Mixing"),
+            Skill.Create(Guid.Parse("e9aed6b8-92b6-4ffe-8dcd-25287e553b4d"),"Weaving"),
+            Skill.Create(Guid.Parse("fc10a749-c4ae-4f6d-8966-4a51a1ac1af3"),"Griding")
         );
     }
 }

@@ -4,7 +4,7 @@
 
 @itemId = 54a811b2-ba74-409b-9cb8-b01a026b27a2
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
-
+@creafterId = b69f5ef7-bf93-4de2-a62f-064652d8dd19
 
 ### PLAY-USER ###
 ###
@@ -47,6 +47,9 @@ GET {{url}}
 ### Get
 GET {{url}}/items/{{itemId}}
 
+### Get by Crafter
+GET {{url}}/crafters/{{creafterId}}
+
 ### Delete All Items sync
 DELETE {{url}}/items
 
@@ -60,7 +63,9 @@ Content-Type: application/json
 {
   "name": "Sword",
   "description": "Easy damage",
-  "price": 27.52
+  "price": 27.52,
+  "crafterId": "{{creafterId}}",
+  "element": "Fire"
 }
 
 ### Create with Crafter
@@ -86,6 +91,9 @@ Content-Type: application/json
 
 ### Delete
 DELETE {{url}}/items/{{itemId}}
+
+### CRAFTERS
+GET {{url}}/crafters/{{creafterId}}
 
 ### PLAY-INVENTORY ###
 ### Browse Inventory

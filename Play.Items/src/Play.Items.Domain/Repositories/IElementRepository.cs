@@ -5,5 +5,5 @@ namespace Play.Items.Domain.Repositories;
 public interface IElementRepository
 {
     Task AddElement(Element element);
-    Task<Element> GetElement(Guid elementId);
+    Task<Element> GetElement(string elementName);
 }
