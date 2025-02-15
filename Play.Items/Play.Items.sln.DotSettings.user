@@ -155,6 +155,13 @@
   &lt;Assembly Path="C:\Users\czlom\.nuget\packages\play.common\1.1.6\lib\net8.0\Play.Common.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\czlom\.nuget\packages\play.common\1.1.74\lib\net8.0\Play.Common.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0d139294_002De10f_002D4154_002D9569_002Db141e7634c60/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="create_item_handler_should_throw_item_already_exists_exception_when_item_already_exists" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::1AC34136-6B92-4A69-96BF-1DF3408D26C5::net8.0::Play.Items.Tests.Unit.Application.Commands.Handlers.CreateItemHandlerTests.create_item_handler_should_throw_item_already_exists_exception_when_item_already_exists&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;xUnit::1AC34136-6B92-4A69-96BF-1DF3408D26C5::net8.0::Play.Items.Tests.Unit.Application.Commands.Handlers.CreateItemHandlerTests.create_item_handler_should_add_new_item_and_call_item_repository&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	
 	
 	
 	

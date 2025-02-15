@@ -16,7 +16,6 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
     private readonly ICrafterRepository _crafterRepository;
     private readonly IElementRepository _elementRepository;
     
-    private readonly IBusPublisher _busPublisher;
     private readonly ICorrelationContext _correlationContext;
     private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
     
@@ -25,23 +24,21 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
     public CreateItemHandler(
         IItemRepository itemRepository,
         ICrafterRepository crafterRepository,
-        
-        IBusPublisher busPublisher,
+        IElementRepository elementRepository,
+
         ICorrelationContextAccessor correlationContextAccessor,
         IExceptionToMessageMapper exceptionToMessageMapper,
         
-        IEventProcessor eventProcessor,
-        IElementRepository elementRepository)
+        IEventProcessor eventProcessor)
     {
         _itemRepository = itemRepository;
         _crafterRepository = crafterRepository;
+        _elementRepository = elementRepository;
         
-        _busPublisher = busPublisher;
         _exceptionToMessageMapper = exceptionToMessageMapper;
         _correlationContext = correlationContextAccessor.CorrelationContext;
         
         _eventProcessor = eventProcessor;
-        _elementRepository = elementRepository;
     }
 
     public async Task HandleAsync(CreateItem command)
