@@ -26,4 +26,6 @@ public class UpdateItemHandler(
         await itemRepository.UpdateAsync(item);
         await eventProcessor.Process(item.Events);
     }
+    
+    
 }

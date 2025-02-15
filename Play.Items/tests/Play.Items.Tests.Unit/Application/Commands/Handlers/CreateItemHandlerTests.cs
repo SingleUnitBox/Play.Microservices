@@ -35,6 +35,19 @@ public class CreateItemHandlerTests
     }
 
     [Fact]
+    public async Task create_item_handler_should_throw_crafter_not_found_exceptin_when_crafter_not_found()
+    {
+        var item = GetItem();
+        _crafterRepository.GetCrafterById(Arg.Any<Guid>()).Returns(Task.FromResult<Crafter>(null));
+        var command = new CreateItem("Sword", "Deals a lot of damage", 20.30m, Guid.NewGuid(), "Fire");
+        
+        var exception = await Record.ExceptionAsync(() => Act(command));
+
+        exception.ShouldNotBeNull();
+        exception.ShouldBeOfType<CrafterNotFoundException>();
+    }
+
+    [Fact]
     public async Task create_item_handler_should_add_new_item_and_call_item_repository()
     {
         var item = GetItem();

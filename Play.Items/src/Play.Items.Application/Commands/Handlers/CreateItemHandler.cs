@@ -56,6 +56,11 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
             command.Price,
             DateTimeOffset.UtcNow);
         var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
+        if (crafter is null)
+        {
+            throw new CrafterNotFoundException(command.CrafterId);
+        }
+
         item.SetCrafter(crafter);
         var element = await _elementRepository.GetElement(command.Element);
         item.SetElement(element);
