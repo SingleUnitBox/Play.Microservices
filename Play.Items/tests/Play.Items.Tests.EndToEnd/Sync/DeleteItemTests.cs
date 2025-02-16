@@ -1,5 +1,7 @@
 ﻿using System.Net;
+using Microsoft.EntityFrameworkCore;
 using Play.Items.Domain.Entities;
+using Play.Items.Infra.Postgres;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
 using Shouldly;
@@ -8,7 +10,7 @@ namespace Play.Items.Tests.EndToEnd.Sync;
 
 [Collection("SyncTests")]
 public class DeleteItemTests : IClassFixture<PlayItemsApplicationFactory>,
-    IClassFixture<MongoDbFixture<Item>>
+    IClassFixture<ItemsPostgresDbFixture>
 {
     private Task<HttpResponseMessage> Act()
         => _httpClient.DeleteAsync($"items/{_itemId}");
@@ -25,31 +27,39 @@ public class DeleteItemTests : IClassFixture<PlayItemsApplicationFactory>,
     }
 
     [Fact]
-    public async Task delete_item_endpoint_should_remove_document_from_database_with_given_id()
+    public async Task delete_item_endpoint_should_remove_item_from_database_with_given_id()
     {
         await InsertItemAsync();
 
         await Act();
         
-        var document = await _mongoDbFixture.GetAsync(_itemId);
-        document.ShouldBeNull();
+        var itemFromDb = await _dbContext.Items.SingleOrDefaultAsync(i => i.Id == _itemId);
+        itemFromDb.ShouldBeNull();
     }
 
     private readonly HttpClient _httpClient;
-    private readonly MongoDbFixture<Item> _mongoDbFixture;
+    private readonly ItemsPostgresDbContext _dbContext;
+    private readonly Crafter _crafter;
     private readonly Guid _itemId;
     
 
     public DeleteItemTests(PlayItemsApplicationFactory factory,
-        MongoDbFixture<Item> mongoDbFixture)
+        ItemsPostgresDbFixture dbFixture)
     {
         factory.Server.AllowSynchronousIO = true;
         _httpClient = factory.CreateClient();
-        _mongoDbFixture = mongoDbFixture;
+        _dbContext = dbFixture.DbContext;
+        _crafter = Crafter.Create("Din Boon");
         _itemId = Guid.NewGuid();
     }
 
     private async Task InsertItemAsync()
-        => _mongoDbFixture.InsertAsync(Item.Create(_itemId, "Potion",
-            "Heals a bit of HP", 10, DateTimeOffset.UtcNow));
+    {
+        var item = Item.Create(_itemId, "Sword", "Deals a lot of damage", 20.30m, DateTimeOffset.Now);
+        item.SetCrafter(_crafter);
+        var element = Element.Create("Fire");
+        item.SetElement(element);
+        await _dbContext.Items.AddAsync(item);
+        await _dbContext.SaveChangesAsync();
+    }
 }

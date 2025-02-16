@@ -15,6 +15,12 @@ public class AppInitializer : IHostedService
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
+        var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (environmentName == "test")
+        {
+            return;
+        }
+
         var dbContextTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
             .Where(t => typeof(DbContext).IsAssignableFrom(t)
