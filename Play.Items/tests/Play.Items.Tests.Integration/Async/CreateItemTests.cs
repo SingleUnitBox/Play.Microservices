@@ -1,41 +1,51 @@
-﻿using Play.Items.Domain.Entities;
+﻿using Play.Items.Application.Commands;
+using Play.Items.Application.Events;
+using Play.Items.Domain.Entities;
+using Play.Items.Domain.Types;
+using Play.Items.Domain.ValueObjects;
+using Play.Items.Infra.Postgres;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
+using Shouldly;
 
 namespace Play.Items.Tests.Integration.Async;
 
 [Collection("AsyncTests")]
 public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
-    IClassFixture<MongoDbFixture<Item>>,
+    IClassFixture<ItemsPostgresDbFixture>,
     IClassFixture<RabbitMqFixture>
 {
-    //private Task Act(CreateItem command) => _rabbitMqFixture.PublishAsync(command);
+    private Task Act(CreateItem command) => _rabbitMqFixture.PublishAsync(command);
 
     [Fact]
     public async Task create_item_command_should_add_document_with_given_id_to_database()
     {
-        //var command = new CreateItem("Potion", "Heals a bit of HP", 10);
+        var command = new CreateItem("Potion", "Heals a bit of HP", 10,
+            _crafterId.Value, Elements.Fire.ToString());
 
-        // var tcs = _rabbitMqFixture
-        //     .SubscribeAndGet<ItemCreated, Item>(_mongoDbFixture.GetAsync, command.ItemId);
+         // var tcs = _rabbitMqFixture
+         //     .SubscribeAndGet<ItemCreated, Item>(_dbFixture.GetItemAsync, command.ItemId);
+         
+         await Act(command);
+
+         await Task.Delay(10_000);
         
-        //send a command
-        // await Act(command);
-        //
-        // var document = await tcs.Task;
-        // document.ShouldNotBeNull();
-        // document.Id.Value.ShouldBe(command.ItemId);
+         // var itemFromDb = await tcs.Task;
+         // itemFromDb.ShouldNotBeNull();
+         // itemFromDb.Id.Value.ShouldBe(command.ItemId);
     }
 
-    private readonly MongoDbFixture<Item> _mongoDbFixture;
+    private readonly ItemsPostgresDbFixture _dbFixture;
     private readonly RabbitMqFixture _rabbitMqFixture;
+    private readonly CrafterId _crafterId;
     
     public CreateItemTests(PlayItemsApplicationFactory factory,
-        MongoDbFixture<Item> mongoDbFixture,
+        ItemsPostgresDbFixture dbFixture,
         RabbitMqFixture rabbitMqFixture)
     {
-        _mongoDbFixture = mongoDbFixture;
-        _rabbitMqFixture = rabbitMqFixture;
         factory.Server.AllowSynchronousIO = true;
+        _dbFixture = dbFixture;
+        _rabbitMqFixture = rabbitMqFixture;
+        _crafterId = new CrafterId(Guid.Parse("b69f5ef7-bf93-4de2-a62f-064652d8dd19"));
     }
 }

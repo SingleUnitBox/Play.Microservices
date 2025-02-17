@@ -1,44 +1,25 @@
 ﻿using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Abs.RabbitMq;
 using Play.Common.Settings;
-using Play.Items.Tests.Shared.Fixtures.Consumers;
+using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Helpers;
 
 namespace Play.Items.Tests.Shared.Fixtures;
 
-public class RabbitMqFixture
+public class RabbitMqFixture : IAsyncLifetime
 {
     private readonly RabbitMqSettings _rabbitMqSettings;
-    private readonly IServiceProvider _serviceProvider;
-    private readonly IBusControl _busControl;
+    private IBusPublisher _busPublisher;
     
     public RabbitMqFixture()
     {
         _rabbitMqSettings = SettingsHelper.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
-        // _serviceProvider = new ServiceCollection()
-        //     .AddMassTransit(x =>
-        //     {
-        //         x.AddConsumer<ItemCreatedConsumer>();
-        //         x.AddConsumer<ItemUpdatedConsumer>();
-        //         x.UsingRabbitMq((ctx, config) =>
-        //         {
-        //             config.Host(_rabbitMqSettings.Host);
-        //             config.ReceiveEndpoint("item-created-queue", ep 
-        //                 => ep.ConfigureConsumer<ItemCreatedConsumer>(ctx));
-        //             config.ReceiveEndpoint("item-updated-queue", ep
-        //                 => ep.ConfigureConsumer<ItemUpdatedConsumer>(ctx));
-        //         });
-        //     })
-        //     .AddSingleton(this)
-        //     .BuildServiceProvider();
-        
-        _busControl = _serviceProvider.GetRequiredService<IBusControl>();
-        _busControl.Start();
     }
 
-    public async Task PublishAsync<TMessage>(TMessage message)
+    public async Task PublishAsync<TMessage>(TMessage message) where TMessage : class
     {
-        await _busControl.Publish(message);
+        await _busPublisher.Publish(message);
     }
     
     public TaskCompletionSource<TEntity> SubscribeAndGet<TMessage, TEntity>(
@@ -51,5 +32,17 @@ public class RabbitMqFixture
         onMessageReceived(id, tcs);
         //return tcs with Item Task<Item> inside
         return tcs;
+    }
+
+    public async Task InitializeAsync()
+    {
+        var factory = new PlayItemsApplicationFactory();
+        var scope = factory.Services.CreateScope();
+        _busPublisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
+    }
+
+    public Task DisposeAsync()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Play.Common.RabbitMq.Consumers;
 using Play.Items.Api;
 
 namespace Play.Items.Tests.Shared.Factories;
@@ -18,6 +19,11 @@ public class PlayItemsApplicationFactory : WebApplicationFactory<Program>
             var descriptors = services.Where(d => d.ServiceType == typeof(IHostedService)).ToList();
             foreach (var descriptor in descriptors)
             {
+                if (descriptor.ImplementationType == typeof(CommandConsumerService))
+                {
+                    continue;
+                }
+
                 services.Remove(descriptor); // Remove background workers
             }
         });

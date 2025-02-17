@@ -21,6 +21,18 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
     
     public async Task<Item> GetItem(Guid itemId)
         => await DbContext.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+    
+    public async Task GetItemAsync(Guid itemId, TaskCompletionSource<Item> tcs)
+    {
+        var item = await GetItem(itemId);
+        if (item is null)
+        {
+            tcs.TrySetCanceled();
+            return;
+        }
+        
+        tcs.TrySetResult(item);
+    }
 
     public async Task AddCrafter(Crafter crafter)
     {
