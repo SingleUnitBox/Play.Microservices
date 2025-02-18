@@ -173,11 +173,8 @@
   &lt;Assembly Path="C:\Users\czlom\.nuget\packages\play.common\1.1.74\lib\net8.0\Play.Common.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	
-	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=d121fe7a_002D48bb_002D4694_002Db7db_002Dfa96172b80c6/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="create_item_command_should_add_document_with_given_id_to_database #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::31978527-394A-4DCE-B83D-068119594996::net8.0::Play.Items.Tests.Integration.Async.CreateItemTests.create_item_command_should_add_document_with_given_id_to_database&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
-&lt;/SessionState&gt;</s:String>
+	
+	
 	
 	
 	

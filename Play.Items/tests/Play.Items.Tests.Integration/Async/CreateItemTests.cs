@@ -23,16 +23,17 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
         var command = new CreateItem("Potion", "Heals a bit of HP", 10,
             _crafterId.Value, Elements.Fire.ToString());
 
-         // var tcs = _rabbitMqFixture
+         // var tcs = await _rabbitMqFixture
          //     .SubscribeAndGet<ItemCreated, Item>(_dbFixture.GetItemAsync, command.ItemId);
          
          await Act(command);
 
          await Task.Delay(10_000);
-        
-         // var itemFromDb = await tcs.Task;
-         // itemFromDb.ShouldNotBeNull();
-         // itemFromDb.Id.Value.ShouldBe(command.ItemId);
+
+         var itemFromDb = await _dbFixture.GetItem(command.ItemId);
+         //var itemFromDb = await tcs.Task;
+         itemFromDb.ShouldNotBeNull();
+         itemFromDb.Id.Value.ShouldBe(command.ItemId);
     }
 
     private readonly ItemsPostgresDbFixture _dbFixture;
