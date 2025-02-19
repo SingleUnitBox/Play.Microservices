@@ -73,7 +73,7 @@ public class CommandConsumer : ICommandConsumer
             catch (Exception e)
             {
                 var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
-                await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                await channel.BasicAckAsync(ea.DeliveryTag, false);
                 await _busPublisher.Publish(rejectedEvent);
             }
 

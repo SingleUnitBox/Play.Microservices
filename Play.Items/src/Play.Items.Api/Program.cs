@@ -61,7 +61,7 @@ public class Program
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
         builder.Services.AddRabbitMq()
             .AddCommandConsumer()
-            //.AddEventConsumer()
+            .AddEventConsumer()
             .Build();
         builder.Services.AddInfra();
 

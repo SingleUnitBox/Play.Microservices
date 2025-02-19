@@ -29,31 +29,31 @@ public class RabbitMqFixture : IAsyncLifetime
         await _busPublisher.Publish(message);
     }
     
-    public TaskCompletionSource<TEntity> SubscribeAndGet<TMessage, TEntity>(
+    public async Task<TaskCompletionSource<TEntity>> SubscribeAndGet<TMessage, TEntity>(
         Func<Guid, TaskCompletionSource<TEntity>, Task> onMessageReceived, Guid id)
     {
         var tcs = new TaskCompletionSource<TEntity>();
-        // using var channel = _connection.CreateChannelAsync();
-        //
-        // var queueName = typeof(TMessage).GetQueueName();
-        // channel.QueueDeclareAsync(queueName, true, false, false);
-        //
-        // var exchangeName = typeof(TMessage).GetExchangeName();
-        // var routingKey = typeof(TMessage).GetRoutingKey();
-        // channel.QueueBindAsync(queueName, exchangeName, routingKey);
-        //
-        // var consumer = new AsyncEventingBasicConsumer(channel);
-        // consumer.ReceivedAsync += async (model, ea) =>
-        // {
-        //     var body = ea.Body;
-        //     var json = Encoding.UTF8.GetString(body.Span);
-        //     var message = JsonConvert.DeserializeObject<TEntity>(json);
-        //     
-        //     await onMessageReceived(id, tcs);
-        // };
-        //
-        // channel.BasicConsumeAsync(queueName, true, consumer);
-        //
+        await using var channel = await _connection.CreateChannelAsync();
+        
+        var queueName = typeof(TMessage).GetQueueName();
+        await channel.QueueDeclareAsync(queueName, true, false, false);
+        
+        var exchangeName = typeof(TMessage).GetExchangeName();
+        var routingKey = typeof(TMessage).GetRoutingKey();
+        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (model, ea) =>
+        {
+            var body = ea.Body;
+            var json = Encoding.UTF8.GetString(body.Span);
+            var message = JsonConvert.DeserializeObject<TEntity>(json);
+            
+            await onMessageReceived(id, tcs);
+        };
+        
+        await channel.BasicConsumeAsync(queueName, true, consumer);
+        
         return tcs;
     }
 
@@ -62,7 +62,11 @@ public class RabbitMqFixture : IAsyncLifetime
         var factory = new PlayItemsApplicationFactory();
         var scope = factory.Services.CreateScope();
         _busPublisher = scope.ServiceProvider.GetRequiredService<IBusPublisher>();
-        _connection = _connection;
+        var connectionFactory = new ConnectionFactory()
+        {
+            HostName = _rabbitMqSettings.Host,
+        };
+        _connection = await connectionFactory.CreateConnectionAsync();
     }
 
     public Task DisposeAsync()

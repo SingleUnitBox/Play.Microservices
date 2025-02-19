@@ -15,8 +15,8 @@ public class EventDispatcher : IEventDispatcher
     public async Task HandleAsync<TEvent>(TEvent @event) where TEvent : class, IEvent
     {
         using var scope = _serviceProvider.CreateScope();
-        var handler = scope.ServiceProvider.GetRequiredService<IEventHandler<TEvent>>();
+        var handler = scope.ServiceProvider.GetService<IEventHandler<TEvent>>();
         
-        await handler.HandleAsync(@event);
+        await handler?.HandleAsync(@event);
     }
 }

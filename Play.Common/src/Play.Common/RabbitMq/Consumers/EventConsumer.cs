@@ -58,7 +58,7 @@ public class EventConsumer(
             catch (Exception e)
             {
                 logger.LogError(e, e.Message);
-                await channel.BasicNackAsync(ea.DeliveryTag, false, true);
+                await channel.BasicAckAsync(ea.DeliveryTag, false);
             }
         };
 

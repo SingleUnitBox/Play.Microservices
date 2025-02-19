@@ -19,10 +19,15 @@ public class PlayItemsApplicationFactory : WebApplicationFactory<Program>
             var descriptors = services.Where(d => d.ServiceType == typeof(IHostedService)).ToList();
             foreach (var descriptor in descriptors)
             {
-                // if (descriptor.ImplementationType == typeof(CommandConsumerService))
-                // {
-                //     continue;
-                // }
+                if (descriptor.ImplementationType == typeof(CommandConsumerService))
+                {
+                    continue;
+                }
+
+                if (descriptor.ImplementationType == typeof(EventConsumerService))
+                {
+                    continue;
+                }
 
                 services.Remove(descriptor); // Remove background workers
             }
