@@ -3,7 +3,6 @@ using Play.Items.Application.Events;
 using Play.Items.Domain.Entities;
 using Play.Items.Domain.Types;
 using Play.Items.Domain.ValueObjects;
-using Play.Items.Infra.Postgres;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
 using Shouldly;
@@ -27,10 +26,7 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
              .SubscribeAndGet<ItemCreated, Item>(_dbFixture.GetItemAsync, command.ItemId);
          
          await Act(command);
-
-         //await Task.Delay(10_000);
-
-         //var itemFromDb = await _dbFixture.GetItem(command.ItemId);
+         
          var itemFromDb = await tcs.Task;
          itemFromDb.ShouldNotBeNull();
          itemFromDb.Id.Value.ShouldBe(command.ItemId);

@@ -1,7 +1,6 @@
 ﻿using System.Text;
-using System.Text.Json;
+using Newtonsoft.Json;
 using Play.Common.Abs.RabbitMq;
-using Play.Common.RabbitMq.CorrelationContext;
 using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
@@ -27,7 +26,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         var routingKey = message.GetRoutingKey();
         await channel.QueueBindAsync(queueName, exchangeName, routingKey);
 
-        var json = JsonSerializer.Serialize(message);
+        var json = JsonConvert.SerializeObject(message);
         var body = Encoding.UTF8.GetBytes(json);
         
         //properties

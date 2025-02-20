@@ -33,7 +33,7 @@ public class RabbitMqFixture : IAsyncLifetime
         Func<Guid, TaskCompletionSource<TEntity>, Task> onMessageReceived, Guid id)
     {
         var tcs = new TaskCompletionSource<TEntity>();
-        await using var channel = await _connection.CreateChannelAsync();
+        var channel = await _connection.CreateChannelAsync();
         
         var queueName = typeof(TMessage).GetQueueName();
         await channel.QueueDeclareAsync(queueName, true, false, false);
@@ -47,8 +47,9 @@ public class RabbitMqFixture : IAsyncLifetime
         {
             var body = ea.Body;
             var json = Encoding.UTF8.GetString(body.Span);
-            var message = JsonConvert.DeserializeObject<TEntity>(json);
-            
+            var message = JsonConvert.DeserializeObject<TMessage>(json);
+
+            Console.WriteLine($"Getting message - {typeof(TMessage).Name}");
             await onMessageReceived(id, tcs);
         };
         
@@ -69,8 +70,8 @@ public class RabbitMqFixture : IAsyncLifetime
         _connection = await connectionFactory.CreateConnectionAsync();
     }
 
-    public Task DisposeAsync()
+    public async Task DisposeAsync()
     {
-        throw new NotImplementedException();
+        _connection.Dispose();
     }
 }

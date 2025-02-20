@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Play.Items.Application.Commands;
 using Play.Items.Domain.Entities;
@@ -8,6 +9,7 @@ using Play.Items.Domain.Types;
 using Play.Items.Infra.Postgres;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
+using RabbitMQ.Client;
 using Shouldly;
 
 namespace Play.Items.Tests.EndToEnd.Sync;
@@ -49,7 +51,8 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
         locationHeader.ShouldNotBeNull();
         locationHeader.ShouldBe($"http://localhost/Items/{_command.ItemId}");
     }
-    
+
+    private readonly PlayItemsApplicationFactory _factory;
     private readonly HttpClient _httpClient;
     private readonly ItemsPostgresDbContext _dbContext;
     private readonly Crafter _crafter;
@@ -60,6 +63,7 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
         Environment.SetEnvironmentVariable("ASPNETCORE_ENVIRONMENT", "test");
         
         factory.Server.AllowSynchronousIO = true;
+        _factory = factory;
         _httpClient = factory.CreateClient();
         _dbContext = dbFixture.DbContext;
         _crafter = Crafter.Create("Din Boon");

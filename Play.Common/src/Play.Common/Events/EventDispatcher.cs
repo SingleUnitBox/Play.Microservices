@@ -16,7 +16,12 @@ public class EventDispatcher : IEventDispatcher
     {
         using var scope = _serviceProvider.CreateScope();
         var handler = scope.ServiceProvider.GetService<IEventHandler<TEvent>>();
-        
+
+        if (handler is null)
+        {
+            return;
+        }
+
         await handler?.HandleAsync(@event);
     }
 }

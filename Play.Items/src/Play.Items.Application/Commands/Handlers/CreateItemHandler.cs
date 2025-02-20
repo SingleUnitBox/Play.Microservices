@@ -43,7 +43,7 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
 
     public async Task HandleAsync(CreateItem command)
     {
-        var item = await _itemRepository.GetByIdAsync(command.ItemId);
+         var item = await _itemRepository.GetByIdAsync(command.ItemId);
          if (item != null)
          {
              throw new ItemAlreadyExistException(item.Id);
