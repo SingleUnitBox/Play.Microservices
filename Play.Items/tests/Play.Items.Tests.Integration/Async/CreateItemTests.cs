@@ -30,6 +30,7 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
          var itemFromDb = await tcs.Task;
          itemFromDb.ShouldNotBeNull();
          itemFromDb.Id.Value.ShouldBe(command.ItemId);
+         //await Task.Delay(8000);
     }
 
     private readonly ItemsPostgresDbFixture _dbFixture;
@@ -40,7 +41,7 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
         ItemsPostgresDbFixture dbFixture,
         RabbitMqFixture rabbitMqFixture)
     {
-        factory.Server.AllowSynchronousIO = true;
+        //factory.Server.AllowSynchronousIO = true;
         _dbFixture = dbFixture;
         _rabbitMqFixture = rabbitMqFixture;
         _crafterId = new CrafterId(Guid.Parse("b69f5ef7-bf93-4de2-a62f-064652d8dd19"));

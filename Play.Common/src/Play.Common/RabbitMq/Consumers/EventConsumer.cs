@@ -15,7 +15,7 @@ public class EventConsumer(
     ILogger<EventConsumer> logger,
     IServiceProvider serviceProvider) : IEventConsumer
 {
-    public async Task ConsumeEvent<TEvent>() where TEvent : class, IEvent
+    public async Task ConsumeEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent
     {
         using var channel = await connection.CreateChannelAsync();
 
@@ -63,6 +63,22 @@ public class EventConsumer(
         };
 
         await channel.BasicConsumeAsync(queueName, false, consumer);
-        await Task.Delay(Timeout.Infinite);
+
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(1000, stoppingToken);
+            }
+        }
+        catch (TaskCanceledException)
+        {
+
+        }
+        finally
+        {
+            await channel.CloseAsync();
+            channel.Dispose();
+        }
     }
 }

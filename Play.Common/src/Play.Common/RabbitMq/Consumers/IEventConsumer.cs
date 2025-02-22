@@ -4,5 +4,5 @@ namespace Play.Common.RabbitMq.Consumers;
 
 public interface IEventConsumer
 {
-    Task ConsumeEvent<TEvent>() where TEvent : class, IEvent;
+    Task ConsumeEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent;
 }

@@ -21,7 +21,13 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
     
     public async Task<Item> GetItem(Guid itemId)
         => await DbContext.Items.FirstOrDefaultAsync(i => i.Id == itemId);
-    
+
+    public async Task InsertItem(Item item)
+    {
+        await DbContext.Items.AddAsync(item);
+        await DbContext.SaveChangesAsync();
+    }
+
     public async Task GetItemAsync(Guid itemId, TaskCompletionSource<Item> tcs)
     {
         var item = await GetItem(itemId);
@@ -33,14 +39,9 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
         
         tcs.TrySetResult(item);
     }
-
-    public async Task AddCrafter(Crafter crafter)
-    {
-        Console.WriteLine($"Adding crafter {crafter}");
-        await DbContext.Crafters.AddAsync(crafter);
-        await DbContext.SaveChangesAsync();
-        Console.WriteLine($"Added crafter {crafter}");
-    }
+    
+    public async Task<Crafter> GetCrafter(Guid crafterId)
+        => await DbContext.Crafters.SingleOrDefaultAsync(c => c.CrafterId == crafterId);
     
     public async Task InitializeAsync()
     {

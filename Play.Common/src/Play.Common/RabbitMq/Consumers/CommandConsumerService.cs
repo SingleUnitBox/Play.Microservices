@@ -28,9 +28,9 @@ public class CommandConsumerService : BackgroundService
                 {
                     return null;
                 }
-
+    
                 var genericMethod = methodInfo.MakeGenericMethod(type);
-                return genericMethod.Invoke(this, null) as Task;
+                return genericMethod.Invoke(this, new object[] { stoppingToken }) as Task;
             })
             .Where(task => task != null)
             .ToList();
@@ -38,8 +38,14 @@ public class CommandConsumerService : BackgroundService
         await Task.WhenAll(consumeTasks);
     }
 
-    private Task ConsumeGenericCommand<TCommand>() where TCommand : class, ICommand
+    // public override async Task StopAsync(CancellationToken cancellationToken)
+    // {
+    //     Console.WriteLine("Stopping down command consumer...");
+    //     //_commandConsumer.
+    // }
+
+    private Task ConsumeGenericCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
     {
-        return _commandConsumer.ConsumeCommand<TCommand>();
+        return _commandConsumer.ConsumeCommand<TCommand>(stoppingToken);
     }
 }

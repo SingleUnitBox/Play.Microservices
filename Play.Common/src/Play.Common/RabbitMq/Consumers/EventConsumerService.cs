@@ -23,7 +23,7 @@ public class EventConsumerService(IEventConsumer eventConsumer) : BackgroundServ
                 }
 
                 var genericMethod = methodInfo.MakeGenericMethod(t);
-                return genericMethod?.Invoke(this, null) as Task;
+                return genericMethod?.Invoke(this, new object[] { stoppingToken }) as Task;
             })
             .Where(task => task is not null)
             .ToList();
@@ -31,6 +31,6 @@ public class EventConsumerService(IEventConsumer eventConsumer) : BackgroundServ
         await Task.WhenAll(consumeTasks);
     }
     
-    private Task ConsumeGenericEvent<TEvent>() where TEvent : class, IEvent
-        => eventConsumer.ConsumeEvent<TEvent>();
+    private Task ConsumeGenericEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent
+        => eventConsumer.ConsumeEvent<TEvent>(stoppingToken);
 }

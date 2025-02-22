@@ -15,11 +15,13 @@ public static class Extensions
     {
         services.AddSingleton<IRabbitMqClient>(sp =>
             new RabbitMqClient(sp.GetRequiredService<IConfiguration>()));
+        
         services.AddSingleton<IConnection>(sp =>
         {
             var rabbitMqClient = sp.GetRequiredService<IRabbitMqClient>();
             return rabbitMqClient.GetConnection().GetAwaiter().GetResult();
         });
+        
         services.AddSingleton<IBusPublisher, BusPublisher>();
         var builder = new RabbitMqBuilder(services);
         services.AddSingleton(builder);

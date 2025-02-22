@@ -4,7 +4,7 @@ using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
 
-public class RabbitMqClient : IRabbitMqClient, IDisposable
+public class RabbitMqClient : IRabbitMqClient, IAsyncDisposable
 {
     private readonly ConnectionFactory _connectionFactory;
     private IConnection _connection;
@@ -28,14 +28,12 @@ public class RabbitMqClient : IRabbitMqClient, IDisposable
         return _connection;
     }
 
-    public async Task<IChannel> CreateChannel()
+    public async ValueTask DisposeAsync()
     {
-        var connection = await GetConnection();
-        return await connection.CreateChannelAsync();
-    }
-
-    public void Dispose()
-    {
-        _connection?.Dispose();
+        if (_connection != null && _connection.IsOpen)
+        {
+            await _connection.CloseAsync();
+            _connection.Dispose();
+        }
     }
 }

@@ -31,9 +31,9 @@ public class CommandConsumer : ICommandConsumer
         _busPublisher = busPublisher;
     }
 
-    public async Task ConsumeCommand<TCommand>() where TCommand : class, ICommand
+    public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
     {
-        using var channel = await _connection.CreateChannelAsync();
+        using var channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
 
         var queueName = typeof(TCommand).GetQueueName();
         await channel.QueueDeclareAsync(queueName, true, false, false);
@@ -80,6 +80,25 @@ public class CommandConsumer : ICommandConsumer
         };
         
         await channel.BasicConsumeAsync(queueName, false, consumer);
-        await Task.Delay(Timeout.Infinite);
+
+        try
+        {
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                await Task.Delay(1000, stoppingToken);
+            }
+        }
+        catch (TaskCanceledException)
+        {
+
+        }
+        finally
+        {
+            if (channel.IsOpen)
+            {
+                await channel.CloseAsync();
+                channel.Dispose();
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
 using Asp.Versioning;
-using MongoDB.Driver;
 using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
@@ -8,18 +7,15 @@ using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
-using Play.Common.MongoDb;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Common.RabbitMq;
 using Play.Common.Settings;
-using Play.Items.Domain.Repositories;
 using Play.Items.Infra;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Postgres;
 using Play.Items.Infra.Postgres.Repositories;
-using Play.Items.Infra.Repositories;
 
 namespace Play.Items.Api;
 
@@ -61,7 +57,7 @@ public class Program
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
         builder.Services.AddRabbitMq()
             .AddCommandConsumer()
-            //.AddEventConsumer()
+            .AddEventConsumer()
             .Build();
         builder.Services.AddInfra();
 
