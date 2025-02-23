@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using MassTransit;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -10,6 +9,7 @@ using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Helpers;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Xunit.Sdk;
 
 namespace Play.Items.Tests.Shared.Fixtures;
 
@@ -35,7 +35,7 @@ public class RabbitMqFixture : IAsyncLifetime
         var tcs = new TaskCompletionSource<TEntity>();
         var channel = await _connection.CreateChannelAsync();
         
-        var queueName = typeof(TMessage).GetQueueName();
+        var queueName = $"{typeof(TMessage).GetQueueName()}_tests";
         await channel.QueueDeclareAsync(queueName, true, false, false);
         
         var exchangeName = typeof(TMessage).GetExchangeName();
@@ -51,9 +51,41 @@ public class RabbitMqFixture : IAsyncLifetime
 
             Console.WriteLine($"Getting message - {typeof(TMessage).Name}");
             await onMessageReceived(id, tcs);
+
+            await channel.BasicAckAsync(ea.DeliveryTag, false);
         };
         
-        await channel.BasicConsumeAsync(queueName, true, consumer);
+        await channel.BasicConsumeAsync(queueName, false, consumer);
+        
+        return tcs;
+    }
+
+    public async Task<TaskCompletionSource<Item>> SubscribeAndCheckForNull<TMessage, Item>(
+        Func<Guid, TaskCompletionSource<Item>, Task> onMessageReceived, Guid id)
+    {
+        var tcs = new TaskCompletionSource<Item>();
+        
+        var channel = await _connection.CreateChannelAsync();
+        var queueName = $"{typeof(TMessage).GetQueueName()}_tests";
+        await channel.QueueDeclareAsync(queueName, true, false, false);
+        
+        var exchangeName = typeof(TMessage).GetExchangeName();
+        var routingKey = typeof(TMessage).GetRoutingKey();
+        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+
+        var consumer = new AsyncEventingBasicConsumer(channel);
+        consumer.ReceivedAsync += async (model, ea) =>
+        {
+            var body = ea.Body;
+            var json = Encoding.UTF8.GetString(body.Span);
+            var message = JsonConvert.DeserializeObject<TMessage>(json);
+            
+            await onMessageReceived(id, tcs);
+
+            await channel.BasicAckAsync(ea.DeliveryTag, false);
+        };
+        
+        await channel.BasicConsumeAsync(queueName, false, consumer);
         
         return tcs;
     }
@@ -66,6 +98,7 @@ public class RabbitMqFixture : IAsyncLifetime
         var connectionFactory = new ConnectionFactory()
         {
             HostName = _rabbitMqSettings.Host,
+            ClientProvidedName = "RabbitMqFixture_test"
         };
         _connection = await connectionFactory.CreateConnectionAsync();
     }

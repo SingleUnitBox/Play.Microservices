@@ -17,7 +17,7 @@ public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     private Task Act(CreateItem command) => _rabbitMqFixture.PublishAsync(command);
 
     [Fact]
-    public async Task create_item_command_should_add_document_with_given_id_to_database()
+    public async Task create_item_command_should_add_item_with_given_id_to_database()
     {
         var command = new CreateItem("Potion", "Heals a bit of HP", 10,
             _crafterId.Value, Elements.Fire.ToString());

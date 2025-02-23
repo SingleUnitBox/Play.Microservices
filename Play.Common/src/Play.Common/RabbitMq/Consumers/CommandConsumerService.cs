@@ -45,7 +45,5 @@ public class CommandConsumerService : BackgroundService
     // }
 
     private Task ConsumeGenericCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
-    {
-        return _commandConsumer.ConsumeCommand<TCommand>(stoppingToken);
-    }
+        => _commandConsumer.ConsumeCommand<TCommand>(stoppingToken);
 }

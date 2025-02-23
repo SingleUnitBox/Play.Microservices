@@ -17,7 +17,7 @@ public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
     private Task Act(UpdateItem command) => _rabbitMqFixture.PublishAsync(command);
 
      [Fact]
-     public async Task update_item_command_should_update_document_with_given_id_and_data()
+     public async Task update_item_command_should_update_item_with_given_id_and_data()
      {
          var crafter = await _dbFixture.GetCrafter(_crafterId);
          _item.SetCrafter(crafter);
@@ -29,11 +29,12 @@ public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,
          
          var command = new UpdateItem(_item.Id, "Greatest book", "Even more spells", 22);
          await Act(command);
-         
+
+         await Task.Delay(100);
          var updatedItem = await tcs.Task;
          updatedItem.ShouldNotBeNull();
          updatedItem.Name.Value.ShouldBe("Greatest book");
-         updatedItem.Price.Value.ShouldBe(22);
+         updatedItem.Price.Value.ShouldBe(22); 
      }
 
     private readonly ItemsPostgresDbFixture _dbFixture;

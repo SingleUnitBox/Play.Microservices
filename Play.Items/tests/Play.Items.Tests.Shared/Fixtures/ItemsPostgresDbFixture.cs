@@ -20,7 +20,9 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
     }
     
     public async Task<Item> GetItem(Guid itemId)
-        => await DbContext.Items.FirstOrDefaultAsync(i => i.Id == itemId);
+        => await DbContext.Items
+            .AsNoTracking()
+            .FirstOrDefaultAsync(i => i.Id == itemId);
 
     public async Task InsertItem(Item item)
     {
@@ -39,7 +41,18 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
         
         tcs.TrySetResult(item);
     }
-    
+
+    public async Task GetNullItemAsync(Guid itemId, TaskCompletionSource<Item> tcs)
+    {
+        var item = await GetItem(itemId);
+        if (item is null)
+        {
+            tcs.TrySetResult(null);
+        }
+        
+        tcs.TrySetCanceled();
+    }
+
     public async Task<Crafter> GetCrafter(Guid crafterId)
         => await DbContext.Crafters.SingleOrDefaultAsync(c => c.CrafterId == crafterId);
     

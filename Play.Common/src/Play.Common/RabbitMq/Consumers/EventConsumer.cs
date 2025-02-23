@@ -77,8 +77,11 @@ public class EventConsumer(
         }
         finally
         {
-            await channel.CloseAsync();
-            channel.Dispose();
+            if (channel.IsOpen)
+            {
+                await channel.CloseAsync();
+                channel.Dispose();
+            }
         }
     }
 }
