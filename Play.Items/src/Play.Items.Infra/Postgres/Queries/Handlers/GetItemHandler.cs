@@ -27,13 +27,15 @@ public class GetItemHandler : IQueryHandler<GetItem, ItemDto>
             .FromSqlInterpolated($"SELECT * FROM \"play.items\".\"Items\" WHERE \"Id\" = {query.ItemId}")
             .SingleOrDefaultAsync();
 
-        return new ItemDto
-        (
-            item.Id,
-            item.Name,
-            item.Description,
-            item.Price,
-            item.CreatedDate
-        );
+        return item is null
+            ? null
+            : new ItemDto
+            (
+                item.Id,
+                item.Name,
+                item.Description,
+                item.Price,
+                item.CreatedDate
+            );
     }
 }
