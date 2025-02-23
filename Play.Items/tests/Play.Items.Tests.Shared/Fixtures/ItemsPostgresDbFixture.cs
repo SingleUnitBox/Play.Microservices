@@ -30,6 +30,14 @@ public class ItemsPostgresDbFixture : IAsyncLifetime
         await DbContext.SaveChangesAsync();
     }
 
+    public async Task InsertItems(IEnumerable<Item> items)
+    {
+        foreach (var item in items)
+        {
+            await InsertItem(item);
+        }
+    }
+
     public async Task GetItemAsync(Guid itemId, TaskCompletionSource<Item> tcs)
     {
         var item = await GetItem(itemId);

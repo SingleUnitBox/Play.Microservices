@@ -9,7 +9,7 @@ using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
 using Shouldly;
 
-namespace Play.Items.Tests.EndToEnd.Sync;
+namespace Play.Items.Tests.EndToEnd.Sync.Commands;
 
 [Collection("SyncTests")]
 public class UpdateItemTests : IClassFixture<PlayItemsApplicationFactory>,

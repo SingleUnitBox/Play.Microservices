@@ -1,5 +1,17 @@
 <h2>Items List</h2>
-<ul>
-  <li *ngFor="let item of items">{{ item.price }}</li>
 
+<!-- Show loading spinner or message -->
+<div *ngIf="loading">Loading items...</div>
+
+<!-- Show error message if any -->
+<div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+
+<!-- Display list of items if available -->
+<ul *ngIf="!loading && items.length > 0">
+  <li *ngFor="let item of items">
+    <strong>Price:</strong> {{ item.price | currency }}
+  </li>
 </ul>
+
+<!-- Show message if no items -->
+<p *ngIf="!loading && items.length === 0">No items available.</p>

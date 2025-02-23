@@ -15,8 +15,17 @@ export class ItemsComponent implements OnInit {
   constructor(private itemsService: ItemsService) {}
 
   ngOnInit() {
-    this.itemsService.getItems().subscribe(data => {
-      this.items = data;
+    this.fetchItems();
+  }
+
+  fetchItems() {
+    this.itemsService.getItems().subscribe({
+      next: (data) => {
+        this.items = data;
+      },
+      error: (err) => {
+        console.error('Error fetching items', err);
+      }
     });
   }
 }

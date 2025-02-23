@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Play.Items.Application.Commands;
 using Play.Items.Domain.Entities;
@@ -9,10 +8,9 @@ using Play.Items.Domain.Types;
 using Play.Items.Infra.Postgres;
 using Play.Items.Tests.Shared.Factories;
 using Play.Items.Tests.Shared.Fixtures;
-using RabbitMQ.Client;
 using Shouldly;
 
-namespace Play.Items.Tests.EndToEnd.Sync;
+namespace Play.Items.Tests.EndToEnd.Sync.Commands;
 
 [Collection("SyncTests")]
 public class CreateItemTests : IClassFixture<PlayItemsApplicationFactory>,

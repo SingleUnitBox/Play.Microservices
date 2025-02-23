@@ -1,14 +1,15 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { ItemsComponent } from './components/items/items.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ItemsComponent],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
-  standalone: true
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'Play.Items.UI';
+  constructor(private router: Router) {}
+
+  goToItems() {
+    this.router.navigate(['/items']);
+  }
 }
