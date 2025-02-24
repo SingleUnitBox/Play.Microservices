@@ -47,6 +47,18 @@ public class UserController : ControllerBase
         return Ok(accountDto);
     }
 
+    [HttpGet("{userId}")]
+    public async Task<ActionResult<string>> GetUserState(Guid userId)
+    {
+        var userState = await _userService.GetUserState(userId);
+        if (userState is null)
+        {
+            return NotFound();
+        }
+        
+        return Ok(userState);
+    }
+
     [HttpPost]
     [Authorize]
     public async Task<ActionResult> ChangeUsername(ChangeUsernameDto dto)

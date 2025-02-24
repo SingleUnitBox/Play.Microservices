@@ -2,4 +2,7 @@
 
 namespace Play.APIGateway.Commands.Items;
 
-public record CreateItem(string Name, string Description, Decimal Price, Guid CrafterId) : ICommand;
+public record CreateItem(string Name, string Description, decimal Price, Guid CrafterId, string Element) : ICommand
+{
+    public Guid ItemId { get; init; } = Guid.NewGuid();
+}

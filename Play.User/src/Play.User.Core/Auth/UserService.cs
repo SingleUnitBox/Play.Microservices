@@ -77,10 +77,22 @@ public class UserService : IUserService
                 Username = user.Username,
                 Role = user.Role,
                 Claims = user.Claims,
+                State = user.State
             };
         }
 
         return null;
+    }
+
+    public async  Task<string> GetUserState(Guid userId)
+    {
+        var user = await _userRepository.GetUserById(userId);
+        if (user is null)
+        {
+            return null;
+        }
+        
+        return user.State;
     }
     
     public async Task ChangeUsername(Guid userId, ChangeUsernameDto dto)

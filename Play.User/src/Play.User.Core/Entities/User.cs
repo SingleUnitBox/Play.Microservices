@@ -1,4 +1,5 @@
 ﻿using Play.Common;
+using Play.User.Core.Types;
 
 namespace Play.User.Core.Entities;
 
@@ -11,6 +12,7 @@ public class User : IEntity
     public string Role { get; set; }
     public Dictionary<string, IEnumerable<string>> Claims { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
+    public string State { get; set; }
 
     public User(string username, string email, string password, string role, Dictionary<string,
         IEnumerable<string>> claims)
@@ -21,5 +23,6 @@ public class User : IEntity
         Role = role;
         Claims = claims;
         CreatedAt = DateTimeOffset.Now;
+        State = States.Active.ToString();
     }
 }

@@ -1,12 +1,10 @@
 @url = http://localhost:5008
 
-@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5ZmFkZGZiNS0wMjI3LTQ4MDUtODA1YS0yMTQwNDIxZTZkZTUiLCJ1bmlxdWVfbmFtZSI6IjlmYWRkZmI1LTAyMjctNDgwNS04MDVhLTIxNDA0MjFlNmRlNSIsImp0aSI6IjE5ZDc3ZDExLTQxZmYtNDcwNC04MDhiLTFiOWRkMTJhOTI3MCIsImlhdCI6IjE3Mzc2NzIzNjc3MzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM3NjcyMzY3LCJleHAiOjE3NDYyMjU5NjcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.w4L6OMqS1Unb0X28N8AQi_8eWMpW1RYqKunvNSAnmc4
+@accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyODI2MzMyMi03NGUwLTQ3MzUtYWQ5Ni00ZjY4ODUxYTgxMGUiLCJ1bmlxdWVfbmFtZSI6IjI4MjYzMzIyLTc0ZTAtNDczNS1hZDk2LTRmNjg4NTFhODEwZSIsImp0aSI6IjZlZjM4ZmMyLTQ2MzItNDdhOS1hZGNhLTE1MWY3Yzc3YTVmZSIsImlhdCI6IjE3NDA0Mzg2NjIxMzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzQwNDM4NjYyLCJleHAiOjE3NDg5OTIyNjIsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.JvQSz3yjELyWd-I3ct6hHnZSQhWA2ZN3_4H2egvAqd4
 
-@itemId = 4167c08a-7b8a-41d5-97c3-c8a593c3f58a
-@crafterId = db1ed409-a217-461d-a49f-c75dcf675709
-@userId = 99d8ed15-e2c2-4fad-8d5e-a5105e68b96a
-
-99d8ed15-e2c2-4fad-8d5e-a5105e68b96b
+@itemId = a51bd6ca-6ca9-48e7-90c4-e75f290f7a9a
+@crafterId = b69f5ef7-bf93-4de2-a62f-064652d8dd19
+@userId = 28263322-74e0-4735-ad96-4f68851a810e
 
 ###
 GET {{url}}/publishCreateItem
@@ -17,8 +15,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user4",
-  "email": "user4@play.com",
+  "username": "user2",
+  "email": "user2@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -34,13 +32,16 @@ POST {{url}}/play-user/signIn
 Content-Type: application/json
 
 {
-    "email": "user3@play.com",
+    "email": "user2@play.com",
     "password": "secret"
 }
 
 ###
 GET {{url}}/play-user
 Authorization: Bearer {{accessToken}}
+
+###
+GET {{url}}/play-user/{{userId}}
 
 ### PLAY-ITEMS ###
 ### HomePage
@@ -67,7 +68,8 @@ Content-Type: application/json
   "name": "XXXXXL Potion",
   "description": "Easy damage",
   "price": 66.99,
-  "crafterId": "{{crafterId}}"
+  "crafterId": "{{crafterId}}",
+  "element": "Fire"
 }
 
 ### Update

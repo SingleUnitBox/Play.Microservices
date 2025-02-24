@@ -2,6 +2,7 @@
 using Play.Common.Abs.Events;
 using Play.Inventory.Application.Events;
 using Play.Inventory.Application.Exceptions;
+using Play.Inventory.Application.Services.Clients;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Policies;
 using Play.Inventory.Domain.Policies.Factories;
@@ -15,6 +16,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
     private readonly IInventoryItemRepository _inventoryItemRepository;
     private readonly IMoneyBagRepository _moneyBagRepository;
     private readonly IPlayerRepository _playerRepository;
+    private readonly IUserServiceClient _userServiceClient;
     private readonly IWeaponPurchasePolicyFactory _policyFactory;
     private readonly IEventDispatcher _eventDispatcher;
 
@@ -22,6 +24,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         IInventoryItemRepository inventoryItemRepository, 
         IMoneyBagRepository moneyBagRepository, 
         IPlayerRepository playerRepository,
+        IUserServiceClient userServiceClient,
         IWeaponPurchasePolicyFactory policyFactory,
         IEventDispatcher eventDispatcher)
     {
@@ -29,6 +32,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         _inventoryItemRepository = inventoryItemRepository;
         _moneyBagRepository = moneyBagRepository;
         _playerRepository = playerRepository;
+        _userServiceClient = userServiceClient;
         _policyFactory = policyFactory;
         _eventDispatcher = eventDispatcher;
     }
@@ -37,6 +41,7 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
     {
         var catalogItem = await ValidateCatalogItem(command.ItemId);
         var player = await ValidatePlayer(command.PlayerId);
+        await ValidatePlayerState(player.Id);
         var moneyBag = await ValidateMoneyBag(command.PlayerId);
         var inventoryItem = await _inventoryItemRepository.GetInventory(i =>
             i.PlayerId == player.Id && i.CatalogItemId == command.ItemId);
@@ -109,6 +114,15 @@ public class PurchaseItemHandler : ICommandHandler<PurchaseItem>
         }
         
         return user;
+    }
+
+    private async Task ValidatePlayerState(Guid playerId)
+    {
+        var playerState = await _userServiceClient.GetStateAsync(playerId);
+        if (!playerState.IsActive)
+        {
+            throw new InvalidPlayerStateException(playerId, playerState.State);
+        }
     }
 
     private async Task<MoneyBag> ValidateMoneyBag(Guid userId)
