@@ -1,4 +1,5 @@
 using Play.Common.Auth;
+using Play.Common.Consul;
 using Play.Common.Context;
 using Play.Common.MongoDb;
 using Play.Common.RabbitMq;
@@ -15,6 +16,7 @@ builder.Services.AddMongoDb(builder.Configuration);
 builder.Services.AddMongoRepository<IUserRepository, UserMongoRepository>(
     db => new UserMongoRepository(db, "users"));
 builder.Services.AddRabbitMq();
+builder.Services.AddConsul();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

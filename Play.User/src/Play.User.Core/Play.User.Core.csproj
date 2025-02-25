@@ -9,7 +9,7 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
         <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.11" />
-        <PackageReference Include="Play.Common" Version="1.1.52" />
+        <PackageReference Include="Play.Common" Version="1.1.88" />
     </ItemGroup>
 
 </Project>
