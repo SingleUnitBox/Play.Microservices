@@ -1,6 +1,7 @@
 using Play.Common.Auth;
 using Play.Common.Consul;
 using Play.Common.Context;
+using Play.Common.Logging;
 using Play.Common.MongoDb;
 using Play.Common.RabbitMq;
 using Play.User.Core.Auth;
@@ -20,6 +21,8 @@ builder.Services.AddConsul();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.UseSerilogWithSeq();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

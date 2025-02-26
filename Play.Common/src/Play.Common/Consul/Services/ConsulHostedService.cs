@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Play.Common.Consul.Models;
 
 namespace Play.Common.Consul.Services;
 
@@ -31,8 +32,18 @@ public class ConsulHostedService : IHostedService
         _logger.LogError($"There was an error registering a service with id '{serviceRegistration.Id}' in Consul");
     }
 
-    public Task StopAsync(CancellationToken cancellationToken)
+    public async Task StopAsync(CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        using var scope = _serviceProvider.CreateScope();
+        var consulService = scope.ServiceProvider.GetRequiredService<IConsulService>();
+        var serviceRegistration = scope.ServiceProvider.GetRequiredService<ServiceRegistration>();
+        var response = await consulService.DeregisterServiceAsync(serviceRegistration.Id);
+        if (response.IsSuccessStatusCode)
+        {
+            _logger.LogInformation($"Deregistered a service with id '{serviceRegistration.Id}' from Consul");
+            return;
+        }
+        
+        _logger.LogError($"There was an error deregistering a service with id '{serviceRegistration.Id}' from Consul");
     }
 }

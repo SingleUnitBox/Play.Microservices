@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Common;
 using Play.Common.Consul.Builders;
+using Play.Common.Consul.Models;
 using Play.Common.Consul.Services;
 using Play.Common.Settings;
 
@@ -20,6 +22,7 @@ public static class Extensions
     public static IConsulBuilder AddConsul(this IConsulBuilder builder,
         ConsulSettings consulSettings, HttpClientSettings httpClientSettings)
     {
+        builder.Services.AddSingleton<IServiceId, ServiceId>();
         builder.Services.AddSingleton(consulSettings);
         builder.Services.AddHostedService<ConsulHostedService>();
         var registration = builder.Services.CreateConsulAgentRegistration(consulSettings);
@@ -44,9 +47,15 @@ public static class Extensions
 
         services.AddHttpClient<IConsulService, ConsulService>(c => c.BaseAddress = new Uri(consulSettings.Url));
 
+        string serviceId;
+        using (var serviceProvider = services.BuildServiceProvider())
+        {
+            serviceId = serviceProvider.GetRequiredService<IServiceId>().Id;
+        }
+
         var registration = new ServiceRegistration
         {
-            Id = $"{consulSettings.Service}:{Guid.NewGuid()}",
+            Id = $"{consulSettings.Service}:{serviceId}",
             Name = consulSettings.Service,
             Address = consulSettings.Address,
             Port = consulSettings.Port,

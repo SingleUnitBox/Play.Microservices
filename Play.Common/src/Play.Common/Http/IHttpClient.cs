@@ -1,4 +1,6 @@
-﻿namespace Play.Common.Http;
+﻿using Play.Common.Http.Serializer;
+
+namespace Play.Common.Http;
 
 public interface IHttpClient
 {

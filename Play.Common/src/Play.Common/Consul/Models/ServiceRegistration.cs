@@ -1,4 +1,4 @@
-﻿namespace Play.Common.Consul;
+﻿namespace Play.Common.Consul.Models;
 
 public class ServiceRegistration
 {
