@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Common;
 using Play.Common.Consul.Builders;
+using Play.Common.Consul.Http;
+using Play.Common.Consul.MessageHandlers;
 using Play.Common.Consul.Models;
 using Play.Common.Consul.Services;
+using Play.Common.Http;
 using Play.Common.Settings;
 
 namespace Play.Common.Consul;
@@ -22,16 +25,23 @@ public static class Extensions
     public static IConsulBuilder AddConsul(this IConsulBuilder builder,
         ConsulSettings consulSettings, HttpClientSettings httpClientSettings)
     {
-        builder.Services.AddSingleton<IServiceId, ServiceId>();
-        builder.Services.AddSingleton(consulSettings);
-        builder.Services.AddHostedService<ConsulHostedService>();
-        var registration = builder.Services.CreateConsulAgentRegistration(consulSettings);
-        if (registration is null)
+        if (httpClientSettings.Type?.ToLowerInvariant() == "consul")
         {
-            return builder;
-        }
+            builder.Services.AddTransient<ConsulServiceDiscoveryMessageHandler>();
+            builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>()
+                .AddHttpMessageHandler<ConsulServiceDiscoveryMessageHandler>();
+            builder.Services.AddSingleton<IServiceId, ServiceId>();
+            builder.Services.AddSingleton(consulSettings);
+            builder.Services.AddHostedService<ConsulHostedService>();
+            builder.Services.AddTransient<IConsulServicesRegistry, ConsulServiceRegistry>();
+            var registration = builder.Services.CreateConsulAgentRegistration(consulSettings);
+            if (registration is null)
+            {
+                return builder;
+            }
         
-        builder.Services.AddSingleton(registration);
+            builder.Services.AddSingleton(registration);
+        }
         
         return builder;
     }

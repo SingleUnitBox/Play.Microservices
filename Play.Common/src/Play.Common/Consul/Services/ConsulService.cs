@@ -1,6 +1,4 @@
-﻿
-
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Play.Common.Consul.Models;
 
@@ -22,6 +20,20 @@ public class ConsulService : IConsulService
 
     public Task<HttpResponseMessage> DeregisterServiceAsync(string id)
         => _httpClient.PutAsync(GetEndpoint($"agent/service/deregister/{id}"), EmptyRequest);
+
+    public async Task<IDictionary<string, ServiceAgent>> GetServicesAsync(string service = null)
+    {
+        var filter = string.IsNullOrWhiteSpace(service) ? string.Empty : $"?filter=Service==\"{service}\"";
+        var response = await _httpClient.GetAsync(GetEndpoint($"agent/services{filter}"));
+        if (!response.IsSuccessStatusCode)
+        {
+            return new Dictionary<string, ServiceAgent>();
+        }
+        
+        var content = await response.Content.ReadAsStringAsync();
+        
+        return JsonSerializer.Deserialize<IDictionary<string, ServiceAgent>>(content);
+    }
 
     private static StringContent GetContent(object request)
         => new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");

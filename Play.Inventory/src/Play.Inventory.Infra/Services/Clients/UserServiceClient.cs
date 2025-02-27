@@ -1,4 +1,5 @@
 ﻿using System.Net.Http.Headers;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Play.Common.Http;
 using Play.Common.Settings;
@@ -9,22 +10,22 @@ namespace Play.Inventory.Infra.Services.Clients;
 
 internal sealed class UserServiceClient : IUserServiceClient
 {
-    //private readonly IHttpClientFactory _httpClientFactory;
     private readonly IHttpClient _httpClient;
     private readonly string _url;
+    private readonly IServiceProvider _serviceProvider;
 
     public UserServiceClient(
         IHttpClient httpClient,
-        //IHttpClientFactory httpClientFactory,
-        HttpClientSettings httpClientSettings)
+        HttpClientSettings httpClientSettings, IServiceProvider serviceProvider)
     {
         _httpClient = httpClient;
-        //_httpClientFactory = httpClientFactory;
+        _serviceProvider = serviceProvider;
         _url = httpClientSettings.Services["User"];
     }
     public async Task<UserStateDto> GetStateAsync(Guid playerId)
     {
-        //var client = _httpClientFactory.CreateClient();
+        using var scope = _serviceProvider.CreateScope();
+        var clients = scope.ServiceProvider.GetServices<IHttpClient>();
         var response = await _httpClient.GetAsync($"{_url}/user/{playerId}");
         
         var responseBody = await response.Content.ReadAsStringAsync();

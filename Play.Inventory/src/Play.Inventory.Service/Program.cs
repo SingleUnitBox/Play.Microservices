@@ -2,6 +2,7 @@ using Play.Common.Abs.Commands;
 using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
+using Play.Common.Consul;
 using Play.Common.Context;
 using Play.Common.Events;
 using Play.Common.Exceptions;
@@ -47,6 +48,7 @@ builder.Services.AddEvents();
 builder.Services.AddLoggingEventHandlerDecorator();
 builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
 builder.Services.AddInfrastructure();
+builder.Services.AddConsul();
 
 builder.Services.AddAPostgresCommandHandlerDecorator();
 builder.Services.AddPostgresUnitOfWork<IInventoryUnitOfWork, InventoryPostgresUnitOfWork>();
