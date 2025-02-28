@@ -25,13 +25,16 @@ public static class Extensions
     public static IConsulBuilder AddConsul(this IConsulBuilder builder,
         ConsulSettings consulSettings, HttpClientSettings httpClientSettings)
     {
+        builder.Services.AddSingleton(consulSettings);
         if (httpClientSettings.Type?.ToLowerInvariant() == "consul")
         {
             builder.Services.AddTransient<ConsulServiceDiscoveryMessageHandler>();
             builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>()
                 .AddHttpMessageHandler<ConsulServiceDiscoveryMessageHandler>();
+            builder.Services.RemoveHttpClient();
+            builder.Services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>()
+                .AddHttpMessageHandler<ConsulServiceDiscoveryMessageHandler>();
             builder.Services.AddSingleton<IServiceId, ServiceId>();
-            builder.Services.AddSingleton(consulSettings);
             builder.Services.AddHostedService<ConsulHostedService>();
             builder.Services.AddTransient<IConsulServicesRegistry, ConsulServiceRegistry>();
             var registration = builder.Services.CreateConsulAgentRegistration(consulSettings);
@@ -72,5 +75,15 @@ public static class Extensions
         };
         
         return registration;
+    }
+    
+    public static void RemoveHttpClient(this IServiceCollection services)
+    {
+        var registryType = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.GetTypes())
+            .SingleOrDefault(t => t.Name == "HttpClientMappingRegistry");
+        var registry = services.SingleOrDefault(s => s.ServiceType == registryType)?.ImplementationInstance;
+        var registrations = registry?.GetType().GetProperty("TypedClientRegistrations");
+        var clientRegistrations = registrations?.GetValue(registry) as IDictionary<Type, string>;
+        clientRegistrations?.Remove(typeof(IHttpClient));
     }
 }
