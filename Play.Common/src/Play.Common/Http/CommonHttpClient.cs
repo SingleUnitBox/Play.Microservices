@@ -16,12 +16,12 @@ public class CommonHttpClient : IHttpClient
         _httpClientSerializer = httpClientSerializer;
     }
     
-    public Task<HttpResponseMessage> GetAsync(string url)
-        => _httpClient.GetAsync(url);
+    public virtual Task<HttpResponseMessage> GetAsync(string uri)
+        => SendAsync(uri);
 
-    public async Task<T> GetAsync<T>(string url, IHttpClientSerializer serializer = null)
+    public async Task<T> GetAsync<T>(string uri, IHttpClientSerializer serializer = null)
     {
-        var response = await _httpClient.GetAsync(url);
+        var response = await _httpClient.GetAsync(uri);
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStreamAsync();
@@ -29,5 +29,12 @@ public class CommonHttpClient : IHttpClient
         }
         
         return default;
+    }
+
+    protected virtual Task<HttpResponseMessage> SendAsync(string uri)
+    {
+        var requestUri = uri.StartsWith("http") ? uri : $"http://{uri}";
+
+        return _httpClient.GetAsync(requestUri);
     }
 }

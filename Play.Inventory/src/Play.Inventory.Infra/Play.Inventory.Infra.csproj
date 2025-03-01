@@ -16,7 +16,7 @@
     </ItemGroup>
     
     <ItemGroup>
-      <PackageReference Include="Play.Common" Version="1.1.97" />
+      <PackageReference Include="Play.Common" Version="1.2.4" />
     </ItemGroup>
 
 </Project>

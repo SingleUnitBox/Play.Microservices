@@ -61,7 +61,8 @@ public class ConsulServiceDiscoveryMessageHandler : DelegatingHandler
 
         var uriBuilder = new UriBuilder(uri)
         {
-            Host = service.Address,
+            //Host = service.Address,
+            Host = "localhost",
             Port = service.Port,
         };
 

@@ -29,10 +29,10 @@ public static class Extensions
         if (httpClientSettings.Type?.ToLowerInvariant() == "consul")
         {
             builder.Services.AddTransient<ConsulServiceDiscoveryMessageHandler>();
-            builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>()
+            builder.Services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>()
                 .AddHttpMessageHandler<ConsulServiceDiscoveryMessageHandler>();
             builder.Services.RemoveHttpClient();
-            builder.Services.AddHttpClient<IConsulHttpClient, ConsulHttpClient>()
+            builder.Services.AddHttpClient<IHttpClient, ConsulHttpClient>()
                 .AddHttpMessageHandler<ConsulServiceDiscoveryMessageHandler>();
             builder.Services.AddSingleton<IServiceId, ServiceId>();
             builder.Services.AddHostedService<ConsulHostedService>();
