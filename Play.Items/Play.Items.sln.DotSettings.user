@@ -192,6 +192,9 @@
   &lt;Assembly Path="C:\Users\czlom\.nuget\packages\play.common\1.1.6\lib\net8.0\Play.Common.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\czlom\.nuget\packages\play.common\1.1.74\lib\net8.0\Play.Common.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=3b0fc72f_002D46a7_002D487b_002Db5aa_002De31ae611d994/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="All tests from Solution" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;Solution /&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
 	
 	
 	
