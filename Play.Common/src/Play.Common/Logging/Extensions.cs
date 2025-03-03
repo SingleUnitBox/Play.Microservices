@@ -1,5 +1,4 @@
-﻿using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;

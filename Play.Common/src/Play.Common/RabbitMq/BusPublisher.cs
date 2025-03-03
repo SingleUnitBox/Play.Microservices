@@ -13,18 +13,18 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         ICorrelationContext correlationContext = null)
         where TMessage : class
     {
-        using var channel = await connection.CreateChannelAsync();
+        using var channel = connection.CreateModel();
 
         //create_item_exchange
         var exchangeName = message.GetExchangeName();
-        await channel.ExchangeDeclareAsync(exchangeName, ExchangeType.Direct, true, false);
+        channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false);
 
         //create_item_queue
         var queueName = message.GetQueueName();
-        await channel.QueueDeclareAsync(queueName, true, false, false);
+        channel.QueueDeclare(queueName, true, false, false);
         
         var routingKey = message.GetRoutingKey();
-        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        channel.QueueBind(queueName, exchangeName, routingKey);
 
         var json = JsonConvert.SerializeObject(message);
         var body = Encoding.UTF8.GetBytes(json);
@@ -40,7 +40,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         };
         
 
-        await channel.BasicPublishAsync(
+        await channel.BasicPublish(
             exchangeName,
             routingKey,
             false,

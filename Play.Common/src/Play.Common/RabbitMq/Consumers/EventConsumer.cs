@@ -17,17 +17,17 @@ public class EventConsumer(
 {
     public async Task ConsumeEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent
     {
-        using var channel = await connection.CreateChannelAsync();
+        using var channel = connection.CreateModel();
 
         var queueName = typeof(TEvent).GetQueueName();
-        await channel.QueueDeclareAsync(queueName, true, false, false);
+        channel.QueueDeclare(queueName, true, false, false);
 
         var exchangeName = typeof(TEvent).GetExchangeName();
         var routingKey = typeof(TEvent).GetRoutingKey();
-        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        channel.QueueBind(queueName, exchangeName, routingKey);
 
         var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += async (model, ea) =>
+        consumer.Received += async (model, ea) =>
         {
             var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
             var userIdString = string.Empty;
@@ -53,16 +53,16 @@ public class EventConsumer(
 
                 await eventDispatcher.HandleAsync(@event);
 
-                await channel.BasicAckAsync(ea.DeliveryTag, false);
+                channel.BasicAck(ea.DeliveryTag, false);
             }
             catch (Exception e)
             {
                 logger.LogError(e, e.Message);
-                await channel.BasicAckAsync(ea.DeliveryTag, false);
+                channel.BasicAck(ea.DeliveryTag, false);
             }
         };
 
-        await channel.BasicConsumeAsync(queueName, false, consumer);
+        channel.BasicConsume(queueName, false, consumer);
 
         try
         {
@@ -79,7 +79,7 @@ public class EventConsumer(
         {
             if (channel.IsOpen)
             {
-                await channel.CloseAsync();
+                channel.Close();
                 channel.Dispose();
             }
         }

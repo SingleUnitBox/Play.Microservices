@@ -33,17 +33,17 @@ public class CommandConsumer : ICommandConsumer
 
     public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
     {
-        using var channel = await _connection.CreateChannelAsync(cancellationToken: stoppingToken);
+        using var channel = _connection.CreateModel();
 
         var queueName = typeof(TCommand).GetQueueName();
-        await channel.QueueDeclareAsync(queueName, true, false, false);
+        channel.QueueDeclare(queueName, true, false, false);
         
         var exchangeName = typeof(TCommand).GetExchangeName();
         var routingKey = typeof(TCommand).GetRoutingKey();
-        await channel.QueueBindAsync(queueName, exchangeName, routingKey);
+        channel.QueueBind(queueName, exchangeName, routingKey);
         
         var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += async (model, ea) =>
+        consumer.Received += async (model, ea) =>
         {
             var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
             var userIdString = string.Empty;
@@ -68,18 +68,18 @@ public class CommandConsumer : ICommandConsumer
             try
             {
                 await _commandDispatcher.DispatchAsync(command);
-                await channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false);
+                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception e)
             {
                 var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
-                await channel.BasicAckAsync(ea.DeliveryTag, false);
+                channel.BasicAck(ea.DeliveryTag, false);
                 await _busPublisher.Publish(rejectedEvent);
             }
 
         };
         
-        await channel.BasicConsumeAsync(queueName, false, consumer);
+        channel.BasicConsume(queueName, false, consumer);
 
         try
         {
@@ -96,7 +96,7 @@ public class CommandConsumer : ICommandConsumer
         {
             if (channel.IsOpen)
             {
-                await channel.CloseAsync();
+                channel.Close();
                 channel.Dispose();
             }
         }

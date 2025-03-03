@@ -24,6 +24,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.0.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.11" />
     <PackageReference Include="Play.Common.Abs" Version="1.0.28" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
     <PackageReference Include="Scrutor" Version="5.0.2" />
     <PackageReference Include="Serilog" Version="4.2.1-dev-02337" />
     <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />

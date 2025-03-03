@@ -22,7 +22,7 @@ public class RabbitMqClient : IRabbitMqClient, IAsyncDisposable
     {
         if (_connection is null || !_connection.IsOpen)
         {
-            _connection = await _connectionFactory.CreateConnectionAsync();
+            _connection = await _connectionFactory.CreateConnection();
         }
 
         return _connection;
