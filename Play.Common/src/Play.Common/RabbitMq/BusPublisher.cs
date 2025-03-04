@@ -1,11 +1,12 @@
 ﻿using System.Text;
 using Newtonsoft.Json;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.Connection;
 using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq;
 
-public class  BusPublisher(IConnection connection) : IBusPublisher
+internal sealed class BusPublisher(ChannelFactory channelFactory) : IBusPublisher
 {
     public async Task Publish<TMessage>(
         TMessage message,
@@ -13,7 +14,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         ICorrelationContext correlationContext = null)
         where TMessage : class
     {
-        using var channel = connection.CreateModel();
+        var channel = channelFactory.CreateForProducer();
 
         //create_item_exchange
         var exchangeName = message.GetExchangeName();
@@ -30,7 +31,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
         var body = Encoding.UTF8.GetBytes(json);
         
         //properties
-        var basicProperties = new BasicProperties();
+        var basicProperties = channel.CreateBasicProperties();
         basicProperties.CorrelationId = string.IsNullOrWhiteSpace(correlationContext?.CorrelationId.ToString())
             ? Guid.NewGuid().ToString()
             : correlationContext.CorrelationId.ToString();
@@ -39,8 +40,7 @@ public class  BusPublisher(IConnection connection) : IBusPublisher
             { "UserId", correlationContext?.UserId.ToString() ?? Guid.Empty.ToString() }
         };
         
-
-        await channel.BasicPublish(
+        channel.BasicPublish(
             exchangeName,
             routingKey,
             false,

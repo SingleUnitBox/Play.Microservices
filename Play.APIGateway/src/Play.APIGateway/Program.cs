@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-using Play.APIGateway.Commands;
 using Play.APIGateway.Commands.Inventory;
 using Play.APIGateway.Commands.Items;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.Logging;
 using Play.Common.RabbitMq;
+using Play.Common.Settings;
 
 namespace Play.APIGateway;
 
@@ -16,7 +15,12 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
-        builder.Services.AddRabbitMq();
+        var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
+        builder.Services.AddSingleton(settings);
+        builder.Services.AddRabbitMq()
+            .Build()
+            .AddConnectionProvider()
+            .AddChannelFactory();
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddContext();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);

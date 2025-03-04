@@ -1,6 +1,7 @@
 ﻿using Humanizer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.RabbitMq.Builder;
 using Play.Common.RabbitMq.Connection;
@@ -18,45 +19,53 @@ public static class Extensions
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
         services.AddSingleton(rabbitSettings);
         
-        services.AddSingleton<IRabbitMqClient>(sp =>
-            new RabbitMqClient(sp.GetRequiredService<IConfiguration>()));
-        
-        services.AddSingleton<IConnection>(sp =>
-        {
-            var rabbitMqClient = sp.GetRequiredService<IRabbitMqClient>();
-            return rabbitMqClient.GetConnection().GetAwaiter().GetResult();
-        });
-        
-        services.AddSingleton<IBusPublisher, BusPublisher>();
         var builder = new RabbitMqBuilder(services);
         services.AddSingleton(builder);
+        services.AddSingleton<IBusPublisher, BusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+        
         return builder;
     }
 
-    public static IRabbitMqBuilder AddConnectionProvider(this IRabbitMqBuilder builder)
+    public static IServiceCollection AddConnectionProvider(this IServiceCollection services)
     {
-        builder.Services.AddSingleton(sp =>
+        services.AddSingleton<ConnectionProvider>(sp =>
         {
+            var logger = sp.GetRequiredService<ILogger<ConnectionProvider>>();
             var settings = sp.GetRequiredService<RabbitMqSettings>();
             var serviceName = sp.GetRequiredService<ServiceSettings>().ServiceName;
             var factory = new ConnectionFactory()
             {
                 HostName = settings.Host,
-                // Port
-                // UserName
-                // Password
-                // VirtualHost
+                Port = settings.Port,
+                UserName = settings.UserName,
+                Password = settings.Password,
+                VirtualHost = settings.VirtualHost
             };
-            
-            var consumerConnection = factory.CreateConnection($"{serviceName}-consumer");
-            var producerConnection = factory.CreateConnection($"{serviceName}-producer");
-            var connectionProvider = new ConnectionProvider(consumerConnection, producerConnection);
-            
-            return connectionProvider;
+            logger.LogInformation($"Connecting to RabbitMQ at {settings.Host}:{settings.Port}");
+
+            try
+            {
+                var consumerConnection = factory.CreateConnection($"{serviceName}-consumer");
+                var producerConnection = factory.CreateConnection($"{serviceName}-producer");
+                
+                logger.LogInformation("RabbitMQ connections created successfully!");
+                return new ConnectionProvider(consumerConnection, producerConnection);
+            }
+            catch (Exception e)
+            {
+                throw new InvalidOperationException("Failed to create RabbitMQ connections", e);
+            }
         });
         
-        return builder;
+        return services;
+    }
+
+    public static IServiceCollection AddChannelFactory(this IServiceCollection services)
+    {
+        services.AddTransient<ChannelFactory>();
+        
+        return services;
     }
 
     public static string GetExchangeName<TMessage>(this TMessage message)

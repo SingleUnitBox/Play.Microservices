@@ -55,10 +55,17 @@ public class Program
         builder.Services.AddLoggingEventHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+        var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
+        builder.Services.AddSingleton(settings);
         builder.Services.AddRabbitMq()
             .AddCommandConsumer()
-            .AddEventConsumer()
-            .Build();
+            .Build()
+            .AddConnectionProvider()
+            .AddChannelFactory();
+            
+
+            //.AddEventConsumer()
+            //.Build();
         builder.Services.AddInfra();
 
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
