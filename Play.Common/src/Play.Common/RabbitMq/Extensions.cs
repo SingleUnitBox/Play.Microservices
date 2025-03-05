@@ -14,22 +14,22 @@ namespace Play.Common.RabbitMq;
 
 public static class Extensions
 {
-    public static IRabbitMqBuilder AddRabbitMq(this IServiceCollection services)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services, Action<IRabbitMqBuilder> rabbitBuilder)
     {
-        var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
-        services.AddSingleton(rabbitSettings);
-        
         var builder = new RabbitMqBuilder(services);
         services.AddSingleton(builder);
+        
+        var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
+        services.AddSingleton(rabbitSettings);
         services.AddSingleton<IBusPublisher, BusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         
-        return builder;
+        return services;
     }
 
-    public static IServiceCollection AddConnectionProvider(this IServiceCollection services)
+    public static IRabbitMqBuilder AddConnectionProvider(this IRabbitMqBuilder builder)
     {
-        services.AddSingleton<ConnectionProvider>(sp =>
+        builder.Services.AddSingleton<ConnectionProvider>(sp =>
         {
             var logger = sp.GetRequiredService<ILogger<ConnectionProvider>>();
             var settings = sp.GetRequiredService<RabbitMqSettings>();
@@ -58,14 +58,14 @@ public static class Extensions
             }
         });
         
-        return services;
+        return builder;
     }
 
-    public static IServiceCollection AddChannelFactory(this IServiceCollection services)
+    public static IRabbitMqBuilder AddChannelFactory(this IRabbitMqBuilder builder)
     {
-        services.AddTransient<ChannelFactory>();
+        builder.Services.AddTransient<ChannelFactory>();
         
-        return services;
+        return builder;
     }
 
     public static string GetExchangeName<TMessage>(this TMessage message)

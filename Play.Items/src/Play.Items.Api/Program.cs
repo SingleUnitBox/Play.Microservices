@@ -57,15 +57,13 @@ public class Program
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
         var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
         builder.Services.AddSingleton(settings);
-        builder.Services.AddRabbitMq()
-            .AddCommandConsumer()
-            .Build()
-            .AddConnectionProvider()
-            .AddChannelFactory();
-            
+        builder.Services.AddRabbitMq(builder =>
+            builder
+                .AddCommandConsumer()
+                //.AddEventConsumer()
+                .AddConnectionProvider()
+                .AddChannelFactory());
 
-            //.AddEventConsumer()
-            //.Build();
         builder.Services.AddInfra();
 
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
