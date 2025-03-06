@@ -21,17 +21,7 @@ public class RabbitMqBuilder(IServiceCollection services) : IRabbitMqBuilder
 
     public IRabbitMqBuilder AddCommandConsumer()
     {
-        Services.AddSingleton<ICommandConsumer>(sp =>
-        {
-            var commandConsumer = new CommandConsumer(
-                sp.GetRequiredService<ConnectionProvider>().ConsumerConnection,
-                sp.GetRequiredService<ICommandDispatcher>(),
-                sp,
-                sp.GetRequiredService<IExceptionToMessageMapper>(),
-                sp.GetRequiredService<IBusPublisher>());
-            
-            return commandConsumer;
-        });
+        Services.AddSingleton<ICommandConsumer, CommandConsumer>();
         Services.AddHostedService<CommandConsumerService>();
 
         return this;

@@ -14,9 +14,10 @@ namespace Play.Common.RabbitMq;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, Action<IRabbitMqBuilder> rabbitBuilder)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services, Action<IRabbitMqBuilder> builder)
     {
-        var builder = new RabbitMqBuilder(services);
+        var rabbitBuilder = new RabbitMqBuilder(services);
+        builder(rabbitBuilder);
         services.AddSingleton(builder);
         
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));

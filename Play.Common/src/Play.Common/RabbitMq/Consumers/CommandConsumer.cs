@@ -1,30 +1,32 @@
 ﻿using System.Text;
 using System.Text.Json;
+using System.Threading.Channels;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.Connection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Play.Common.RabbitMq.Consumers;
 
-public class CommandConsumer : ICommandConsumer
+internal sealed class CommandConsumer : ICommandConsumer
 {
-    private readonly IConnection _connection;
+    private readonly ChannelFactory _channelFactory;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IServiceProvider _serviceProvider;
     private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
     private readonly IBusPublisher _busPublisher;
 
     public CommandConsumer(
-        IConnection connection,
+        ChannelFactory channelFactory,
         ICommandDispatcher commandDispatcher,
         IServiceProvider serviceProvider,
         IExceptionToMessageMapper exceptionToMessageMapper,
         IBusPublisher busPublisher)
     {
-        _connection = connection;
+        _channelFactory = channelFactory;
         _commandDispatcher = commandDispatcher;
         _serviceProvider = serviceProvider;
         _exceptionToMessageMapper = exceptionToMessageMapper;
@@ -33,7 +35,7 @@ public class CommandConsumer : ICommandConsumer
 
     public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
     {
-        using var channel = _connection.CreateModel();
+        var channel = _channelFactory.CreateForConsumer();
 
         var queueName = typeof(TCommand).GetQueueName();
         channel.QueueDeclare(queueName, true, false, false);
@@ -80,25 +82,5 @@ public class CommandConsumer : ICommandConsumer
         };
         
         channel.BasicConsume(queueName, false, consumer);
-
-        try
-        {
-            while (!stoppingToken.IsCancellationRequested)
-            {
-                await Task.Delay(1000, stoppingToken);
-            }
-        }
-        catch (TaskCanceledException)
-        {
-
-        }
-        finally
-        {
-            if (channel.IsOpen)
-            {
-                channel.Close();
-                channel.Dispose();
-            }
-        }
     }
 }

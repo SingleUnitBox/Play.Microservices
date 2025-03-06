@@ -57,8 +57,8 @@ public class Program
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
         var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
         builder.Services.AddSingleton(settings);
-        builder.Services.AddRabbitMq(builder =>
-            builder
+        builder.Services.AddRabbitMq(rabbitBuilder =>
+            rabbitBuilder
                 .AddCommandConsumer()
                 //.AddEventConsumer()
                 .AddConnectionProvider()
