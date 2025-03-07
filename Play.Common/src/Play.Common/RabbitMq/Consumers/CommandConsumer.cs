@@ -44,7 +44,7 @@ internal sealed class CommandConsumer : ICommandConsumer
         var routingKey = typeof(TCommand).GetRoutingKey();
         channel.QueueBind(queueName, exchangeName, routingKey);
         
-        var consumer = new AsyncEventingBasicConsumer(channel);
+        var consumer = new EventingBasicConsumer(channel);
         consumer.Received += async (model, ea) =>
         {
             var correlationId = ea.BasicProperties?.CorrelationId ?? Guid.Empty.ToString();
@@ -74,9 +74,9 @@ internal sealed class CommandConsumer : ICommandConsumer
             }
             catch (Exception e)
             {
-                var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
-                channel.BasicAck(ea.DeliveryTag, false);
-                await _busPublisher.Publish(rejectedEvent);
+                // var rejectedEvent = _exceptionToMessageMapper.Map(e, command);
+                // channel.BasicAck(ea.DeliveryTag, false);
+                // await _busPublisher.Publish(rejectedEvent);
             }
 
         };

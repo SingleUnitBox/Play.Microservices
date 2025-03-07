@@ -22,7 +22,7 @@ public class RabbitMqBuilder(IServiceCollection services) : IRabbitMqBuilder
     public IRabbitMqBuilder AddCommandConsumer()
     {
         Services.AddSingleton<ICommandConsumer, CommandConsumer>();
-        Services.AddHostedService<CommandConsumerService>();
+        //Services.AddHostedService<CommandConsumerService>();
 
         return this;
     }

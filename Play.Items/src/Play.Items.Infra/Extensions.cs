@@ -10,6 +10,8 @@ public static class Extensions
 {
     public static IServiceCollection AddInfra(this IServiceCollection services)
     {
+        services.AddHostedService<CreateItemConsumerService>();
+        
         services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddScoped<IEventProcessor, EventProcessor>();
         services.AddSingleton<IEventMapper, EventMapper>();
