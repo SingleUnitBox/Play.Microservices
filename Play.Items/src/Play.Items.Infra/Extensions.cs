@@ -10,6 +10,7 @@ public static class Extensions
 {
     public static IServiceCollection AddInfra(this IServiceCollection services)
     {
+        // generic consumer
         services.AddHostedService<CreateItemConsumerService>();
         
         services.AddScoped<IMessageBroker, MessageBroker>();
