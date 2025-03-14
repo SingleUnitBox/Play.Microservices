@@ -6,6 +6,7 @@ using Play.Common.Abs.Commands;
 using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.RabbitMq.Connection;
+using Play.Common.RabbitMq.Message;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -82,5 +83,45 @@ internal sealed class CommandConsumer : ICommandConsumer
         };
         
         channel.BasicConsume(queueName, false, consumer);
+    }
+
+    public Task ConsumeNonGenericCommand(Func<MessageData, Task> handleRawPayload, CancellationToken stoppingToken = default)
+    {
+        var channel = _channelFactory.CreateForConsumer();
+        var consumer = new EventingBasicConsumer(channel);
+        var queueName = 
+
+        consumer.Received += async (model, ea) =>
+        {
+            try
+            {
+                var messageData = CreateMessageData(ea);
+                await handleRawPayload(messageData);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+            channel.BasicAck(ea.DeliveryTag, multiple: false);
+        };
+
+        channel.BasicConsume(queue, false, consumer);
+    }
+
+    private MessageData CreateMessageData(BasicDeliverEventArgs ea)
+    {
+        var messageId = GetMessageId(ea.BasicProperties);
+        var messageType = ea.BasicProperties.Type;
+        var payload = ea.Body.ToArray();
+        
+        return new MessageData(messageId, payload, messageType);
+    }
+
+    private static Guid GetMessageId(IBasicProperties properties)
+    {
+        var messageId = properties.MessageId;
+        return Guid.Parse(messageId);
     }
 }
