@@ -85,11 +85,12 @@ internal sealed class CommandConsumer : ICommandConsumer
         channel.BasicConsume(queueName, false, consumer);
     }
 
-    public Task ConsumeNonGenericCommand(Func<MessageData, Task> handleRawPayload, CancellationToken stoppingToken = default)
+    public Task ConsumeNonGenericCommand(Func<MessageData, Task> handleRawPayload,
+        string queue,
+        CancellationToken stoppingToken = default)
     {
         var channel = _channelFactory.CreateForConsumer();
         var consumer = new EventingBasicConsumer(channel);
-        var queueName = 
 
         consumer.Received += async (model, ea) =>
         {
@@ -108,6 +109,7 @@ internal sealed class CommandConsumer : ICommandConsumer
         };
 
         channel.BasicConsume(queue, false, consumer);
+        return Task.CompletedTask;
     }
 
     private MessageData CreateMessageData(BasicDeliverEventArgs ea)

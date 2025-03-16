@@ -8,5 +8,6 @@ public interface ICommandConsumer
     Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand;
     Task ConsumeNonGenericCommand(
         Func<MessageData, Task> handleRawPayload,
+        string queue,
         CancellationToken stoppingToken = default);
 }
