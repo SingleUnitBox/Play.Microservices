@@ -2,7 +2,7 @@
 using Play.Common.RabbitMq.Consumers;
 using Play.Items.Application.Commands;
 
-namespace Play.Items.Infra.Services;
+namespace Play.Items.Infra.Services.Consumers;
 
 public class CreateItemConsumerService(ICommandConsumer commandConsumer) : BackgroundService
 {

@@ -1,8 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.SharedKernel.DomainEvents;
+using Play.Common.Serialization;
 using Play.Items.Application.Services;
 using Play.Items.Infra.Services;
+using Play.Items.Infra.Services.Consumers;
+using Play.Items.Infra.Services.Demultiplexing;
 
 namespace Play.Items.Infra;
 
@@ -12,7 +15,10 @@ public static class Extensions
     {
         // generic consumer
         services.AddHostedService<CreateItemConsumerService>();
-        
+        services.AddHostedService<NonGenericCommandConsumerService>();
+        services.AddScoped<ItemChangesHandler>();
+
+        services.AddSerialization();
         services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddScoped<IEventProcessor, EventProcessor>();
         services.AddSingleton<IEventMapper, EventMapper>();

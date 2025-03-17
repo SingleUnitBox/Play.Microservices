@@ -34,7 +34,9 @@ public static class Extensions
                 
                 var correlationId = Guid.NewGuid();
                 var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
-                await busPublisher.Publish<TCommand>(command,
+                await busPublisher.Publish<TCommand>(
+                    message: command, 
+                    exchangeName: "item_changes_exchange",
                     correlationContext: new CorrelationContext(correlationId, userId));
                 
                 context.Response.Headers["RequestId"] = correlationId.ToString();

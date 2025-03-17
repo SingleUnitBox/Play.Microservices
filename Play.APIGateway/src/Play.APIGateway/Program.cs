@@ -4,6 +4,7 @@ using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.Logging;
 using Play.Common.RabbitMq;
+using Play.Common.Serialization;
 using Play.Common.Settings;
 
 namespace Play.APIGateway;
@@ -17,10 +18,11 @@ public class Program
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
         builder.Services.AddSingleton(settings);
-        builder.Services.AddRabbitMq()
-            .Build()
-            .AddConnectionProvider()
-            .AddChannelFactory();
+        builder.Services.AddRabbitMq(rabbitBuilder =>
+            rabbitBuilder
+                .AddConnectionProvider()
+                .AddChannelFactory());
+        builder.Services.AddSerialization();
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddContext();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
