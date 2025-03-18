@@ -24,7 +24,7 @@ public class NonGenericCommandConsumerService(ICommandConsumer commandConsumer,
 
     private ItemChangesHandler CreateDemultiplexingHandler()
     {
-        using var scope = serviceProvider.CreateScope();
+        var scope = serviceProvider.CreateScope();
         return scope.ServiceProvider.GetService<ItemChangesHandler>();
     }
 }

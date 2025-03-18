@@ -45,7 +45,7 @@ public class ItemRepository : IItemRepository
     public async Task<Item> GetByIdAsync(AggregateRootId id)
     {
         var item = await _items
-            .Include(i => i.Crafter)
+            //.Include(i => i.Crafter)
             .SingleOrDefaultAsync(x => x.Id == id);
         if (item is null)
         {
