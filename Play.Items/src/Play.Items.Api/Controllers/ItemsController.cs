@@ -22,6 +22,7 @@ namespace Play.Items.Api.Controllers
             _queryDispatcher = queryDispatcher;
         }
 
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ItemDto>>> GetAsync()
         {
