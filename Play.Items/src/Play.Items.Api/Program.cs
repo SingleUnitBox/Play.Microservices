@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Play.Common;
 using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
@@ -32,10 +33,14 @@ public class Program
                     .AllowAnyHeader()
                     .AllowAnyMethod());
         });
+
+        builder.Services.AddPlayMicroservice(builder.Configuration, config =>
+        {
+            config.AddExceptionHandling();
+            config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
+        });
         
-        builder.Services.AddExceptionHandling();
         builder.Services.AddHostedService<AppInitializer>();
-        builder.Services.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
         builder.Services.AddApiVersioning(options =>
         {
