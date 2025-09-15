@@ -4,20 +4,21 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.RabbitMq.Connection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Play.Common.RabbitMq.Consumers;
 
-public class EventConsumer(
-    IConnection connection,
+internal sealed class EventConsumer(
+    ChannelFactory channelFactory,
     IEventDispatcher eventDispatcher,
     ILogger<EventConsumer> logger,
     IServiceProvider serviceProvider) : IEventConsumer
 {
     public async Task ConsumeEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent
     {
-        using var channel = connection.CreateModel();
+        using var channel = channelFactory.CreateForConsumer();
 
         var queueName = typeof(TEvent).GetQueueName();
         channel.QueueDeclare(queueName, true, false, false);

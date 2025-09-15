@@ -1,10 +1,20 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Play.Common.Abs;
 
 namespace Play.Common.Settings;
 
 public static class Extensions
 {
+    public static IPlayConfigurator AddSettings<TSettings>(this IPlayConfigurator playConfigurator, string sectionName)
+        where TSettings : class, new()
+    {
+        var settings = playConfigurator.Services.GetSettings<TSettings>(sectionName);
+        playConfigurator.Services.AddSingleton(settings);
+        
+        return playConfigurator;
+    }
+
     public static TSettings GetSettings<TSettings>(this IServiceCollection services, string sectionName)
         where TSettings : class, new()
     {

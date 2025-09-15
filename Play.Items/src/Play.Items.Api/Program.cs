@@ -8,6 +8,7 @@ using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
+using Play.Common.Metrics;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Common.RabbitMq;
@@ -34,11 +35,15 @@ public class Program
                     .AllowAnyMethod());
         });
 
-        builder.Services.AddPlayMicroservice(builder.Configuration, config =>
-        {
-            config.AddExceptionHandling();
-            config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
-        });
+        builder.Services.AddPlayMicroservice(
+            builder.Configuration,
+            config =>
+            {
+                config.AddExceptionHandling();
+                config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
+                config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
+                config.AddPlayMetrics();
+            });
         
         builder.Services.AddHostedService<AppInitializer>();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
@@ -60,17 +65,15 @@ public class Program
         builder.Services.AddLoggingEventHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
-        var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
-        builder.Services.AddSingleton(settings);
         builder.Services.AddRabbitMq(rabbitBuilder =>
             rabbitBuilder
                 .AddCommandConsumer()
-                //.AddEventConsumer()
+                .AddEventConsumer()
                 .AddConnectionProvider()
                 .AddChannelFactory());
 
         builder.Services.AddInfra();
-
+        
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
         builder.Services.AddPostgresRepositories();
         // builder.Services.AddMongoDb(builder.Configuration);
@@ -104,6 +107,7 @@ public class Program
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
+        //app.UsePlayMetrics();
 #pragma warning disable ASP0014
         app.UseEndpoints(endpoints =>
         {
