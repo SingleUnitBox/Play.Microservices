@@ -107,7 +107,7 @@ public class Program
         app.UseAuthentication();
         app.UseRouting();
         app.UseAuthorization();
-        //app.UsePlayMetrics();
+        app.UsePlayMetrics();
 #pragma warning disable ASP0014
         app.UseEndpoints(endpoints =>
         {
