@@ -37,7 +37,6 @@ public static class Extensions
 
         services.AddSingleton<ItemsMetrics>();
         services.AddSingleton<CustomMetricsMiddleware>();
-        
         services.AddPlayMicroservice(
             configuration,
             config =>
