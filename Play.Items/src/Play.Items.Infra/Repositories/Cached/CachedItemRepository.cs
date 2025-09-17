@@ -91,4 +91,9 @@ public class CachedItemRepository : IItemRepository
     {
         return await _decoratedItemRepository.GetAllAsync();
     }
+
+    public int Count()
+    {
+        return _decoratedItemRepository.Count();
+    }
 }

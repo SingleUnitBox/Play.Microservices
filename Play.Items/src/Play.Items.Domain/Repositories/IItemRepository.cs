@@ -14,4 +14,5 @@ public interface IItemRepository : IMongoRepository<Item>
     Task<Item> GetAsync(Expression<Func<Item, bool>> predicate);
     Task<IReadOnlyList<Item>> GetAllAsync(Expression<Func<Item, bool>> predicate);
     Task<IReadOnlyList<Item>> GetAllAsync();
+    int Count();
 }

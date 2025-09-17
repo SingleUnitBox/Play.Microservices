@@ -76,4 +76,7 @@ public class ItemRepository : IItemRepository
 
     public async Task<IReadOnlyList<Item>> GetAllAsync()
         => await _items.ToListAsync();
+
+    public int Count()
+        =>  _items.Count();
 }

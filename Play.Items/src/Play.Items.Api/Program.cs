@@ -16,6 +16,7 @@ using Play.Common.Settings;
 using Play.Items.Infra;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
+using Play.Items.Infra.Metrics;
 using Play.Items.Infra.Postgres;
 using Play.Items.Infra.Postgres.Repositories;
 
@@ -26,7 +27,6 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("AllowAngularUI",
@@ -34,16 +34,6 @@ public class Program
                     .AllowAnyHeader()
                     .AllowAnyMethod());
         });
-
-        builder.Services.AddPlayMicroservice(
-            builder.Configuration,
-            config =>
-            {
-                config.AddExceptionHandling();
-                config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
-                config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
-                config.AddPlayMetrics();
-            });
         
         builder.Services.AddHostedService<AppInitializer>();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
@@ -71,8 +61,6 @@ public class Program
                 .AddEventConsumer()
                 .AddConnectionProvider()
                 .AddChannelFactory());
-
-        builder.Services.AddInfra();
         
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
         builder.Services.AddPostgresRepositories();
@@ -92,6 +80,7 @@ public class Program
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
         
+        builder.Services.AddInfra(builder.Configuration);
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();
@@ -103,6 +92,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.Services.GetRequiredService<ItemsMetrics>();
         app.UseCors("AllowAngularUI");
         app.UseAuthentication();
         app.UseRouting();

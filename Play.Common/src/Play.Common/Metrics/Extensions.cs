@@ -7,7 +7,8 @@ namespace Play.Common.Metrics;
 
 public static class Extensions
 {
-    public static IPlayConfigurator AddPlayMetrics(this IPlayConfigurator playConfigurator)
+    public static IPlayConfigurator AddPlayMetrics(this IPlayConfigurator playConfigurator,
+        string[]? meterNames = null)
     {
         playConfigurator.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
@@ -16,6 +17,12 @@ public static class Extensions
                     .AddAspNetCoreInstrumentation()
                     .AddRuntimeInstrumentation()
                     .AddPrometheusExporter();
+
+                if (meterNames != null && meterNames.Any())
+                {
+                    foreach (var meter in meterNames)
+                        metrics.AddMeter(meter);
+                }
             }); 
         
         return playConfigurator;

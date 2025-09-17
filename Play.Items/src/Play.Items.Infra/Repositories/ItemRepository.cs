@@ -49,4 +49,7 @@ public class ItemRepository : IItemRepository
         var items = await _itemsCollection.Find(_filterBuilder.Empty).ToListAsync();
         return items;
     }
+
+    public int Count()
+        => (int) _itemsCollection.CountDocuments(_filterBuilder.Empty);
 }
