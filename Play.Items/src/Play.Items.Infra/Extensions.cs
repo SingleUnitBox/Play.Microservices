@@ -36,6 +36,7 @@ public static class Extensions
             .WithScopedLifetime());
 
         services.AddSingleton<ItemsMetrics>();
+        services.AddSingleton<CustomMetricsMiddleware>();
         
         services.AddPlayMicroservice(
             configuration,
