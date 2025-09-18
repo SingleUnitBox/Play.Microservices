@@ -24,11 +24,15 @@ using Play.Inventory.Infra.Postgres.UnitOfWork;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHostedService<AppInitializer>();
-builder.Services.AddExceptionHandling();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
-builder.Services.AddRabbitMq()
-    .AddCommandConsumer()
-    .AddEventConsumer();
+builder.Services.AddRabbitMq(builder =>
+{
+    builder
+        .AddCommandConsumer()
+        .AddEventConsumer()
+        .AddConnectionProvider()
+        .AddChannelFactory();
+});
 
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();
@@ -40,15 +44,14 @@ builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
 builder.Services.AddContext();
 builder.Services.AddQueries();
 builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTempleMapper>();
-builder.Services.AddCustomExceptionToMessageMapper<InventoryExceptionToMessageMapper>();
 builder.Services.AddLoggingQueryHandlerDecorator();
 builder.Services.AddCommands();
 builder.Services.AddLoggingCommandHandlerDecorator();
 builder.Services.AddEvents();
 builder.Services.AddLoggingEventHandlerDecorator();
 builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(UnitOfWorkCommandHandlerDecorator<>));
-builder.Services.AddInfrastructure();
-builder.Services.AddConsul();
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
+// builder.Services.AddConsul();
 
 builder.Services.AddAPostgresCommandHandlerDecorator();
 builder.Services.AddPostgresUnitOfWork<IInventoryUnitOfWork, InventoryPostgresUnitOfWork>();

@@ -1,8 +1,10 @@
 using Play.APIGateway.Commands.Inventory;
 using Play.APIGateway.Commands.Items;
+using Play.Common;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.Logging;
+using Play.Common.Metrics;
 using Play.Common.RabbitMq;
 using Play.Common.Serialization;
 using Play.Common.Settings;
@@ -26,6 +28,11 @@ public class Program
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddContext();
         builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+        builder.Services.AddPlayMicroservice(builder.Configuration,
+            config =>
+            {
+                config.AddPlayTracing(builder.Environment);
+            });
         var app = builder.Build();
         
         app.UseRouting();
