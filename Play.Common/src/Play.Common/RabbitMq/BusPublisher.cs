@@ -1,6 +1,4 @@
-﻿using System.Text;
-using Newtonsoft.Json;
-using Play.Common.Abs.RabbitMq;
+﻿using Play.Common.Abs.RabbitMq;
 using Play.Common.RabbitMq.Connection;
 using Play.Common.Serialization;
 using RabbitMQ.Client;

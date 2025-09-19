@@ -12,16 +12,17 @@ public class EventConsumerService(IEventConsumer eventConsumer) : BackgroundServ
             .SelectMany(a => a.GetTypes())
             .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
+        
+        var methodInfo = GetType().GetMethod(nameof(ConsumeGenericEvent),
+            BindingFlags.Instance | BindingFlags.NonPublic);
+        if (methodInfo is null)
+        {
+            return;
+        }
+        
         var consumeTasks = eventTypes
             .Select(t =>
             {
-                var methodInfo = GetType().GetMethod(nameof(ConsumeGenericEvent),
-                    BindingFlags.Instance | BindingFlags.NonPublic);
-                if (methodInfo is null)
-                {
-                    return null;
-                }
-
                 var genericMethod = methodInfo.MakeGenericMethod(t);
                 return genericMethod?.Invoke(this, new object[] { stoppingToken }) as Task;
             })
