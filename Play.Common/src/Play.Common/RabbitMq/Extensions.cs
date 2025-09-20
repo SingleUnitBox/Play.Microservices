@@ -7,6 +7,7 @@ using Play.Common.RabbitMq.Builder;
 using Play.Common.RabbitMq.Connection;
 using Play.Common.RabbitMq.Consumers;
 using Play.Common.RabbitMq.CorrelationContext;
+using Play.Common.RabbitMq.Topology;
 using Play.Common.Settings;
 using RabbitMQ.Client;
 
@@ -22,6 +23,7 @@ public static class Extensions
         
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
         services.AddSingleton(rabbitSettings);
+        services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
         services.AddSingleton<IBusPublisher, BusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         

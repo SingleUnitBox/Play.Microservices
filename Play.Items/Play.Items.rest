@@ -1,4 +1,4 @@
-@url = http://localhost:5002
+@url = http://localhost:5008
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
@@ -12,8 +12,8 @@ POST {{url}}/play-user/signUp
 Content-Type: application/json
 
 {
-  "username": "user1",
-  "email": "user1@play.com",
+  "username": "user8",
+  "email": "user8@play.com",
   "password": "secret",
   "role": "user",
   "claims": {
@@ -38,14 +38,14 @@ GET {{url}}/play-user
 Authorization: Bearer {{accessToken}}
 
 ### PLAY-ITEMS ###
-### Get Items
-GET {{url}}/items
+### Hello
+GET {{url}}/play-items
 
 ### Get Items
-GET {{url}}
+GET {{url}}/play-items/items
 
 ### Get
-GET {{url}}/items/{{itemId}}
+GET {{url}}/play-items/items/{{itemId}}
 
 ### Get by Crafter
 GET {{url}}/crafters/{{creafterId}}

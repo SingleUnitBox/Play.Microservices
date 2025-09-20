@@ -13,6 +13,7 @@ internal sealed class BusPublisher(
         TMessage message,
         string exchangeName = null,
         string messageId = null,
+        string? routingKey = null,
         ICorrelationContext correlationContext = null,
         IDictionary<string, object?> headers = default)
         where TMessage : class
@@ -30,7 +31,7 @@ internal sealed class BusPublisher(
         // var queueName = message.GetQueueName();
         // channel.QueueDeclare(queueName, true, false, false);
         
-        var routingKey = message.GetRoutingKey();
+        // var routingKey = message.GetRoutingKey();
         // channel.QueueBind(queueName, exchangeName, routingKey);
 
         var body = serializer.Serialize(message);

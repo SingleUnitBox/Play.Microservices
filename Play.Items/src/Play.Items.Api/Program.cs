@@ -55,12 +55,6 @@ public class Program
         builder.Services.AddLoggingEventHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
-        builder.Services.AddRabbitMq(rabbitBuilder =>
-            rabbitBuilder
-                .AddCommandConsumer()
-                .AddEventConsumer()
-                .AddConnectionProvider()
-                .AddChannelFactory());
         
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
         builder.Services.AddPostgresRepositories();

@@ -1,16 +1,15 @@
 ﻿using System.Text;
-using Newtonsoft.Json;
 
 namespace Play.Common.Serialization;
 
 public class JsonSerializer : ISerializer
 {
     public byte[] Serialize(object obj)
-        => Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+        => Encoding.UTF8.GetBytes(System.Text.Json.JsonSerializer.Serialize(obj));
 
     public TMessage Deserialize<TMessage>(string json)
-        => JsonConvert.DeserializeObject<TMessage>(json);
+        => System.Text.Json.JsonSerializer.Deserialize<TMessage>(json);
 
     public TMessage DeserializeBinary<TMessage>(byte[] objBytes)
-        => JsonConvert.DeserializeObject<TMessage>(Encoding.UTF8.GetString(objBytes));
+        => System.Text.Json.JsonSerializer.Deserialize<TMessage>(Encoding.UTF8.GetString(objBytes));
 }

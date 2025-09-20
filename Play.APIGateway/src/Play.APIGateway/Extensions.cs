@@ -2,6 +2,7 @@
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Context;
+using Play.Common.RabbitMq;
 using Play.Common.RabbitMq.CorrelationContext;
 
 namespace Play.APIGateway;
@@ -36,7 +37,8 @@ public static class Extensions
                 var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
                 await busPublisher.Publish<TCommand>(
                     message: command, 
-                    exchangeName: "item_changes_exchange",
+                    exchangeName: typeof(TCommand).GetExchangeName(),
+                    routingKey: null,
                     correlationContext: new CorrelationContext(correlationId, userId));
                 
                 context.Response.Headers["RequestId"] = correlationId.ToString();

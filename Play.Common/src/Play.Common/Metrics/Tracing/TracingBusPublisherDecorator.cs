@@ -18,10 +18,12 @@ public class TracingBusPublisherDecorator : IBusPublisher
         TMessage message,
         string exchangeName = null,
         string messageId = null,
+        string? routingKey = null,
         ICorrelationContext correlationContext = null,
         IDictionary<string, object?> headers = null) where TMessage : class
     {
         using var span = _tracer.StartActiveSpan($"Span of '{typeof(TMessage).Name}'.");
-        await  _innerBusPublisher.Publish(message, exchangeName, messageId, correlationContext, headers);
+        await  _innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
+            correlationContext, headers);
     }
 }

@@ -33,5 +33,5 @@ public class EventConsumerService(IEventConsumer eventConsumer) : BackgroundServ
     }
     
     private Task ConsumeGenericEvent<TEvent>(CancellationToken stoppingToken) where TEvent : class, IEvent
-        => eventConsumer.ConsumeEvent<TEvent>(stoppingToken);
+        => eventConsumer.ConsumeEvent<TEvent>(stoppingToken: stoppingToken);
 }

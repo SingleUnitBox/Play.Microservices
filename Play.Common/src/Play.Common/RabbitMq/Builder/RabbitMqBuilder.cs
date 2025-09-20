@@ -14,7 +14,7 @@ public class RabbitMqBuilder(IServiceCollection services) : IRabbitMqBuilder
     public IRabbitMqBuilder AddEventConsumer()
     {
         Services.AddSingleton<IEventConsumer, EventConsumer>();
-        Services.AddHostedService<EventConsumerService>();
+        // Services.AddHostedService<EventConsumerService>();
 
         return this;
     }

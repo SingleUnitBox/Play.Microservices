@@ -2,7 +2,7 @@
 
 namespace Play.Common.RabbitMq.Connection;
 
-internal sealed class ChannelFactory(ConnectionProvider connectionProvider) : IDisposable
+public sealed class ChannelFactory(ConnectionProvider connectionProvider) : IDisposable
 {
     private readonly ThreadLocal<IModel> _consumerCache = new ThreadLocal<IModel>(true);
     private readonly ThreadLocal<IModel> _producerCache = new(true);

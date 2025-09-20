@@ -5,9 +5,11 @@ using Play.Common;
 using Play.Common.Exceptions;
 using Play.Common.Http;
 using Play.Common.Metrics;
+using Play.Common.RabbitMq.Consumers;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Inventory.Application.Services.Clients;
+using Play.Inventory.Infra.Events;
 using Play.Inventory.Infra.Exceptions;
 using Play.Inventory.Infra.Services.Clients;
 
@@ -34,6 +36,9 @@ public static class Extensions
                 config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
                 config.AddPlayTracing(environment);
             });
+
+        services.AddHostedService<InventoryEventConsumerService>();
+        services.AddSingleton<IEventConsumer, InventoryEventConsumer>();
         
         return services;
     }
