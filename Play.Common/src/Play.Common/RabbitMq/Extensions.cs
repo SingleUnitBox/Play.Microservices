@@ -24,6 +24,8 @@ public static class Extensions
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
         services.AddSingleton(rabbitSettings);
         services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
+        var topologySettings = services.GetSettings<TopologySettings>(nameof(TopologySettings));
+        services.AddSingleton(topologySettings);
         services.AddSingleton<IBusPublisher, BusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         
@@ -68,6 +70,22 @@ public static class Extensions
     {
         builder.Services.AddTransient<ChannelFactory>();
         
+        return builder;
+    }
+    
+    public static IRabbitMqBuilder AddEventConsumer(this IRabbitMqBuilder builder)
+    {
+        builder.Services.AddSingleton<IEventConsumer, EventConsumer>();
+        // Services.AddHostedService<EventConsumerService>();
+        
+        return builder;
+    }
+
+    public static IRabbitMqBuilder AddCommandConsumer(this IRabbitMqBuilder builder)
+    {
+        builder.Services.AddSingleton<ICommandConsumer, CommandConsumer>();
+        builder.Services.AddHostedService<CommandConsumerService>();
+
         return builder;
     }
 

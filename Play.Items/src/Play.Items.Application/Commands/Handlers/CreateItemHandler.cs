@@ -49,22 +49,22 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
              throw new ItemAlreadyExistException(item.Id);
          }
          
-        item = Item.Create(
-            command.ItemId,
-            command.Name,
-            command.Description,
-            command.Price,
-            DateTimeOffset.UtcNow);
-        var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
-        if (crafter is null)
-        {
-            throw new CrafterNotFoundException(command.CrafterId);
-        }
+         item = Item.Create(
+             command.ItemId,
+             command.Name,
+             command.Description,
+             command.Price,
+             DateTimeOffset.UtcNow);
+         var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
+         if (crafter is null)
+         {
+             throw new CrafterNotFoundException(command.CrafterId);
+         }
 
-        item.SetCrafter(crafter);
-        var element = await _elementRepository.GetElement(command.Element);
-        item.SetElement(element);
-        await _itemRepository.CreateAsync(item);
-        await _eventProcessor.Process(item.Events);
+         item.SetCrafter(crafter);
+         var element = await _elementRepository.GetElement(command.Element);
+         item.SetElement(element);
+         await _itemRepository.CreateAsync(item);
+         await _eventProcessor.Process(item.Events);
     }
 }

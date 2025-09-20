@@ -7,6 +7,7 @@ using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.Exceptions;
 using Play.Common.Metrics;
 using Play.Common.RabbitMq;
+using Play.Common.RabbitMq.Topology;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Items.Application.Services;
@@ -55,7 +56,11 @@ public static class Extensions
                 .AddEventConsumer()
                 .AddConnectionProvider()
                 .AddChannelFactory());
-        services.AddHostedService<TopologyInitializer>();
+        var topologySettings = services.GetSettings<TopologySettings>(nameof(TopologySettings));
+        if (topologySettings.Enabled)
+        {
+            services.AddHostedService<TopologyInitializer>();
+        }
         
         return services;
     }

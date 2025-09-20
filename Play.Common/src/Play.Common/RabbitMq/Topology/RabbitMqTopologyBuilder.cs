@@ -1,11 +1,15 @@
 ﻿using System.Threading.Channels;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Play.Common.RabbitMq.Connection;
 using RabbitMQ.Client;
 
 namespace Play.Common.RabbitMq.Topology;
 
-public class RabbitMqTopologyBuilder(ChannelFactory channelFactory, ILogger<RabbitMqTopologyBuilder> logger) : ITopologyBuilder
+public class RabbitMqTopologyBuilder(
+    ChannelFactory channelFactory, 
+    TopologySettings topologySettings,
+    ILogger<RabbitMqTopologyBuilder> logger) : ITopologyBuilder
 {
     public Task CreateTopologyAsync(
         string publisherSource,
@@ -14,6 +18,11 @@ public class RabbitMqTopologyBuilder(ChannelFactory channelFactory, ILogger<Rabb
         TopologyType topologyType,
         CancellationToken cancellationToken)
     {
+        if (!topologySettings.Enabled)
+        {
+            return Task.CompletedTask;
+        }
+
         var channel = channelFactory.CreateForConsumer();
 
         switch (topologyType)
@@ -27,7 +36,7 @@ public class RabbitMqTopologyBuilder(ChannelFactory channelFactory, ILogger<Rabb
             default:
                 throw new NotImplementedException($"{nameof(topologyType)} is not supported");
         }
-        
+
         return Task.CompletedTask;
     }
 

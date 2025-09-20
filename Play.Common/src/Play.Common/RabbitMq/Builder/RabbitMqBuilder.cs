@@ -10,23 +10,7 @@ namespace Play.Common.RabbitMq.Builder;
 public class RabbitMqBuilder(IServiceCollection services) : IRabbitMqBuilder
 {
     public IServiceCollection Services { get; } = services;
-
-    public IRabbitMqBuilder AddEventConsumer()
-    {
-        Services.AddSingleton<IEventConsumer, EventConsumer>();
-        // Services.AddHostedService<EventConsumerService>();
-
-        return this;
-    }
-
-    public IRabbitMqBuilder AddCommandConsumer()
-    {
-        Services.AddSingleton<ICommandConsumer, CommandConsumer>();
-        //Services.AddHostedService<CommandConsumerService>();
-
-        return this;
-    }
-
+    
     public IServiceCollection Build()
         => Services;
 }

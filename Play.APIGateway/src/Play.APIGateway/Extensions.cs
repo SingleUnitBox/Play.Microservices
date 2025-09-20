@@ -38,7 +38,7 @@ public static class Extensions
                 await busPublisher.Publish<TCommand>(
                     message: command, 
                     exchangeName: typeof(TCommand).GetExchangeName(),
-                    routingKey: null,
+                    routingKey: "",
                     correlationContext: new CorrelationContext(correlationId, userId));
                 
                 context.Response.Headers["RequestId"] = correlationId.ToString();
