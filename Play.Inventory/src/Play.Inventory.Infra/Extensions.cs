@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Exceptions;
 using Play.Common.Http;
-using Play.Common.Metrics;
+using Play.Common.Observability;
 using Play.Common.RabbitMq.Consumers;
 using Play.Common.Serialization;
 using Play.Common.Settings;

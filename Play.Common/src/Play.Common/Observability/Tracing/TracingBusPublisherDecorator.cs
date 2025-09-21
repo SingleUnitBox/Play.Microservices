@@ -1,7 +1,7 @@
 ﻿using OpenTelemetry.Trace;
 using Play.Common.Abs.RabbitMq;
 
-namespace Play.Common.Metrics.Tracing;
+namespace Play.Common.Observability.Tracing;
 
 public class TracingBusPublisherDecorator : IBusPublisher
 {

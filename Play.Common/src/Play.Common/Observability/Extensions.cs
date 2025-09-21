@@ -6,9 +6,9 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Play.Common.Abs;
 using Play.Common.Abs.RabbitMq;
-using Play.Common.Metrics.Tracing;
+using Play.Common.Observability.Tracing;
 
-namespace Play.Common.Metrics;
+namespace Play.Common.Observability;
 
 public static class Extensions
 {
@@ -43,7 +43,9 @@ public static class Extensions
                         ResourceBuilder.CreateDefault()
                             .AddService(environment.ApplicationName))
                     // below line will add allow to add CustomSpans for AsyncMessaging
-                    // .AddSource()
+                    .AddSource(
+                        MessagingActivitySource.MessagingPublishSourceName,
+                            MessagingActivitySource.MessagingConsumeSourceName)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
                     .AddSqlClientInstrumentation()

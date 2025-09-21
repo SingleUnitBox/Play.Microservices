@@ -7,16 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\Play.Common\src\Play.Common\Play.Common.csproj" />
       <ProjectReference Include="..\Play.Inventory.Application\Play.Inventory.Application.csproj" />
     </ItemGroup>
     
     <ItemGroup>
       <Folder Include="Mongo\" />
       <Folder Include="Repositories\UnitOfWork\" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <PackageReference Include="Play.Common" Version="1.2.50" />
     </ItemGroup>
 
 </Project>

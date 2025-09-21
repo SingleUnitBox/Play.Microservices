@@ -37,6 +37,12 @@ internal sealed class ExceptionToMessageMapper : IExceptionToMessageMapper
                 UpdateItem cmd => new UpdateItemRejected(cmd.ItemId, ex.Message, ex.GetType().Name),
                 _ => null
             },
+            CrafterNotFoundException ex => message switch
+            {
+                CreateItem cmd => new CreateItemRejected(cmd.ItemId, cmd.Name, ex.Message, ex.GetType().Name),
+                UpdateItem cmd => new UpdateItemRejected(cmd.ItemId, ex.Message, ex.GetType().Name),
+                _ => null
+            },
             _ => null
         };
 }

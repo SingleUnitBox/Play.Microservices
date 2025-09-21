@@ -36,7 +36,7 @@ internal sealed class CommandConsumer : ICommandConsumer
     public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
     {
         var channel = _channelFactory.CreateForConsumer();
-        var queueName = typeof(TCommand).Name;
+        var queueName = typeof(TCommand).GetQueueName();
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += async (model, ea) =>
         {

@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\Play.Common\src\Play.Common\Play.Common.csproj" />
         <ProjectReference Include="..\Play.Items.Application\Play.Items.Application.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Play.Common" Version="1.2.57" />
     </ItemGroup>
 
 

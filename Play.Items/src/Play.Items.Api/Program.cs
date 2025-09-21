@@ -1,20 +1,16 @@
 using Asp.Versioning;
-using Play.Common;
 using Play.Common.AppInitializer;
 using Play.Common.Auth;
 using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Events;
-using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
-using Play.Common.Metrics;
+using Play.Common.Observability;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
-using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Items.Infra;
-using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Metrics;
 using Play.Items.Infra.Postgres;
@@ -58,17 +54,6 @@ public class Program
         
         builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
         builder.Services.AddPostgresRepositories();
-        // builder.Services.AddMongoDb(builder.Configuration);
-        // builder.Services.AddMongoRepository<IItemRepository, ItemRepository>(
-        //     db => new ItemRepository(db, "items"));
-        // builder.Services.AddScoped<ItemRepository>(sp =>
-        // {
-        //     var db = sp.GetRequiredService<IMongoDatabase>();
-        //     var itemRepository = new ItemRepository(db, "items");
-        //
-        //     return itemRepository;
-        // });
-
         //caching
         //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
         //builder.Services.AddMemoryCache();

@@ -4,7 +4,7 @@ using Play.Common;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.Logging;
-using Play.Common.Metrics;
+using Play.Common.Observability;
 using Play.Common.RabbitMq;
 using Play.Common.Serialization;
 using Play.Common.Settings;
@@ -46,6 +46,7 @@ public class Program
         // this is async, goes to RabbitMq
         app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
         app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
+        app.PublishCommand<CreateCrafter>("play-items/crafters", HttpMethod.Post);
         app.PublishDeleteCommand<DeleteItem>("play-items/items");
         app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
 

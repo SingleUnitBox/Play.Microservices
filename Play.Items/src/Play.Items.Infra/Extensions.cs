@@ -1,23 +1,19 @@
-﻿using System.Diagnostics.Metrics;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.Exceptions;
-using Play.Common.Metrics;
+using Play.Common.Observability;
 using Play.Common.RabbitMq;
 using Play.Common.RabbitMq.Topology;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Items.Application.Services;
-using Play.Items.Domain.Repositories;
 using Play.Items.Infra.Exceptions;
 using Play.Items.Infra.Messaging.Topology;
 using Play.Items.Infra.Metrics;
 using Play.Items.Infra.Services;
-using Play.Items.Infra.Services.Consumers;
-using Play.Items.Infra.Services.Demultiplexing;
 
 namespace Play.Items.Infra;
 
@@ -30,7 +26,7 @@ public static class Extensions
         // services.AddScoped<ItemChangesHandler>();
 
         services.AddSerialization();
-        // services.AddScoped<IMessageBroker, MessageBroker>();
+        services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddScoped<IEventProcessor, EventProcessor>();
         services.AddSingleton<IEventMapper, EventMapper>();
         services.Scan(a => a.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
