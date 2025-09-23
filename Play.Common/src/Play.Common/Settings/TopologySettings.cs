@@ -1,4 +1,4 @@
-﻿namespace Play.Common.RabbitMq.Topology;
+﻿namespace Play.Common.Settings;
 
 public class TopologySettings
 {

@@ -32,6 +32,7 @@ public class GetCrafterHandler : IQueryHandler<GetCrafter, CrafterDto>
                 CrafterId = crafter.CrafterId,
                 CrafterName = crafter.Name,
                 Skills = crafter.Skills.Select(s => s.SkillName.Value),
+                Items = crafter.Items.Select(i => new ItemDto(i.Id, i.Name))
             };
     }
 }

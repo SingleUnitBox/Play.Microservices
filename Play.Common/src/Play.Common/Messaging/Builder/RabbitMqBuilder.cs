@@ -1,11 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Play.Common.Abs.Commands;
-using Play.Common.Abs.Exceptions;
-using Play.Common.Abs.RabbitMq;
-using Play.Common.RabbitMq.Connection;
-using Play.Common.RabbitMq.Consumers;
 
-namespace Play.Common.RabbitMq.Builder;
+namespace Play.Common.Messaging.Builder;
 
 public class RabbitMqBuilder(IServiceCollection services) : IRabbitMqBuilder
 {

@@ -1,11 +1,11 @@
 ﻿using Play.Common.Abs.RabbitMq;
-using Play.Common.RabbitMq.Connection;
+using Play.Common.Messaging.Connection;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 
-namespace Play.Common.RabbitMq;
+namespace Play.Common.Messaging;
 
-internal sealed class BusPublisher(
+internal sealed class RabbitMqBusPublisher(
     ChannelFactory channelFactory,
     ISerializer serializer) : IBusPublisher
 {
@@ -19,21 +19,6 @@ internal sealed class BusPublisher(
         where TMessage : class
     {
         var channel = channelFactory.CreateForProducer();
-
-        //create_item_exchange
-        if (exchangeName is null)
-        {
-            exchangeName = message.GetExchangeName();
-            channel.ExchangeDeclare(exchangeName, ExchangeType.Direct, true, false);
-        }
-
-        //create_item_queue
-        // var queueName = message.GetQueueName();
-        // channel.QueueDeclare(queueName, true, false, false);
-        
-        // var routingKey = message.GetRoutingKey();
-        // channel.QueueBind(queueName, exchangeName, routingKey);
-
         var body = serializer.Serialize(message);
         
         //properties
@@ -49,11 +34,13 @@ internal sealed class BusPublisher(
             false,
             basicProperties,
             body);
+        
+        await Task.CompletedTask;
     }
 
     private IBasicProperties CreateMessageProperties<TMessage>(
         IModel channel,
-        string messageId = default,
+        string? messageId = default,
         ICorrelationContext correlationContext = default,
         IDictionary<string, object?> headers = default)
     {

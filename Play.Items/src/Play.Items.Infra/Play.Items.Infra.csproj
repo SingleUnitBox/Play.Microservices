@@ -11,9 +11,6 @@
         <ProjectReference Include="..\Play.Items.Application\Play.Items.Application.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-    </ItemGroup>
-
 
 </Project>
  

@@ -1,19 +1,12 @@
-﻿using OpenTelemetry.Trace;
+﻿using System.Diagnostics;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.Messaging;
 
 namespace Play.Common.Observability.Tracing;
 
-public class TracingBusPublisherDecorator : IBusPublisher
+internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublisher,
+    MessagePropertiesAccessor messagePropertiesAccessor) : IBusPublisher
 {
-    private readonly IBusPublisher _innerBusPublisher;
-    private readonly Tracer _tracer;
-
-    public TracingBusPublisherDecorator(IBusPublisher innerBusPublisher, TracerProvider tracerProvider)
-    {
-        _innerBusPublisher = innerBusPublisher;
-        _tracer = tracerProvider.GetTracer("Play.RabbitMq");
-    }
-    
     public async Task Publish<TMessage>(
         TMessage message,
         string exchangeName = null,
@@ -22,8 +15,23 @@ public class TracingBusPublisherDecorator : IBusPublisher
         ICorrelationContext correlationContext = null,
         IDictionary<string, object?> headers = null) where TMessage : class
     {
-        using var span = _tracer.StartActiveSpan($"Span of '{typeof(TMessage).Name}'.");
-        await  _innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
+        var messageProperties = messagePropertiesAccessor.InitializeIfEmpty();
+        using var activity = CreateMessagingExecutionActivity(messageProperties);
+        
+        await innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
             correlationContext, headers);
+    }
+
+    private Activity? CreateMessagingExecutionActivity(MessageProperties messageProperties)
+    {
+        var activitySource = new ActivitySource(MessagingActivitySource.MessagingPublishSourceName);
+        var activity = activitySource.StartActivity($"Message execution: {messageProperties.MessageType}",
+            ActivityKind.Producer, Activity.Current?.Context ?? default);
+        if (activity is not null)
+        {
+            messageProperties.Headers.TryAdd(MessagingObservabilityHeaders.TraceParent, activity.Id);
+        }
+        
+        return activity;
     }
 }

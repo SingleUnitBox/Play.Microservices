@@ -4,8 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Exceptions;
 using Play.Common.Http;
+using Play.Common.Messaging;
 using Play.Common.Observability;
-using Play.Common.RabbitMq.Consumers;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Inventory.Application.Services.Clients;
@@ -21,9 +21,18 @@ public static class Extensions
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
-        // var httpClientSettings = services.GetSettings<HttpClientSettings>(nameof(HttpClientSettings));
-        // services.AddSingleton(httpClientSettings);
-        //services.AddHttpClient();
+        services.AddRabbitMq(builder =>
+        {
+            builder
+                //.AddCommandConsumer()
+                //.AddEventConsumer()
+                .AddConnectionProvider()
+                .AddChannelFactory()
+                .AddTopologyInitializer();
+        });
+        var httpClientSettings = services.GetSettings<HttpClientSettings>(nameof(HttpClientSettings));
+        services.AddSingleton(httpClientSettings);
+        services.AddHttpClient();
         services.AddSerialization();
         services.AddTransient<IUserServiceClient, UserServiceClient>();
         services.AddCommonHttpClient();
@@ -37,8 +46,8 @@ public static class Extensions
                 config.AddPlayTracing(environment);
             });
 
-        services.AddHostedService<InventoryEventConsumerService>();
-        services.AddSingleton<IEventConsumer, InventoryEventConsumer>();
+        // services.AddHostedService<InventoryEventConsumerService>();
+        // services.AddSingleton<IEventConsumer, InventoryEventConsumer>();
         
         return services;
     }

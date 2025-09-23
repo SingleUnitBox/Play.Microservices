@@ -1,10 +1,9 @@
-﻿using System.Threading.Channels;
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
-using Play.Common.RabbitMq.Connection;
+﻿using Microsoft.Extensions.Logging;
+using Play.Common.Messaging.Connection;
+using Play.Common.Settings;
 using RabbitMQ.Client;
 
-namespace Play.Common.RabbitMq.Topology;
+namespace Play.Common.Messaging.Topology;
 
 public class RabbitMqTopologyBuilder(
     ChannelFactory channelFactory, 
@@ -60,7 +59,7 @@ public class RabbitMqTopologyBuilder(
     private void CreateTopic(string publisherSource, string consumerDestination, string filter, IModel channel)
     {
         logger.LogInformation($"Declaring exchange name of '{publisherSource}'.");
-        channel.ExchangeDeclare(consumerDestination, ExchangeType.Topic, durable: true);
+        channel.ExchangeDeclare(publisherSource, ExchangeType.Topic, durable: true);
         
         logger.LogInformation($"Declaring queue name of '{consumerDestination}'.");
         channel.QueueDeclare(consumerDestination, durable: true, exclusive: false, autoDelete: false);

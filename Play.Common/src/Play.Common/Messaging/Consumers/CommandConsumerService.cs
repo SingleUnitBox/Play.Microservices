@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
 
-namespace Play.Common.RabbitMq.Consumers;
+namespace Play.Common.Messaging.Consumers;
 
 public class CommandConsumerService : BackgroundService
 {
@@ -37,13 +37,7 @@ public class CommandConsumerService : BackgroundService
         
         await Task.WhenAll(consumeTasks);
     }
-
-    // public override async Task StopAsync(CancellationToken cancellationToken)
-    // {
-    //     Console.WriteLine("Stopping down command consumer...");
-    //     //_commandConsumer.
-    // }
-
+    
     private Task ConsumeGenericCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
         => _commandConsumer.ConsumeCommand<TCommand>(stoppingToken);
 }

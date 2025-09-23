@@ -1,17 +1,16 @@
 ﻿using Humanizer;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.RabbitMq;
-using Play.Common.RabbitMq.Builder;
-using Play.Common.RabbitMq.Connection;
-using Play.Common.RabbitMq.Consumers;
-using Play.Common.RabbitMq.CorrelationContext;
-using Play.Common.RabbitMq.Topology;
+using Play.Common.Messaging.Builder;
+using Play.Common.Messaging.Connection;
+using Play.Common.Messaging.Consumers;
+using Play.Common.Messaging.CorrelationContext;
+using Play.Common.Messaging.Topology;
 using Play.Common.Settings;
 using RabbitMQ.Client;
 
-namespace Play.Common.RabbitMq;
+namespace Play.Common.Messaging;
 
 public static class Extensions
 {
@@ -23,11 +22,9 @@ public static class Extensions
         
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
         services.AddSingleton(rabbitSettings);
-        services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
-        var topologySettings = services.GetSettings<TopologySettings>(nameof(TopologySettings));
-        services.AddSingleton(topologySettings);
-        services.AddSingleton<IBusPublisher, BusPublisher>();
+        services.AddSingleton<IBusPublisher, RabbitMqBusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
+        services.AddSingleton<MessagePropertiesAccessor>();
         
         return services;
     }
@@ -76,7 +73,7 @@ public static class Extensions
     public static IRabbitMqBuilder AddEventConsumer(this IRabbitMqBuilder builder)
     {
         builder.Services.AddSingleton<IEventConsumer, EventConsumer>();
-        // Services.AddHostedService<EventConsumerService>();
+        builder.Services.AddHostedService<EventConsumerService>();
         
         return builder;
     }
@@ -86,6 +83,19 @@ public static class Extensions
         builder.Services.AddSingleton<ICommandConsumer, CommandConsumer>();
         builder.Services.AddHostedService<CommandConsumerService>();
 
+        return builder;
+    }
+
+    public static IRabbitMqBuilder AddTopologyInitializer(this IRabbitMqBuilder builder)
+    {
+        var topologySettings = builder.Services.GetSettings<TopologySettings>(nameof(TopologySettings));
+        if (topologySettings.Enabled)
+        {
+            builder.Services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
+            builder.Services.AddSingleton(topologySettings);
+            builder.Services.AddHostedService<TopologyInitializer>();
+        }
+        
         return builder;
     }
 

@@ -11,7 +11,6 @@ using Play.Common.Logging.Mappers;
 using Play.Common.PostgresDb;
 using Play.Common.PostgresDb.UnitOfWork.Decorators;
 using Play.Common.Queries;
-using Play.Common.RabbitMq;
 using Play.Common.Settings;
 using Play.Inventory.Domain.Policies;
 using Play.Inventory.Infra;
@@ -25,14 +24,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHostedService<AppInitializer>();
 builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
-builder.Services.AddRabbitMq(builder =>
-{
-    builder
-        .AddCommandConsumer()
-        .AddEventConsumer()
-        .AddConnectionProvider()
-        .AddChannelFactory();
-});
 
 //builder.Services.AddMongoDb(builder.Configuration);
 //builder.Services.AddMongoRepositories();

@@ -43,12 +43,6 @@ public class Program
         
         builder.Services.AddContext();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddCommands();
-        builder.Services.AddLoggingCommandHandlerDecorator();
-        builder.Services.AddQueries();
-        builder.Services.AddLoggingQueryHandlerDecorator();
-        builder.Services.AddEvents();
-        builder.Services.AddLoggingEventHandlerDecorator();
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
         
@@ -59,7 +53,7 @@ public class Program
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
         
-        builder.Services.AddInfra(builder.Configuration);
+        builder.Services.AddInfrastructure(builder.Configuration);
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();

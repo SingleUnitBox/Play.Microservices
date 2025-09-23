@@ -1,6 +1,6 @@
 ﻿using RabbitMQ.Client;
 
-namespace Play.Common.RabbitMq.Connection;
+namespace Play.Common.Messaging.Connection;
 
 public sealed class ConnectionProvider(IConnection consumerConnection, IConnection producerConnection)
 {

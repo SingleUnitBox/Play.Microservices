@@ -3,15 +3,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.SharedKernel.DomainEvents;
+using Play.Common.Commands;
+using Play.Common.Events;
 using Play.Common.Exceptions;
+using Play.Common.Logging;
+using Play.Common.Messaging;
 using Play.Common.Observability;
-using Play.Common.RabbitMq;
-using Play.Common.RabbitMq.Topology;
+using Play.Common.Queries;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Items.Application.Services;
 using Play.Items.Infra.Exceptions;
-using Play.Items.Infra.Messaging.Topology;
 using Play.Items.Infra.Metrics;
 using Play.Items.Infra.Services;
 
@@ -19,12 +21,19 @@ namespace Play.Items.Infra;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfra(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         // services.AddHostedService<CreateItemConsumerService>();
         // services.AddHostedService<NonGenericCommandConsumerService>();
         // services.AddScoped<ItemChangesHandler>();
 
+        services.AddCommands();
+        services.AddLoggingCommandHandlerDecorator();
+        services.AddQueries();
+        services.AddLoggingQueryHandlerDecorator();
+        services.AddEvents();
+        services.AddLoggingEventHandlerDecorator();
+        
         services.AddSerialization();
         services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddScoped<IEventProcessor, EventProcessor>();
@@ -45,18 +54,14 @@ public static class Extensions
                 config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
                 config.AddPlayMetrics(["play.items.meter"]);
             });
-        
+
         services.AddRabbitMq(rabbitBuilder =>
             rabbitBuilder
                 .AddCommandConsumer()
                 .AddEventConsumer()
                 .AddConnectionProvider()
                 .AddChannelFactory());
-        var topologySettings = services.GetSettings<TopologySettings>(nameof(TopologySettings));
-        if (topologySettings.Enabled)
-        {
-            services.AddHostedService<TopologyInitializer>();
-        }
+                //.AddTopologyInitializer());
         
         return services;
     }

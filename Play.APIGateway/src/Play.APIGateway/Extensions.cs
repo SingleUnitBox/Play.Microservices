@@ -2,8 +2,8 @@
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Context;
-using Play.Common.RabbitMq;
-using Play.Common.RabbitMq.CorrelationContext;
+using Play.Common.Messaging;
+using Play.Common.Messaging.CorrelationContext;
 
 namespace Play.APIGateway;
 

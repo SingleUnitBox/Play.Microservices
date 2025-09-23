@@ -1,9 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Play.Common.Abs.Commands;
-using Play.Common.RabbitMq;
-using Play.Common.RabbitMq.Topology;
+using Play.Common.Abs.Events;
 
-namespace Play.Items.Infra.Messaging.Topology;
+namespace Play.Common.Messaging.Topology;
 
 public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundService
 {
@@ -13,6 +12,11 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundS
             .SelectMany(a => a.GetTypes())
             .Where(t => typeof(ICommand).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
+        
+        var eventTypes = AppDomain.CurrentDomain.GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface)
+            .ToList();
 
         foreach (var commandType in commandTypes)
         {
@@ -21,6 +25,16 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundS
                 commandType.GetQueueName(),
                 "",
                 TopologyType.Direct, 
+                stoppingToken);
+        }
+        
+        foreach (var eventType in eventTypes)
+        {
+            topologyBuilder.CreateTopologyAsync(
+                eventType.GetExchangeName(),
+                eventType.GetQueueName(),
+                "",
+                TopologyType.PublishSubscribe, 
                 stoppingToken);
         }
         

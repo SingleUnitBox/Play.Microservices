@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using Play.Common.RabbitMq.Consumers;
+using Play.Common.Messaging.Consumers;
 using Play.Items.Application.Commands;
 
 namespace Play.Items.Infra.Services.Consumers;

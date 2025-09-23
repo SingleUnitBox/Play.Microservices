@@ -1,7 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
-using Play.Common.RabbitMq.Message;
+using Play.Common.Messaging.Message;
 
-namespace Play.Common.RabbitMq.Consumers;
+namespace Play.Common.Messaging.Consumers;
 
 public interface ICommandConsumer
 {

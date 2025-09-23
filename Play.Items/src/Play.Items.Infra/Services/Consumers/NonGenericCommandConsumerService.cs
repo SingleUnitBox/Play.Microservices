@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Play.Common.RabbitMq.Consumers;
+using Play.Common.Messaging.Consumers;
 using Play.Items.Infra.Services.Demultiplexing;
 
 namespace Play.Items.Infra.Services.Consumers;

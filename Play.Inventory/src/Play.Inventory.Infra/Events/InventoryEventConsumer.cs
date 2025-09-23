@@ -1,9 +1,9 @@
 ﻿using System.Text;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
-using Play.Common.RabbitMq;
-using Play.Common.RabbitMq.Connection;
-using Play.Common.RabbitMq.Consumers;
+using Play.Common.Messaging;
+using Play.Common.Messaging.Connection;
+using Play.Common.Messaging.Consumers;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -17,7 +17,7 @@ public class InventoryEventConsumer(
     ILogger<InventoryEventConsumer> logger,
     IServiceProvider serviceProvider) : IEventConsumer
 {
-    public async Task ConsumeEvent<TEvent>(string? queueName = null, CancellationToken stoppingToken = new CancellationToken()) where TEvent : class, IEvent
+    public async Task ConsumeEvent<TEvent>(string? queueName = null, CancellationToken stoppingToken = default) where TEvent : class, IEvent
     {
         var channel = channelFactory.CreateForConsumer();
         

@@ -1,6 +1,6 @@
 ﻿using Play.Common.Abs.RabbitMq;
 
-namespace Play.Common.RabbitMq.CorrelationContext;
+namespace Play.Common.Messaging.CorrelationContext;
 
 public class CorrelationContextAccessor : ICorrelationContextAccessor
 {

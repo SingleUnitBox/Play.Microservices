@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Play.Common.RabbitMq.Builder;
+namespace Play.Common.Messaging.Builder;
 
 public interface IRabbitMqBuilder
 {

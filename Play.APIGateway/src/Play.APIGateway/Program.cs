@@ -4,8 +4,8 @@ using Play.Common;
 using Play.Common.Auth;
 using Play.Common.Context;
 using Play.Common.Logging;
+using Play.Common.Messaging;
 using Play.Common.Observability;
-using Play.Common.RabbitMq;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 
