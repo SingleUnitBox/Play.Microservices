@@ -1,5 +1,6 @@
 ﻿using Play.Common.Abs.Events;
 using Play.Common.Abs.RabbitMq;
+using Play.Common.Messaging;
 using Play.Items.Application.Services;
 
 namespace Play.Items.Infra.Services;
@@ -31,7 +32,7 @@ internal sealed class MessageBroker : IMessageBroker
             }
 
             var messageId = Guid.NewGuid().ToString("N");
-            await _busPublisher.Publish(@event, messageId);
+            await _busPublisher.Publish(@event, @event.GetType().GetExchangeName());
         }
     }
 }

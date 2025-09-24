@@ -53,7 +53,7 @@ public class Program
         //builder.Services.AddMemoryCache();
         //builder.Services.AddCaching();
         
-        builder.Services.AddInfrastructure(builder.Configuration);
+        builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
         var app = builder.Build();

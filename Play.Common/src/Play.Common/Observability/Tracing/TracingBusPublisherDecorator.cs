@@ -11,21 +11,21 @@ internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublish
         TMessage message,
         string exchangeName = null,
         string messageId = null,
-        string? routingKey = null,
+        string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object?> headers = null) where TMessage : class
+        IDictionary<string, object> headers = null) where TMessage : class
     {
         var messageProperties = messagePropertiesAccessor.InitializeIfEmpty();
-        using var activity = CreateMessagingExecutionActivity(messageProperties);
+        using var activity = CreateMessagingExecutionActivity(messageProperties, typeof(TMessage));
         
         await innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
-            correlationContext, headers);
+            correlationContext, messageProperties.Headers);
     }
 
-    private Activity? CreateMessagingExecutionActivity(MessageProperties messageProperties)
+    private Activity? CreateMessagingExecutionActivity(MessageProperties messageProperties, Type messageType)
     {
         var activitySource = new ActivitySource(MessagingActivitySource.MessagingPublishSourceName);
-        var activity = activitySource.StartActivity($"Message execution: {messageProperties.MessageType}",
+        var activity = activitySource.StartActivity($"Message execution: {messageType.Name}",
             ActivityKind.Producer, Activity.Current?.Context ?? default);
         if (activity is not null)
         {

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Commands;
@@ -6,6 +7,7 @@ using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Message;
+using Play.Common.Observability.Tracing;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -19,7 +21,8 @@ internal sealed class CommandConsumer(
     ILogger<CommandConsumer> logger,
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
-    IBusPublisher busPublisher)
+    IBusPublisher busPublisher,
+    MessagePropertiesAccessor messagePropertiesAccessor)
     : ICommandConsumer
 {
     public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
@@ -29,7 +32,11 @@ internal sealed class CommandConsumer(
         var consumer = new EventingBasicConsumer(channel);
         consumer.Received += async (model, ea) =>
         {
+            // correlationContext ?? should be here
             SetCorrelationContext(ea.BasicProperties);
+            SetMessageProperties(ea.BasicProperties);
+            
+            using var activity = CreateMessagingConsumeActivity(ea.BasicProperties);
 
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
@@ -111,5 +118,38 @@ internal sealed class CommandConsumer(
         var correlationContextAccessor = serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
         correlationContextAccessor.CorrelationContext = 
             new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
+    }
+
+    private void SetMessageProperties(IBasicProperties basicProperties)
+    {
+        var messageId = basicProperties.MessageId;
+        var headers = basicProperties.Headers?
+            .Select(h => (h.Key, (object)Encoding.UTF8.GetString((byte[])h.Value))).ToDictionary();
+        var messageType = basicProperties.Type;
+        
+        var messageProperties = new MessageProperties(messageId, headers, messageType);
+        messagePropertiesAccessor.Set(messageProperties);
+    }
+
+    private Activity? CreateMessagingConsumeActivity(IBasicProperties basicProperties)
+    {
+        var isHeaderPresent = basicProperties.Headers?.ContainsKey(MessagingObservabilityHeaders.TraceParent) ?? false;
+        if (isHeaderPresent is false)
+        {
+            return Activity.Current;
+        }
+
+        basicProperties.Headers.TryGetValue(MessagingObservabilityHeaders.TraceParent, out var traceIdBytes);
+        var traceId = Encoding.UTF8.GetString((byte[])traceIdBytes);
+
+        var parentContext = ActivityContext.Parse(traceId, default);
+        var activitySource = new ActivitySource(MessagingActivitySource.MessagingConsumeSourceName);
+        var activity = activitySource.StartActivity(
+            $"Command consuming: {messagePropertiesAccessor.Get()?.MessageType}",
+            ActivityKind.Consumer,
+            parentContext: parentContext,
+            links: [new ActivityLink(parentContext)]);
+        
+        return activity;
     }
 }

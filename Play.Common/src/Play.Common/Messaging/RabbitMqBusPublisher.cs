@@ -7,13 +7,14 @@ namespace Play.Common.Messaging;
 
 internal sealed class RabbitMqBusPublisher(
     ChannelFactory channelFactory,
-    ISerializer serializer) : IBusPublisher
+    ISerializer serializer,
+    MessagePropertiesAccessor messagePropertiesAccessor) : IBusPublisher
 {
     public async Task Publish<TMessage>(
         TMessage message,
         string exchangeName = null,
         string messageId = null,
-        string? routingKey = null,
+        string routingKey = "",
         ICorrelationContext correlationContext = null,
         IDictionary<string, object?> headers = default)
         where TMessage : class
@@ -42,18 +43,29 @@ internal sealed class RabbitMqBusPublisher(
         IModel channel,
         string? messageId = default,
         ICorrelationContext correlationContext = default,
-        IDictionary<string, object?> headers = default)
+        IDictionary<string, object>? headers = default)
     {
+        var messageProperties = messagePropertiesAccessor.Get();
+        
         var basicProperties = channel.CreateBasicProperties();
         basicProperties.MessageId = messageId ?? Guid.NewGuid().ToString();
         basicProperties.Type = typeof(TMessage).Name;
         basicProperties.CorrelationId = string.IsNullOrWhiteSpace(correlationContext?.CorrelationId.ToString())
             ? Guid.NewGuid().ToString()
             : correlationContext.CorrelationId.ToString();
-        basicProperties.Headers = new Dictionary<string, object>
+        basicProperties.Headers = new Dictionary<string, object>();
+        // {
+        //     { "UserId", correlationContext?.UserId.ToString() ?? Guid.Empty.ToString() }
+        // };
+
+        var headersToAdd = headers
+            ?? messageProperties?.Headers
+            ?? new Dictionary<string, object>();
+
+        foreach (var header in headersToAdd)
         {
-            { "UserId", correlationContext?.UserId.ToString() ?? Guid.Empty.ToString() }
-        };
+            basicProperties.Headers.Add(header.Key, header.Value.ToString());
+        }
         
         return basicProperties;
     }

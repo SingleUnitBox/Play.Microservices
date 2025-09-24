@@ -10,37 +10,15 @@ using Play.Items.Domain.Repositories;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class CreateItemHandler : ICommandHandler<CreateItem>
+public class CreateItemHandler(IItemRepository itemRepository,
+    ICrafterRepository crafterRepository,
+    IElementRepository elementRepository,
+    IEventProcessor eventProcessor) : ICommandHandler<CreateItem>
 {
-    private readonly IItemRepository _itemRepository;
-    private readonly ICrafterRepository _crafterRepository;
-    private readonly IElementRepository _elementRepository;
-    
-    private readonly ICorrelationContext _correlationContext;
-    private readonly IExceptionToMessageMapper _exceptionToMessageMapper;
-    
-    private readonly IEventProcessor _eventProcessor;
-    
-    public CreateItemHandler(
-        IItemRepository itemRepository,
-        ICrafterRepository crafterRepository,
-        IElementRepository elementRepository,
-
-        ICorrelationContextAccessor correlationContextAccessor,
-        IExceptionToMessageMapper exceptionToMessageMapper)
-    {
-        _itemRepository = itemRepository;
-        _crafterRepository = crafterRepository;
-        _elementRepository = elementRepository;
-        
-        _exceptionToMessageMapper = exceptionToMessageMapper;
-        _correlationContext = correlationContextAccessor.CorrelationContext;
-        
-    }
 
     public async Task HandleAsync(CreateItem command)
     {
-         var item = await _itemRepository.GetByIdAsync(command.ItemId);
+         var item = await itemRepository.GetByIdAsync(command.ItemId);
          if (item != null)
          {
              throw new ItemAlreadyExistException(item.Id);
@@ -52,16 +30,16 @@ public class CreateItemHandler : ICommandHandler<CreateItem>
              command.Description,
              command.Price,
              DateTimeOffset.UtcNow);
-         var crafter = await _crafterRepository.GetCrafterById(command.CrafterId);
+         var crafter = await crafterRepository.GetCrafterById(command.CrafterId);
          if (crafter is null)
          {
              throw new CrafterNotFoundException(command.CrafterId);
          }
 
          item.SetCrafter(crafter);
-         var element = await _elementRepository.GetElement(command.Element);
+         var element = await elementRepository.GetElement(command.Element);
          item.SetElement(element);
-         await _itemRepository.CreateAsync(item);
-         // await _eventProcessor.Process(item.Events);
+         await itemRepository.CreateAsync(item);
+         await eventProcessor.Process(item.Events);
     }
 }

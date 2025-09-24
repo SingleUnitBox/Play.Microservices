@@ -6,8 +6,8 @@ public interface IBusPublisher
         TMessage message,
         string exchangeName = null,
         string messageId = null,
-        string? routingKey = null,
+        string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object?> headers = default)
+        IDictionary<string, object> headers = default)
         where TMessage : class;
 }

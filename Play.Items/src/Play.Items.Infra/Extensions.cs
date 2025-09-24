@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
@@ -21,7 +22,8 @@ namespace Play.Items.Infra;
 
 public static class Extensions
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration,
+        IWebHostEnvironment environment)
     {
         // services.AddHostedService<CreateItemConsumerService>();
         // services.AddHostedService<NonGenericCommandConsumerService>();
@@ -45,6 +47,15 @@ public static class Extensions
 
         services.AddSingleton<ItemsMetrics>();
         services.AddSingleton<CustomMetricsMiddleware>();
+        
+        services.AddRabbitMq(rabbitBuilder =>
+            rabbitBuilder
+                .AddCommandConsumer()
+                .AddEventConsumer()
+                .AddConnectionProvider()
+                .AddChannelFactory());
+                //.AddTopologyInitializer());
+                
         services.AddPlayMicroservice(
             configuration,
             config =>
@@ -53,15 +64,8 @@ public static class Extensions
                 config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
                 config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
                 config.AddPlayMetrics(["play.items.meter"]);
+                config.AddPlayTracing(environment);
             });
-
-        services.AddRabbitMq(rabbitBuilder =>
-            rabbitBuilder
-                .AddCommandConsumer()
-                .AddEventConsumer()
-                .AddConnectionProvider()
-                .AddChannelFactory());
-                //.AddTopologyInitializer());
         
         return services;
     }
