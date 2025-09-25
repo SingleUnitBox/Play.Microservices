@@ -16,7 +16,7 @@ internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublish
         IDictionary<string, object> headers = null) where TMessage : class
     {
         var messageProperties = messagePropertiesAccessor.InitializeIfEmpty();
-        using var activity = CreateMessagingExecutionActivity(messageProperties, typeof(TMessage));
+        using var activity = CreateMessagingExecutionActivity(messageProperties, message.GetType());
         
         await innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
             correlationContext, messageProperties.Headers);
