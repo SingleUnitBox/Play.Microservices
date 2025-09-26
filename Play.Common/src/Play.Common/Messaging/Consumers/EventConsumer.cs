@@ -5,6 +5,7 @@ using Play.Common.Abs.Events;
 using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
+using Play.Common.Messaging.Topology;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -18,7 +19,8 @@ internal sealed class EventConsumer(
     ILogger<EventConsumer> logger,
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
-    IBusPublisher busPublisher)
+    IBusPublisher busPublisher,
+    TopologyReadinessAccessor topologyReadinessAccessor)
     : IEventConsumer
 {
     public async Task ConsumeEvent<TEvent>(string? queueName = null, CancellationToken stoppingToken = default) where TEvent : class, IEvent
@@ -50,7 +52,8 @@ internal sealed class EventConsumer(
             }
 
         };
-        
+
+        await EnsureTopologyReadiness(stoppingToken);
         channel.BasicConsume(queueName, false, consumer);
     }
     
@@ -71,5 +74,14 @@ internal sealed class EventConsumer(
         var correlationContextAccessor = serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
         correlationContextAccessor.CorrelationContext = 
             new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
+    }
+
+    private async Task EnsureTopologyReadiness(CancellationToken stoppingToken)
+    {
+        while (topologyReadinessAccessor.TopologyProvisioned is false)
+        {
+            logger.LogInformation("Waiting for topology to be provisioned...");
+            await Task.Delay(1_000, stoppingToken);
+        }
     }
 }

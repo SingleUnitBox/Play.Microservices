@@ -25,7 +25,7 @@ public static class Extensions
         {
             builder
                 //.AddCommandConsumer()
-                //.AddEventConsumer()
+                .AddEventConsumer()
                 .AddConnectionProvider()
                 .AddChannelFactory()
                 .AddTopologyInitializer();

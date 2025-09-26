@@ -4,7 +4,8 @@ using Play.Common.Abs.Events;
 
 namespace Play.Common.Messaging.Topology;
 
-public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundService
+public class TopologyInitializer(ITopologyBuilder topologyBuilder,
+    TopologyReadinessAccessor topologyReadinessAccessor) : BackgroundService
 {
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -18,6 +19,8 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundS
             .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
 
+        topologyReadinessAccessor.MarkTopologyProvisionStart(GetType().Name);
+        
         foreach (var commandType in commandTypes)
         {
             topologyBuilder.CreateTopologyAsync(
@@ -38,6 +41,7 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder) : BackgroundS
                 stoppingToken);
         }
         
+        topologyReadinessAccessor.MarkTopologyProvisionEnd(GetType().Name);
         return Task.CompletedTask;
     }
 }

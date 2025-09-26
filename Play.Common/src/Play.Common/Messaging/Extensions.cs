@@ -25,6 +25,7 @@ public static class Extensions
         services.AddSingleton<IBusPublisher, RabbitMqBusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         services.AddSingleton<MessagePropertiesAccessor>();
+        services.AddSingleton<TopologyReadinessAccessor>();
         
         return services;
     }
