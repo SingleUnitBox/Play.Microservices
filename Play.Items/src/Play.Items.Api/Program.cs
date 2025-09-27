@@ -1,99 +1,68 @@
 using Asp.Versioning;
-using Play.Common.AppInitializer;
 using Play.Common.Auth;
-using Play.Common.Commands;
-using Play.Common.Context;
-using Play.Common.Events;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.Observability;
-using Play.Common.PostgresDb;
-using Play.Common.Queries;
 using Play.Common.Settings;
 using Play.Items.Infra;
 using Play.Items.Infra.Logging;
 using Play.Items.Infra.Metrics;
-using Play.Items.Infra.Postgres;
-using Play.Items.Infra.Postgres.Repositories;
 
-namespace Play.Items.Api;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
+builder.Services.AddApiVersioning(options =>
 {
-    public static void Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAngularUI",
-                builder => builder.WithOrigins("http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod());
-        });
-        
-        builder.Services.AddHostedService<AppInitializer>();
-        builder.Services.AddAuthenticationAndAuthorization(builder.Configuration);
-        builder.Services.AddApiVersioning(options =>
-        {
-            options.ReportApiVersions = true;
-            options.AssumeDefaultVersionWhenUnspecified = true;
-            options.DefaultApiVersion = new ApiVersion(1, 0);
-            options.ApiVersionReader = new UrlSegmentApiVersionReader();
-        });
-        
-        builder.Services.AddContext();
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
-        builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
-        
-        builder.Services.AddPostgresDb<ItemsPostgresDbContext>();
-        builder.Services.AddPostgresRepositories();
-        //caching
-        //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
-        //builder.Services.AddMemoryCache();
-        //builder.Services.AddCaching();
-        
-        builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
-        builder.Host.UseSerilogWithSeq();
-        builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
-        var app = builder.Build();
+    options.ReportApiVersions = true;
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ApiVersionReader = new UrlSegmentApiVersionReader();
+});
 
-        //app.UseExceptionHandling();
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
 
-        app.Services.GetRequiredService<ItemsMetrics>();
-        app.UseCors("AllowAngularUI");
-        app.UseAuthentication();
-        app.UseRouting();
-        app.UseAuthorization();
-        app.UseMiddleware<CustomMetricsMiddleware>();
-        app.UsePlayMetrics();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInActionNames = false; });
+
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
+builder.Host.UseSerilogWithSeq();
+builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
+var app = builder.Build();
+
+//app.UseExceptionHandling();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.Services.GetRequiredService<ItemsMetrics>();
+app.UseCors("AllowAngularUI");
+app.UseAuthentication();
+app.UseRouting();
+app.UseAuthorization();
+app.UseMiddleware<CustomMetricsMiddleware>();
+app.UsePlayMetrics();
 #pragma warning disable ASP0014
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapGet("/", (ctx) =>
-            {
-                var settings = ctx.RequestServices
-                    .GetService<IConfiguration>()
-                    .GetSettings<ServiceSettings>(nameof(ServiceSettings));
-                
-                return ctx.Response.WriteAsJsonAsync($"Hello from Play.{settings.ServiceName}.Service");
-            });
-            endpoints.MapGet("/file", async () =>
-            {
-                string filePath = "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.Catalog\\static\\file.txt";
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapGet("/", (ctx) =>
+    {
+        var settings = ctx.RequestServices
+            .GetService<IConfiguration>()
+            .GetSettings<ServiceSettings>(nameof(ServiceSettings));
+        
+        return ctx.Response.WriteAsJsonAsync($"Hello from Play.{settings.ServiceName}.Service");
+    });
+    endpoints.MapGet("/file", async () =>
+    {
+        string filePath = "C:\\Users\\czlom\\source\\repos\\Play.Microservices\\Play.Catalog\\static\\file.txt";
 
-                var fileContents = await File.ReadAllTextAsync(filePath);
-                return Results.Text(fileContents, "text/plain");
-            });
-        });
+        var fileContents = await File.ReadAllTextAsync(filePath);
+        return Results.Text(fileContents, "text/plain");
+    });
+});
 #pragma warning restore ASP0014
 
-        app.Run();
-    }
-}
+app.Run();
