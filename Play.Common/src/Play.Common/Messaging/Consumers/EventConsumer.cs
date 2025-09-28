@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
@@ -6,6 +7,7 @@ using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Topology;
+using Play.Common.Observability.Tracing;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -20,7 +22,8 @@ internal sealed class EventConsumer(
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
     IBusPublisher busPublisher,
-    TopologyReadinessAccessor topologyReadinessAccessor)
+    TopologyReadinessAccessor topologyReadinessAccessor,
+    MessagePropertiesAccessor messagePropertiesAccessor)
     : IEventConsumer
 {
     public async Task ConsumeEvent<TEvent>(string? queueName = null, CancellationToken stoppingToken = default) where TEvent : class, IEvent
@@ -34,7 +37,10 @@ internal sealed class EventConsumer(
         consumer.Received += async (model, ea) =>
         {
             SetCorrelationContext(ea.BasicProperties);
+            SetMessageProperties(ea.BasicProperties);
 
+            using var activity = CreateMessagingConsumeActivity(ea.BasicProperties);
+            
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
             var command = serializer.Deserialize<TEvent>(message);
@@ -83,5 +89,39 @@ internal sealed class EventConsumer(
             logger.LogInformation("Waiting for topology to be provisioned...");
             await Task.Delay(1_000, stoppingToken);
         }
+    }
+    
+    private void SetMessageProperties(IBasicProperties basicProperties)
+    {
+        var messageId = basicProperties.MessageId;
+        var headers = basicProperties.Headers?
+            .Select(h => (h.Key, (object)Encoding.UTF8.GetString((byte[])h.Value))).ToDictionary();
+        var messageType = basicProperties.Type;
+        
+        var messageProperties = new MessageProperties(messageId, headers, messageType);
+        messagePropertiesAccessor.Set(messageProperties);
+    }
+
+    private Activity? CreateMessagingConsumeActivity(IBasicProperties basicProperties)
+    {
+        var isHeaderPresent =
+            basicProperties.Headers?.ContainsKey(MessagingObservabilityHeaders.TraceParent) ?? false;
+        if (isHeaderPresent is false)
+        {
+            return Activity.Current;
+        }
+
+        basicProperties.Headers.TryGetValue(MessagingObservabilityHeaders.TraceParent, out var traceIdBytes);
+        var traceId = Encoding.UTF8.GetString((byte[])traceIdBytes);
+
+        var parentContext = ActivityContext.Parse(traceId, default);
+        var activitySource = new ActivitySource(MessagingActivitySource.MessagingConsumeSourceName);
+        var activity = activitySource.StartActivity(
+            $"Event consuming: {messagePropertiesAccessor.Get()?.MessageType}",
+            ActivityKind.Consumer,
+            parentContext: parentContext,
+            links: [new ActivityLink(parentContext)]);
+        
+        return activity;
     }
 }

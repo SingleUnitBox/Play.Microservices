@@ -27,7 +27,8 @@ internal sealed class RabbitMqBusPublisher(
             channel: channel,
             messageId: messageId,
             correlationContext: correlationContext,
-            headers: headers);
+            headers: headers,
+            messageType: message.GetType());
         
         channel.BasicPublish(
             exchangeName,
@@ -43,13 +44,15 @@ internal sealed class RabbitMqBusPublisher(
         IModel channel,
         string? messageId = default,
         ICorrelationContext correlationContext = default,
-        IDictionary<string, object>? headers = default)
+        IDictionary<string, object>? headers = default,        
+        Type? messageType = default)
     {
         var messageProperties = messagePropertiesAccessor.Get();
         
         var basicProperties = channel.CreateBasicProperties();
         basicProperties.MessageId = messageId ?? Guid.NewGuid().ToString();
-        basicProperties.Type = typeof(TMessage).Name;
+        // basicProperties.Type = typeof(TMessage).Name;
+        basicProperties.Type = messageType.Name;
         basicProperties.CorrelationId = string.IsNullOrWhiteSpace(correlationContext?.CorrelationId.ToString())
             ? Guid.NewGuid().ToString()
             : correlationContext.CorrelationId.ToString();
