@@ -6,7 +6,9 @@ using Play.Common.Messaging.Builder;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Consumers;
 using Play.Common.Messaging.CorrelationContext;
+using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Topology;
+using Play.Common.PostgresDb;
 using Play.Common.Settings;
 using RabbitMQ.Client;
 
@@ -96,6 +98,13 @@ public static class Extensions
             builder.Services.AddSingleton(topologySettings);
             builder.Services.AddHostedService<TopologyInitializer>();
         }
+        
+        return builder;
+    }
+
+    public static IRabbitMqBuilder AddDeduplication(this IRabbitMqBuilder builder)
+    {
+        builder.Services.AddPostgresDb<DeduplicationDbContext>();
         
         return builder;
     }

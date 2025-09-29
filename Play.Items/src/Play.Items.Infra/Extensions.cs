@@ -59,16 +59,18 @@ public static class Extensions
             .AsImplementedInterfaces()
             .WithScopedLifetime());
 
-        services.AddSingleton<ItemsMetrics>();
-        services.AddSingleton<CustomMetricsMiddleware>();
-        
+        services.AddScoped<ItemsMetrics>();
+        services.AddScoped<CustomMetricsMiddleware>();
+
         services.AddRabbitMq(rabbitBuilder =>
             rabbitBuilder
+                .AddChannelFactory()
+                .AddConnectionProvider()
                 .AddCommandConsumer()
                 .AddEventConsumer()
-                .AddConnectionProvider()
-                .AddChannelFactory());
+                .AddDeduplication());
                 //.AddTopologyInitializer());
+                
                 
         services.AddPlayMicroservice(
             configuration,

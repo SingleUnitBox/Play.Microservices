@@ -43,6 +43,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Play.Common.Abs\Play.Common.Abs.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Messaging\Deduplication\Data\Migrations\" />
+  </ItemGroup>
   
   
 </Project>
