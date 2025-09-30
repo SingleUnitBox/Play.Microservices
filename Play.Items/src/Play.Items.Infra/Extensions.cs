@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
+using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.AppInitializer;
@@ -11,6 +12,7 @@ using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Messaging;
+using Play.Common.Messaging.Executor;
 using Play.Common.Observability;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
@@ -44,7 +46,6 @@ public static class Extensions
         //builder.Services.AddCaching();
         
         services.AddCommands();
-        services.AddLoggingCommandHandlerDecorator();
         services.AddQueries();
         services.AddLoggingQueryHandlerDecorator();
         services.AddEvents();
@@ -68,6 +69,7 @@ public static class Extensions
                 .AddConnectionProvider()
                 .AddCommandConsumer()
                 .AddEventConsumer()
+                .AddMessageExecutor()
                 .AddDeduplication());
                 //.AddTopologyInitializer());
                 
@@ -82,6 +84,18 @@ public static class Extensions
                 config.AddPlayMetrics(["play.items.meter"]);
                 config.AddPlayTracing(environment);
             });
+        
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(MessageExecutorCommandHandlerDecorator<>));
+        services.AddLoggingCommandHandlerDecorator();
+        
+        var descriptors = services
+            .Where(s => s.ServiceType.IsGenericType && 
+                        s.ServiceType.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
+
+        foreach (var d in descriptors)
+        {
+            Console.WriteLine($"ICommandHandler: {d.ImplementationType} ({d.Lifetime})");
+        }
         
         return services;
     }

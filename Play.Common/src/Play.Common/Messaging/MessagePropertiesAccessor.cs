@@ -1,6 +1,6 @@
 ﻿namespace Play.Common.Messaging;
 
-internal sealed class MessagePropertiesAccessor
+public sealed class MessagePropertiesAccessor
 {
     private readonly AsyncLocal<MessageProperties> _messageProperties = new();
     

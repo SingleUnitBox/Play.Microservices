@@ -3,6 +3,7 @@ using Play.Common.Abs.Commands;
 
 namespace Play.Common.PostgresDb.UnitOfWork.Decorators;
 
+[UnitOfWorkDecorator]
 public class UnitOfWorkCommandHandlerDecorator<TCommand> : ICommandHandler<TCommand>
     where TCommand : class, ICommand
 {

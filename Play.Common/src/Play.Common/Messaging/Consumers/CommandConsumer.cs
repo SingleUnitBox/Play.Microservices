@@ -43,7 +43,7 @@ internal sealed class CommandConsumer(
             var command = serializer.Deserialize<TCommand>(message);
             
             try
-            {
+            { 
                 await commandDispatcher.DispatchAsync(command);
                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             }

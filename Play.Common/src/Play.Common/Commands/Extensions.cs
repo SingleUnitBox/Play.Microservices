@@ -5,6 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Logging.Attributes;
+using Play.Common.Messaging.Executor;
+using Play.Common.PostgresDb.UnitOfWork.Decorators;
 
 namespace Play.Common.Commands;
 
@@ -19,7 +21,9 @@ public static class Extensions
             .ToList();
         services.Scan(a => a.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
             .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<>))
-                .WithoutAttribute<LoggingDecoratorAttribute>())
+                .WithoutAttribute<LoggingDecoratorAttribute>()
+                .WithoutAttribute<MessageExecutorDecoratorAttribute>()
+                .WithoutAttribute<UnitOfWorkDecoratorAttribute>())
             .AsImplementedInterfaces()
             .WithScopedLifetime());
         
