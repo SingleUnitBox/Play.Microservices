@@ -69,8 +69,8 @@ public static class Extensions
                 .AddConnectionProvider()
                 .AddCommandConsumer()
                 .AddEventConsumer()
-                .AddMessageExecutor()
-                .AddDeduplication());
+                .AddDeduplication()
+                .AddMessageExecutor());
                 //.AddTopologyInitializer());
                 
                 
@@ -85,17 +85,8 @@ public static class Extensions
                 config.AddPlayTracing(environment);
             });
         
-        services.TryDecorate(typeof(ICommandHandler<>), typeof(MessageExecutorCommandHandlerDecorator<>));
+        services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
         services.AddLoggingCommandHandlerDecorator();
-        
-        var descriptors = services
-            .Where(s => s.ServiceType.IsGenericType && 
-                        s.ServiceType.GetGenericTypeDefinition() == typeof(ICommandHandler<>));
-
-        foreach (var d in descriptors)
-        {
-            Console.WriteLine($"ICommandHandler: {d.ImplementationType} ({d.Lifetime})");
-        }
         
         return services;
     }

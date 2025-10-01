@@ -3,7 +3,7 @@ using Play.Common.Messaging.Executor;
 
 namespace Play.Common.Messaging.Deduplication.FilterSteps;
 
-internal class DeduplicationWithinStep(PostgresDeduplicationStore deduplicationStore) : IMessageFilterStep
+internal class DeduplicationWithinStep(IDeduplicationStore deduplicationStore) : IMessageFilterStep
 {
     public FilterStepType Type => FilterStepType.Within;
     

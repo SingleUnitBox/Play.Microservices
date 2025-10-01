@@ -7,6 +7,7 @@ using Play.Common.Messaging.Builder;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Consumers;
 using Play.Common.Messaging.CorrelationContext;
+using Play.Common.Messaging.Deduplication;
 using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
@@ -108,7 +109,7 @@ public static class Extensions
     public static IRabbitMqBuilder AddMessageExecutor(this IRabbitMqBuilder builder)
     {
         builder.Services.AddScoped<IMessageExecutor, MessageExecutor>();
-        // builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(MessageExecutorCommandHandlerDecorator<>));
+        builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(MessageExecutorCommandHandlerDecorator<>));
         
         return builder;
     }
@@ -116,6 +117,7 @@ public static class Extensions
     public static IRabbitMqBuilder AddDeduplication(this IRabbitMqBuilder builder)
     {
         builder.Services.AddPostgresDb<DeduplicationDbContext>();
+        builder.Services.AddScoped<IDeduplicationStore, PostgresDeduplicationStore>();
         builder.Services.AddTransient<IMessageFilterStep, DeduplicationBeforeStep>();
         builder.Services.AddTransient<IMessageFilterStep, DeduplicationWithinStep>();
         

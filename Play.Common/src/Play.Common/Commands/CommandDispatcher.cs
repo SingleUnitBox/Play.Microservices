@@ -15,7 +15,6 @@ public class CommandDispatcher : ICommandDispatcher
     public async Task DispatchAsync<TCommand>(TCommand command) where TCommand : class, ICommand
     {
         using var scope = _serviceProvider.CreateScope();
-        var handlers = scope.ServiceProvider.GetServices<ICommandHandler<TCommand>>();
         var commandHandler = scope.ServiceProvider.GetRequiredService<ICommandHandler<TCommand>>();
         
         await commandHandler.HandleAsync(command);
