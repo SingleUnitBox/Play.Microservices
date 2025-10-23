@@ -1,4 +1,5 @@
-﻿using Play.Common.Abs.Commands;
+﻿using Microsoft.Extensions.Logging;
+using Play.Common.Abs.Commands;
 using Play.Common.Settings;
 using Polly;
 
@@ -7,15 +8,34 @@ namespace Play.Common.Messaging.Resiliency;
 public class CommandHandlerRetryDecorator<TCommand> : ICommandHandler<TCommand>
     where TCommand : class, ICommand
 {
-    public ICommandHandler<TCommand> _innerHandler { get; set; }
-    public RetryStrategySettings _retrySettings { get; set; }
+    private readonly ICommandHandler<TCommand> _innerHandler;
+    private ILogger<CommandHandlerRetryDecorator<TCommand>> _logger;
+    private readonly RetryStrategySettings _retrySettings;
     
-    public CommandHandlerRetryDecorator()
+    public CommandHandlerRetryDecorator(
+        ICommandHandler<TCommand> innerHandler,
+        ILogger<CommandHandlerRetryDecorator<TCommand>> logger,
+        ResiliencySettings resiliencySettings)
     {
-        _retrySettings = new()
+        _innerHandler = innerHandler;
+        _logger = logger;
+        _retrySettings = new() 
         {
             Delay = TimeSpan.FromSeconds(1),
-            MaxRetryAttempts = 
+            MaxRetryAttempts = resiliencySettings.Consumer.ConsumerRetriesLimit,
+            OnRetry = onRetryArgs =>
+            {
+                if (onRetryArgs.AttemptNumber < resiliencySettings.Consumer.ConsumerRetriesLimit - 1)
+                {
+                    _logger.LogWarning("Consume failed - attempt to retry via consumer");
+                }
+                else
+                {
+                    logger.LogError("Consumer retries limit reached.");
+                }
+                
+                return ValueTask.CompletedTask;
+            }
         };
     }
     

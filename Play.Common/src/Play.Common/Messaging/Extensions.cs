@@ -93,6 +93,15 @@ public static class Extensions
         return builder;
     }
 
+    public static IRabbitMqBuilder AddResiliency(this IRabbitMqBuilder builder)
+    {
+        var consumer =
+            builder.($"{nameof(ResiliencySettings)}:Consumer");
+        var resiliencySettings = new ResiliencySettings()
+        
+        return builder;
+    }
+
     public static IRabbitMqBuilder AddTopologyInitializer(this IRabbitMqBuilder builder)
     {
         var topologySettings = builder.Services.GetSettings<TopologySettings>(nameof(TopologySettings));
