@@ -1,8 +1,4 @@
 ﻿using Play.Common.Abs.Commands;
-using Play.Common.Abs.Events;
-using Play.Common.Abs.Exceptions;
-using Play.Common.Abs.RabbitMq;
-using Play.Items.Application.Events;
 using Play.Items.Application.Exceptions;
 using Play.Items.Application.Services;
 using Play.Items.Domain.Entities;
@@ -18,6 +14,7 @@ public class CreateItemHandler(IItemRepository itemRepository,
 
     public async Task HandleAsync(CreateItem command)
     {
+        throw new NotImplementedException();
          var item = await itemRepository.GetByIdAsync(command.ItemId);
          if (item != null)
          {

@@ -27,7 +27,7 @@ public class CommandHandlerRetryDecorator<TCommand> : ICommandHandler<TCommand>
             {
                 if (onRetryArgs.AttemptNumber < resiliencySettings.Consumer.ConsumerRetriesLimit - 1)
                 {
-                    _logger.LogWarning("Consume failed - attempt to retry via consumer");
+                    _logger.LogWarning($"Consume failed - attempt to retry via consumer - attempt '{onRetryArgs.AttemptNumber+1}'");
                 }
                 else
                 {

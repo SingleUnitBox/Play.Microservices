@@ -59,7 +59,7 @@ public static class Extensions
         
         services.AddSerialization();
         
-        services.AddRabbitMq(builder =>
+        services.AddRabbitMq(configuration, builder =>
         {
             builder
                 .AddCommandConsumer()

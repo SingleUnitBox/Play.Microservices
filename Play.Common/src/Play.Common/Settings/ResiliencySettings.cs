@@ -12,6 +12,9 @@ public class ResiliencySettings
     }
 }
 
-public record ConsumerResiliencySettings(int ConsumerRetriesLimit);
+public record ConsumerResiliencySettings(
+    bool BrokerRetriesEnabled,
+    int BrokerRetriesLimit,
+    int ConsumerRetriesLimit);
 
 public record ProducerResiliencySettings();    

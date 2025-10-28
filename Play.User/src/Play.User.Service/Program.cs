@@ -20,7 +20,7 @@ builder.Services.AddContext();
 builder.Services.AddMongoDb(builder.Configuration);
 builder.Services.AddMongoRepository<IUserRepository, UserMongoRepository>(
     db => new UserMongoRepository(db, "users"));
-builder.Services.AddRabbitMq(rabbitBuilder =>
+builder.Services.AddRabbitMq(builder.Configuration, rabbitBuilder =>
     rabbitBuilder
         //.AddCommandConsumer()
         //.AddEventConsumer()

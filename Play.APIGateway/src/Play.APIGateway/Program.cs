@@ -20,7 +20,7 @@ public class Program
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
         builder.Services.AddSingleton(settings);
-        builder.Services.AddRabbitMq(rabbitBuilder =>
+        builder.Services.AddRabbitMq(builder.Configuration, rabbitBuilder =>
             rabbitBuilder
                 .AddConnectionProvider()
                 .AddChannelFactory());

@@ -7,6 +7,7 @@ using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Message;
+using Play.Common.Messaging.Resiliency;
 using Play.Common.Observability.Tracing;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
@@ -22,7 +23,8 @@ internal sealed class CommandConsumer(
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
     IBusPublisher busPublisher,
-    MessagePropertiesAccessor messagePropertiesAccessor)
+    MessagePropertiesAccessor messagePropertiesAccessor,
+    ReliableConsuming reliableConsuming)
     : ICommandConsumer
 {
     public async Task ConsumeCommand<TCommand>(CancellationToken stoppingToken) where TCommand : class, ICommand
@@ -45,14 +47,14 @@ internal sealed class CommandConsumer(
             try
             { 
                 await commandDispatcher.DispatchAsync(command);
-                channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                var rejectedEvent = exceptionToMessageMapper.Map(e, command);
-                channel.BasicAck(ea.DeliveryTag, false);
-                await busPublisher.Publish(rejectedEvent);
+                await OnCommandDispatcherFailure<TCommand>(ea, channel);
+                return;
             }
+            
+            channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
 
         };
         
@@ -84,6 +86,23 @@ internal sealed class CommandConsumer(
 
         channel.BasicConsume(queue, false, consumer);
         return Task.CompletedTask;
+    }
+
+    private async Task OnCommandDispatcherFailure<TCommand>(BasicDeliverEventArgs ea, IModel channel)
+    {
+        var messageId = GetMessageId(ea.BasicProperties);
+        reliableConsuming.OnConsumeFailed(messageId);
+        
+        if (reliableConsuming.CanBrokerRetry(messageId))
+        {
+            logger.LogWarning($"Command consume failed for message with id '{messageId}. Retrying via broker...'");
+            channel.BasicNack(ea.DeliveryTag, false, requeue: true);
+        }
+        else
+        {
+            logger.LogError($"Broker retries limit exhausted for message with id '{messageId}'. Rejecting message...");
+            channel.BasicReject(ea.DeliveryTag, requeue: false);
+        }
     }
 
     private MessageData CreateMessageData(BasicDeliverEventArgs ea)

@@ -1,4 +1,5 @@
 ﻿using Humanizer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Commands;
@@ -11,6 +12,7 @@ using Play.Common.Messaging.Deduplication;
 using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
+using Play.Common.Messaging.Resiliency;
 using Play.Common.Messaging.Topology;
 using Play.Common.PostgresDb;
 using Play.Common.Settings;
@@ -20,9 +22,11 @@ namespace Play.Common.Messaging;
 
 public static class Extensions
 {
-    public static IServiceCollection AddRabbitMq(this IServiceCollection services, Action<IRabbitMqBuilder> builder)
+    public static IServiceCollection AddRabbitMq(this IServiceCollection services, 
+        IConfiguration configuration,
+        Action<IRabbitMqBuilder> builder)
     {
-        var rabbitBuilder = new RabbitMqBuilder(services);
+        var rabbitBuilder = new RabbitMqBuilder(services, configuration);
         builder(rabbitBuilder);
         services.AddSingleton(builder);
         
@@ -95,9 +99,17 @@ public static class Extensions
 
     public static IRabbitMqBuilder AddResiliency(this IRabbitMqBuilder builder)
     {
-        var consumer =
-            builder.($"{nameof(ResiliencySettings)}:Consumer");
-        var resiliencySettings = new ResiliencySettings()
+        var consumer = builder.Configuration
+            .GetSection($"{nameof(ResiliencySettings)}:Consumer")
+            .Get<ConsumerResiliencySettings>() 
+            ?? new ConsumerResiliencySettings(BrokerRetriesEnabled: true, BrokerRetriesLimit: 3, ConsumerRetriesLimit: 3);
+        var producer =
+            builder.Services.GetSettings<ProducerResiliencySettings>($"{nameof(ResiliencySettings)}:Producer");
+        var resiliencySettings = new ResiliencySettings(consumer, producer);
+        builder.Services.AddSingleton(resiliencySettings);
+
+        builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(CommandHandlerRetryDecorator<>));
+        builder.Services.AddSingleton<ReliableConsuming>();
         
         return builder;
     }

@@ -63,14 +63,15 @@ public static class Extensions
         services.AddScoped<ItemsMetrics>();
         services.AddScoped<CustomMetricsMiddleware>();
 
-        services.AddRabbitMq(rabbitBuilder =>
+        services.AddRabbitMq(configuration, rabbitBuilder =>
             rabbitBuilder
                 .AddChannelFactory()
                 .AddConnectionProvider()
                 .AddCommandConsumer()
                 .AddEventConsumer()
                 .AddDeduplication()
-                .AddMessageExecutor());
+                .AddMessageExecutor()
+                .AddResiliency());
                 //.AddTopologyInitializer());
                 
                 
@@ -85,7 +86,6 @@ public static class Extensions
                 config.AddPlayTracing(environment);
             });
         
-        services.TryDecorate(typeof(ICommandHandler<>), typeof(LoggingCommandHandlerDecorator<>));
         services.AddLoggingCommandHandlerDecorator();
         
         return services;
