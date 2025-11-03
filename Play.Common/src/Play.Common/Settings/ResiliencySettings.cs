@@ -17,4 +17,6 @@ public record ConsumerResiliencySettings(
     int BrokerRetriesLimit,
     int ConsumerRetriesLimit);
 
-public record ProducerResiliencySettings();    
+public record ProducerResiliencySettings(
+    bool PublishMandatoryEnabled,
+    bool PublisherConfirmsEnabled);    

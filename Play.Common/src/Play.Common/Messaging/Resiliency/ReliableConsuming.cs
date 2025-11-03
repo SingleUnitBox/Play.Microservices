@@ -10,7 +10,7 @@ public class ReliableConsuming
     private readonly int _brokerRetriesLimit;
     private readonly int _consumerRetriesLimit;
     
-    public ReliableConsuming(ResiliencySettings  resiliencySettings)
+    public ReliableConsuming(ResiliencySettings resiliencySettings)
     {
         _brokerRetriesEnabled = resiliencySettings.Consumer.BrokerRetriesEnabled;
         _brokerRetriesLimit = resiliencySettings.Consumer.BrokerRetriesLimit;

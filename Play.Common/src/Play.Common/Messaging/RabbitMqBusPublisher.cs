@@ -1,5 +1,7 @@
-﻿using Play.Common.Abs.RabbitMq;
+﻿using Microsoft.Extensions.Logging;
+using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
+using Play.Common.Messaging.Resiliency;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
 
@@ -8,7 +10,9 @@ namespace Play.Common.Messaging;
 internal sealed class RabbitMqBusPublisher(
     ChannelFactory channelFactory,
     ISerializer serializer,
-    MessagePropertiesAccessor messagePropertiesAccessor) : IBusPublisher
+    MessagePropertiesAccessor messagePropertiesAccessor,
+    ReliablePublishing reliablePublishing,
+    ILogger<RabbitMqBusPublisher> logger) : IBusPublisher
 {
     public async Task Publish<TMessage>(
         TMessage message,
@@ -29,13 +33,17 @@ internal sealed class RabbitMqBusPublisher(
             correlationContext: correlationContext,
             headers: headers,
             messageType: message.GetType());
+
+        ConfigureReliablePublishing<TMessage>(channel, basicProperties.MessageId);
         
         channel.BasicPublish(
-            exchangeName,
-            routingKey,
-            false,
+            exchange: exchangeName,
+            routingKey: routingKey,
+            mandatory: reliablePublishing.ShouldPublishAsMandatory(),
             basicProperties,
             body);
+
+        EnsureReliablePublishing(channel);
         
         await Task.CompletedTask;
     }
@@ -72,4 +80,42 @@ internal sealed class RabbitMqBusPublisher(
         
         return basicProperties;
     }
+
+    private void ConfigureReliablePublishing<TMessage>(IModel channel, string messageId)
+    {
+        if (reliablePublishing.UsePublisherConfirms)
+        {
+            channel.ConfirmSelect();
+            channel.BasicNacks += (sender, args) =>
+            {
+                logger.LogWarning(
+                    $"Message '{typeof(TMessage).Name}' with id '{messageId}' was not accepted by broker.");
+            };
+        }
+
+        if (reliablePublishing.ShouldPublishAsMandatory())
+        {
+            channel.BasicReturn += (sender, args) =>
+            {
+                logger.LogWarning($"Message '{typeof(TMessage)}' with id '{messageId}' was not routed properly to any consumer.");
+            };
+        }
+    }
+
+    private void EnsureReliablePublishing(IModel channel)
+    {
+        if (reliablePublishing.UsePublisherConfirms)
+        {
+            try
+            {
+                channel.WaitForConfirmsOrDie();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+    }
+
 }

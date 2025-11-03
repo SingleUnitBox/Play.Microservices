@@ -100,15 +100,18 @@ public static class Extensions
     public static IRabbitMqBuilder AddResiliency(this IRabbitMqBuilder builder)
     {
         var consumer = builder.Configuration
-            .GetSection($"{nameof(ResiliencySettings)}:Consumer")
-            .Get<ConsumerResiliencySettings>() 
-            ?? new ConsumerResiliencySettings(BrokerRetriesEnabled: true, BrokerRetriesLimit: 3, ConsumerRetriesLimit: 3);
-        var producer =
-            builder.Services.GetSettings<ProducerResiliencySettings>($"{nameof(ResiliencySettings)}:Producer");
+                            .GetSection($"{nameof(ResiliencySettings)}:Consumer")
+                            .Get<ConsumerResiliencySettings>() 
+                        ?? new ConsumerResiliencySettings(BrokerRetriesEnabled: true, BrokerRetriesLimit: 3, ConsumerRetriesLimit: 3);
+        var producer = builder.Configuration
+                           .GetSection($"{nameof(ResiliencySettings)}:Producer")
+                           .Get<ProducerResiliencySettings>()
+                       ?? new ProducerResiliencySettings(PublishMandatoryEnabled: false, PublisherConfirmsEnabled: false);
         var resiliencySettings = new ResiliencySettings(consumer, producer);
         builder.Services.AddSingleton(resiliencySettings);
 
         builder.Services.TryDecorate(typeof(ICommandHandler<>), typeof(CommandHandlerRetryDecorator<>));
+        builder.Services.AddSingleton<ReliablePublishing>();
         builder.Services.AddSingleton<ReliableConsuming>();
         
         return builder;

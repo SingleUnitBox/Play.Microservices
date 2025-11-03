@@ -23,7 +23,8 @@ public class Program
         builder.Services.AddRabbitMq(builder.Configuration, rabbitBuilder =>
             rabbitBuilder
                 .AddConnectionProvider()
-                .AddChannelFactory());
+                .AddChannelFactory()
+                .AddResiliency());
         builder.Services.AddSerialization();
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddContext();
