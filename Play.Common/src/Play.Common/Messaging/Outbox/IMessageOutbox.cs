@@ -1,0 +1,23 @@
+﻿using Play.Common.Abs.Messaging;
+
+namespace Play.Common.Messaging.Outbox;
+
+public interface IMessageOutbox
+{
+    Task AddAsync<TMessage>(
+        TMessage message,
+        string messageId,
+        string? exchange = default,
+        string? routingKey = default,
+        IDictionary<string, object>? headers = default,
+        CancellationToken cancellationToken = default)
+        where TMessage : IMessage;
+    
+    Task<IReadOnlyList<OutboxMessage>> GetUnsentAsync(
+        int batchSize = default,
+        CancellationToken cancellationToken = default);
+    
+    Task MarkAsProcessedAsync(
+        OutboxMessage outboxMessage,
+        CancellationToken cancellationToken = default);
+}

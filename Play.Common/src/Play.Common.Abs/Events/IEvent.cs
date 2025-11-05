@@ -1,6 +1,8 @@
-﻿namespace Play.Common.Abs.Events;
+﻿using Play.Common.Abs.Messaging;
 
-public interface IEvent
+namespace Play.Common.Abs.Events;
+
+public interface IEvent : IMessage
 {
     
 }

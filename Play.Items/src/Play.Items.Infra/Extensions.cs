@@ -71,7 +71,8 @@ public static class Extensions
                 .AddEventConsumer()
                 .AddDeduplication()
                 .AddMessageExecutor()
-                .AddResiliency());
+                .AddResiliency()
+                .AddOutbox());
                 //.AddTopologyInitializer());
                 
                 

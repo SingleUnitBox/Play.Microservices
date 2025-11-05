@@ -12,6 +12,8 @@ using Play.Common.Messaging.Deduplication;
 using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
+using Play.Common.Messaging.Outbox;
+using Play.Common.Messaging.Outbox.Data;
 using Play.Common.Messaging.Resiliency;
 using Play.Common.Messaging.Topology;
 using Play.Common.PostgresDb;
@@ -144,6 +146,22 @@ public static class Extensions
         builder.Services.AddScoped<IDeduplicationStore, PostgresDeduplicationStore>();
         builder.Services.AddTransient<IMessageFilterStep, DeduplicationBeforeStep>();
         builder.Services.AddTransient<IMessageFilterStep, DeduplicationWithinStep>();
+        
+        return builder;
+    }
+
+    public static IRabbitMqBuilder AddOutbox(this IRabbitMqBuilder builder)
+    {
+        var enabled = builder.Services.GetSettings<OutboxSettings>(nameof(OutboxSettings))
+            .Enabled;
+        if (enabled is false)
+        {
+            builder.Services.AddPostgresDb<OutboxDbContext>();
+            return builder;
+        }
+        
+        builder.Services.AddPostgresDb<OutboxDbContext>();
+        builder.Services.AddScoped<IMessageOutbox, PostgresMessageOutbox>();
         
         return builder;
     }
