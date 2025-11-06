@@ -1,4 +1,6 @@
-﻿namespace Play.Common.Abs.RabbitMq;
+﻿using Play.Common.Abs.Messaging;
+
+namespace Play.Common.Abs.RabbitMq;
 
 public interface IBusPublisher
 {
@@ -8,6 +10,7 @@ public interface IBusPublisher
         string messageId = null,
         string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object> headers = default)
+        IDictionary<string, object> headers = default,
+        CancellationToken cancellationToken = default)
         where TMessage : class;
 }

@@ -162,6 +162,7 @@ public static class Extensions
         
         builder.Services.AddPostgresDb<OutboxDbContext>();
         builder.Services.AddScoped<IMessageOutbox, PostgresMessageOutbox>();
+        builder.Services.AddSingleton<IBusPublisher, OutboxMessagePublisher>();
         
         return builder;
     }

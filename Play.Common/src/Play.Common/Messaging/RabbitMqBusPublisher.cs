@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Play.Common.Abs.Messaging;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Resiliency;
@@ -20,7 +21,8 @@ internal sealed class RabbitMqBusPublisher(
         string messageId = null,
         string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object?> headers = default)
+        IDictionary<string, object?> headers = default,
+        CancellationToken cancellationToken = default)
         where TMessage : class
     {
         var channel = channelFactory.CreateForProducer();

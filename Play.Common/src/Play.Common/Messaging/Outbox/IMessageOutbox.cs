@@ -11,7 +11,7 @@ public interface IMessageOutbox
         string? routingKey = default,
         IDictionary<string, object>? headers = default,
         CancellationToken cancellationToken = default)
-        where TMessage : IMessage;
+        where TMessage : class;
     
     Task<IReadOnlyList<OutboxMessage>> GetUnsentAsync(
         int batchSize = default,

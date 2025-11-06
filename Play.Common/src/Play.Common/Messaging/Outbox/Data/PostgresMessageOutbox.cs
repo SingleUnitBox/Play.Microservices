@@ -18,7 +18,7 @@ internal sealed class PostgresMessageOutbox(
         string? routingKey = default,
         IDictionary<string, object>? headers = default,
         CancellationToken cancellationToken = default)
-        where TMessage : IMessage
+        where TMessage : class
     {
         var outboxMessage = new OutboxMessage
         {

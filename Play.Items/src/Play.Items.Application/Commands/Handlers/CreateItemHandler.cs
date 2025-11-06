@@ -14,7 +14,6 @@ public class CreateItemHandler(IItemRepository itemRepository,
 
     public async Task HandleAsync(CreateItem command)
     {
-        throw new NotImplementedException();
          var item = await itemRepository.GetByIdAsync(command.ItemId);
          if (item != null)
          {

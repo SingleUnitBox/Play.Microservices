@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Play.Common.Abs.Messaging;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging;
 
@@ -13,13 +14,15 @@ internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublish
         string messageId = null,
         string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object> headers = null) where TMessage : class
+        IDictionary<string, object> headers = null,
+        CancellationToken cancellationToken = default)
+        where TMessage : class
     {
         var messageProperties = messagePropertiesAccessor.InitializeIfEmpty();
         using var activity = CreateMessagingExecutionActivity(messageProperties, message.GetType());
         
         await innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
-            correlationContext, messageProperties.Headers);
+            correlationContext, messageProperties.Headers, cancellationToken);
     }
 
     private Activity? CreateMessagingExecutionActivity(MessageProperties messageProperties, Type messageType)
