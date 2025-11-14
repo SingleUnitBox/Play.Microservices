@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
+using Play.Common.Abs.RabbitMq;
 using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.AppInitializer;
 using Play.Common.Commands;
@@ -67,6 +68,7 @@ public static class Extensions
             rabbitBuilder
                 .AddChannelFactory()
                 .AddConnectionProvider()
+                .AddBusPublisher()
                 .AddCommandConsumer()
                 .AddEventConsumer()
                 .AddDeduplication()
@@ -83,11 +85,12 @@ public static class Extensions
                 config.AddExceptionHandling();
                 config.AddCustomExceptionToMessageMapper<ExceptionToMessageMapper>();
                 config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
-                config.AddPlayMetrics(["play.items.meter"]);
-                config.AddPlayTracing(environment);
+                // config.AddPlayMetrics(["play.items.meter"]);
+                // config.AddPlayTracing(environment);
             });
         
         services.AddLoggingCommandHandlerDecorator();
+        var publishers = services.BuildServiceProvider().GetServices<IBusPublisher>();
         
         return services;
     }

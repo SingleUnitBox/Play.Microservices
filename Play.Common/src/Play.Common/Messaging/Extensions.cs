@@ -34,7 +34,6 @@ public static class Extensions
         
         var rabbitSettings = services.GetSettings<RabbitMqSettings>(nameof(RabbitMqSettings));
         services.AddSingleton(rabbitSettings);
-        services.AddSingleton<IBusPublisher, RabbitMqBusPublisher>();
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         services.AddSingleton<MessagePropertiesAccessor>();
         services.AddSingleton<TopologyReadinessAccessor>();
@@ -82,7 +81,14 @@ public static class Extensions
         
         return builder;
     }
-    
+
+    public static IRabbitMqBuilder AddBusPublisher(this IRabbitMqBuilder builder)
+    {
+        builder.Services.AddSingleton<IBusPublisher, RabbitMqBusPublisher>();
+        
+        return builder;
+    }
+
     public static IRabbitMqBuilder AddEventConsumer(this IRabbitMqBuilder builder)
     {
         builder.Services.AddSingleton<IEventConsumer, EventConsumer>();
