@@ -8,7 +8,7 @@ namespace Play.Common.Observability.Tracing;
 internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublisher,
     MessagePropertiesAccessor messagePropertiesAccessor) : IBusPublisher
 {
-    public async Task Publish<TMessage>(
+    public async Task PublishAsync<TMessage>(
         TMessage message,
         string exchangeName = null,
         string messageId = null,
@@ -21,7 +21,7 @@ internal sealed class TracingBusPublisherDecorator(IBusPublisher innerBusPublish
         var messageProperties = messagePropertiesAccessor.InitializeIfEmpty();
         using var activity = CreateMessagingExecutionActivity(messageProperties, message.GetType());
         
-        await innerBusPublisher.Publish(message, exchangeName, messageId, routingKey,
+        await innerBusPublisher.PublishAsync(message, exchangeName, messageId, routingKey,
             correlationContext, messageProperties.Headers, cancellationToken);
     }
 

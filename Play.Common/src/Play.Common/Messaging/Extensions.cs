@@ -166,9 +166,13 @@ public static class Extensions
             return builder;
         }
         
+        var settings = builder.Services.GetSettings<OutboxSettings>(nameof(OutboxSettings));
+        builder.Services.AddSingleton(settings);
         builder.Services.AddPostgresDb<OutboxDbContext>();
         builder.Services.AddScoped<IMessageOutbox, PostgresMessageOutbox>();
         builder.Services.AddSingleton<IBusPublisher, OutboxMessagePublisher>();
+
+        builder.Services.AddHostedService<OutboxBackgroundService>();
         
         return builder;
     }

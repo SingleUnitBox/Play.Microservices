@@ -15,7 +15,7 @@ internal sealed class RabbitMqBusPublisher(
     ReliablePublishing reliablePublishing,
     ILogger<RabbitMqBusPublisher> logger) : IBusPublisher
 {
-    public async Task Publish<TMessage>(
+    public async Task PublishAsync<TMessage>(
         TMessage message,
         string exchangeName = null,
         string messageId = null,

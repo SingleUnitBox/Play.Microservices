@@ -54,7 +54,7 @@ internal sealed class EventConsumer(
             {
                 var rejectedEvent = exceptionToMessageMapper.Map(e, command);
                 channel.BasicAck(ea.DeliveryTag, false);
-                await busPublisher.Publish(rejectedEvent);
+                await busPublisher.PublishAsync(rejectedEvent);
             }
 
         };

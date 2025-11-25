@@ -16,7 +16,7 @@ public class DeleteItemsHandler(IItemRepository itemRepository,
             foreach (var item in items)
             {
                 await itemRepository.DeleteAsync(item.Id);
-                await busPublisher.Publish(new ItemDeleted(item.Id));
+                await busPublisher.PublishAsync(new ItemDeleted(item.Id));
             }
         }
     }

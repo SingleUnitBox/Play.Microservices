@@ -51,7 +51,7 @@ public static class Extensions
                     }
                 }
                 
-                await busPublisher.Publish(command);
+                await busPublisher.PublishAsync(command);
                 return Results.Accepted();
             });
         

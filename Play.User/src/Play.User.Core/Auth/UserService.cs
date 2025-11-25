@@ -44,7 +44,7 @@ public class UserService : IUserService
             dto.Claims is null ? emptyClaims : dto.Claims);
         
         await _userRepository.CreateUser(user);
-        await _busPublisher.Publish(new UserCreated(user.Id, user.Username));
+        await _busPublisher.PublishAsync(new UserCreated(user.Id, user.Username));
     }
 
     public async Task<JwtToken> SignIn(SignInDto dto)
@@ -105,6 +105,6 @@ public class UserService : IUserService
         
         user.Username = dto.NewUsername;
         await _userRepository.UpdateUser(user);
-        await _busPublisher.Publish(new UsernameChanged(user.Id, user.Username));
+        await _busPublisher.PublishAsync(new UsernameChanged(user.Id, user.Username));
     }
 }

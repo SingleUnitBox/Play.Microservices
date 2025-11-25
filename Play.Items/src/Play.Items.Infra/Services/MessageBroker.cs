@@ -32,7 +32,7 @@ internal sealed class MessageBroker : IMessageBroker
             }
 
             var messageId = Guid.NewGuid().ToString("N");
-            await _busPublisher.Publish(@event, @event.GetType().GetExchangeName());
+            await _busPublisher.PublishAsync(@event, @event.GetType().GetExchangeName());
         }
     }
 }

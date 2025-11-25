@@ -7,7 +7,7 @@ namespace Play.Common.Messaging.Outbox;
 internal sealed class OutboxMessagePublisher(IMessageOutbox messageOutbox, MessagePropertiesAccessor messagePropertiesAccessor,
     ILogger<OutboxMessagePublisher> logger) : IBusPublisher
 {
-    public async Task Publish<TMessage>(TMessage message, string exchangeName = null, string messageId = null, string routingKey = "",
+    public async Task PublishAsync<TMessage>(TMessage message, string exchangeName = null, string messageId = null, string routingKey = "",
         ICorrelationContext correlationContext = null, IDictionary<string, object> headers = default, CancellationToken cancellationToken = default)
         where TMessage : class
     {

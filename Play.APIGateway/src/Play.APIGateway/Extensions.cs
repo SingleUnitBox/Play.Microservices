@@ -35,7 +35,7 @@ public static class Extensions
                 
                 var correlationId = Guid.NewGuid();
                 var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
-                await busPublisher.Publish<TCommand>(
+                await busPublisher.PublishAsync<TCommand>(
                     message: command, 
                     exchangeName: typeof(TCommand).GetExchangeName(),
                     routingKey: "",
@@ -76,7 +76,7 @@ public static class Extensions
                 
                 command = (TCommand)constructor.Invoke(args.ToArray());
                 
-                await busPublisher.Publish(command);
+                await busPublisher.PublishAsync(command);
                 return Results.Accepted();
             });
 

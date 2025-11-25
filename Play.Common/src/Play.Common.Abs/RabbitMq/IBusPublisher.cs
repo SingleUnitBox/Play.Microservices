@@ -4,7 +4,7 @@ namespace Play.Common.Abs.RabbitMq;
 
 public interface IBusPublisher
 {
-    Task Publish<TMessage>(
+    Task PublishAsync<TMessage>(
         TMessage message,
         string exchangeName = null,
         string messageId = null,
