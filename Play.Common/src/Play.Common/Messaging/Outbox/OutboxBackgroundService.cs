@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Outbox.Data;
@@ -8,52 +9,80 @@ using Play.Common.Settings;
 namespace Play.Common.Messaging.Outbox;
 
 internal class OutboxBackgroundService(IServiceProvider serviceProvider,
-    OutboxDbContext dbContext,
-    OutboxSettings outboxSettings,
     IMessageOutbox messageOutbox,
-    IBusPublisher busPublisher,
-    ISerializer serializer,
     ILogger<OutboxBackgroundService> logger) : BackgroundService
 {
+    private OutboxDbContext _dbContext;
+    private OutboxSettings _outboxSettings;
+    private ISerializer _serializer;
+    private IBusPublisher _busPublisher;
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        while (stoppingToken.IsCancellationRequested is false)
+        try
         {
-            await using var transaction = await dbContext.Database.BeginTransactionAsync(stoppingToken);
+            var scope = serviceProvider.CreateScope();
+            _dbContext = scope.ServiceProvider.GetRequiredService<OutboxDbContext>();
+            _outboxSettings = scope.ServiceProvider.GetRequiredService<OutboxSettings>();
+            _serializer = scope.ServiceProvider.GetRequiredService<ISerializer>();
+            var publishers = scope.ServiceProvider.GetServices<IBusPublisher>();
+            var outboxPublishChannel = scope.ServiceProvider.GetRequiredService<OutboxPublishChannel>();
+            _busPublisher = publishers.SingleOrDefault(p => p is RabbitMqBusPublisher);
             
-            try
+            ProcessOutboxChannelAsync(outboxPublishChannel, stoppingToken);
+            
+            while (stoppingToken.IsCancellationRequested is false)
             {
-                var unprocessedMessages = await messageOutbox.GetUnsentAsync(outboxSettings.BatchSize, stoppingToken);
-                if (unprocessedMessages.Any() && unprocessedMessages.Count > 0)
+                await using var transaction = await _dbContext.Database.BeginTransactionAsync(stoppingToken);
+            
+                try
                 {
-                    logger.LogInformation($"Found '{unprocessedMessages.Count}' unprocessed messages. Publishing...");
-                    foreach (var message in unprocessedMessages)
+                    var unprocessedMessages = new List<OutboxMessage>();
+                        // await messageOutbox.GetUnsentAsync(_outboxSettings.BatchSize, stoppingToken);
+                    if (unprocessedMessages.Any() && unprocessedMessages.Count > 0)
                     {
-                        await PublishOutboxMessageAsync(message, stoppingToken);
+                        logger.LogInformation($"Found '{unprocessedMessages.Count}' unprocessed messages. Publishing...");
+                        foreach (var message in unprocessedMessages)
+                        {
+                            await PublishOutboxMessageAsync(message, stoppingToken);
+                        }
                     }
-                }
                 
-                await transaction.CommitAsync(stoppingToken);
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync(stoppingToken);
-                logger.LogError("Failed to publish outbox messages.");
-            }
+                    await transaction.CommitAsync(stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync(stoppingToken);
+                    logger.LogError("Failed to publish outbox messages.");
+                }
 
-            await Task.Delay(outboxSettings.IntervalMilliseconds, stoppingToken);
+                await Task.Delay(_outboxSettings.IntervalMilliseconds, stoppingToken);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    private async void ProcessOutboxChannelAsync(OutboxPublishChannel outboxPublishChannel, CancellationToken stoppingToken)
+    {
+        await foreach (var message in outboxPublishChannel.ReadAsync(stoppingToken))
+        {
+            await PublishOutboxMessageAsync(message, stoppingToken);
         }
     }
 
     private async Task PublishOutboxMessageAsync(OutboxMessage message, CancellationToken stoppingToken)
     {
         var messageType = Type.GetType(message.MessageType);
-        var deserializedMessage = serializer.Deserialize(message.SerializedMessage, messageType);
+        var deserializedMessage = _serializer.Deserialize(message.SerializedMessage, messageType);
 
-        await (Task)busPublisher.GetType()
+        await (Task)_busPublisher.GetType()
             .GetMethod(nameof(IBusPublisher.PublishAsync))
             .MakeGenericMethod(messageType)
-            .Invoke(busPublisher, new[] {deserializedMessage, message.Destination, message.MessageId, message.RoutingKey, null, message.Headers, stoppingToken});
+            .Invoke(_busPublisher, new[] {deserializedMessage, message.Destination, message.MessageId, message.RoutingKey, null, message.Headers, stoppingToken});
         
         await messageOutbox.MarkAsProcessedAsync(message, stoppingToken);
         logger.LogInformation($"Outbox message '{messageType.Name}' with id '{message.MessageId}' marked as processed.");

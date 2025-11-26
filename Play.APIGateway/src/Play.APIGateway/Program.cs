@@ -24,6 +24,7 @@ public class Program
             rabbitBuilder
                 .AddConnectionProvider()
                 .AddChannelFactory()
+                .AddBusPublisher()
                 .AddResiliency());
         builder.Services.AddSerialization();
         builder.Host.UseSerilogWithSeq();

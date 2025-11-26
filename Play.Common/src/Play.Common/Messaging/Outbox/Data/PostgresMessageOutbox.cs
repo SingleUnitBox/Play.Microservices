@@ -8,6 +8,7 @@ namespace Play.Common.Messaging.Outbox.Data;
 
 internal sealed class PostgresMessageOutbox(
     OutboxDbContext dbContext,
+    OutboxLocalCache cache,
     ISerializer serializer,
     ILogger<PostgresMessageOutbox> logger) : IMessageOutbox
 {
@@ -35,7 +36,8 @@ internal sealed class PostgresMessageOutbox(
 
         await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
-        
+
+        cache.Add(outboxMessage);
         logger.LogInformation($"Message '{outboxMessage.MessageType}' with id '{outboxMessage.Id}' has been added.");
     }
 

@@ -21,6 +21,6 @@ internal sealed class OutboxMessagePublisher(IMessageOutbox messageOutbox, Messa
             routingKey,
             messageProperties?.Headers ?? headers,
             cancellationToken);
-        logger.LogInformation($"Message '{typeof(TMessage).Name}' has been saved to Outbox.");
+        logger.LogInformation($"Message '{message.GetType().Name}' has been saved to Outbox.");
     }
 }

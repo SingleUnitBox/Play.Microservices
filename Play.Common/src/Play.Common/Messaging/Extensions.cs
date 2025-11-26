@@ -14,6 +14,7 @@ using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
 using Play.Common.Messaging.Outbox;
 using Play.Common.Messaging.Outbox.Data;
+using Play.Common.Messaging.Outbox.FilterSteps;
 using Play.Common.Messaging.Resiliency;
 using Play.Common.Messaging.Topology;
 using Play.Common.PostgresDb;
@@ -173,6 +174,10 @@ public static class Extensions
         builder.Services.AddSingleton<IBusPublisher, OutboxMessagePublisher>();
 
         builder.Services.AddHostedService<OutboxBackgroundService>();
+        builder.Services.AddSingleton<OutboxLocalCache>();
+        builder.Services.AddSingleton<OutboxPublishChannel>();
+        builder.Services.AddTransient<IMessageFilterStep, OutboxBeforeStep>();
+        builder.Services.AddTransient<IMessageFilterStep, OutboxAfterStep>();
         
         return builder;
     }
