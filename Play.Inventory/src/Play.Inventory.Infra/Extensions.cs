@@ -62,10 +62,13 @@ public static class Extensions
         services.AddRabbitMq(configuration, builder =>
         {
             builder
+                .AddConnectionProvider()
+                .AddChannelFactory()
+                .AddBusPublisher()
                 .AddCommandConsumer()
                 .AddEventConsumer()
-                .AddConnectionProvider()
-                .AddChannelFactory();
+                .AddResiliency();
+
             //.AddTopologyInitializer();
         });
         

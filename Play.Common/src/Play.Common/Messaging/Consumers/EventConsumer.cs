@@ -43,16 +43,16 @@ internal sealed class EventConsumer(
             
             var body = ea.Body.ToArray();
             var message = Encoding.UTF8.GetString(body);
-            var command = serializer.Deserialize<TEvent>(message);
+            var @event = serializer.Deserialize<TEvent>(message);
             
             try
             {
-                await eventDispatcher.HandleAsync(command);
+                await eventDispatcher.HandleAsync(@event);
                 channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
             }
             catch (Exception e)
             {
-                var rejectedEvent = exceptionToMessageMapper.Map(e, command);
+                var rejectedEvent = exceptionToMessageMapper.Map(e, @event);
                 channel.BasicAck(ea.DeliveryTag, false);
                 await busPublisher.PublishAsync(rejectedEvent);
             }
