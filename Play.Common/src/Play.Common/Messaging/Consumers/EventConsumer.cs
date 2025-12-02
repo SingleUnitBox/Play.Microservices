@@ -1,11 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Text;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.Exceptions;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
+using Play.Common.Messaging.Message;
 using Play.Common.Messaging.Topology;
 using Play.Common.Observability.Tracing;
 using Play.Common.Serialization;
@@ -62,7 +64,47 @@ internal sealed class EventConsumer(
         await EnsureTopologyReadiness(stoppingToken);
         channel.BasicConsume(queueName, false, consumer);
     }
+
+    public Task ConsumeNonGenericEvent(Func<MessageData, Task> handleRawPayload, string queue, CancellationToken cancellationToken = default)
+    {
+        var channel = channelFactory.CreateForConsumer();
+        var consumer = new EventingBasicConsumer(channel);
+
+        consumer.Received += async (model, ea) =>
+        {
+            try
+            {
+                var messageData = CreateMessageData(ea);
+                await handleRawPayload(messageData);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex.Message);
+                throw;
+            }
+            
+            channel.BasicAck(ea.DeliveryTag, false);
+        };
+        
+        channel.BasicConsume(queue, false, consumer);
+        return Task.CompletedTask;
+    }
     
+    private MessageData CreateMessageData(BasicDeliverEventArgs ea)
+    {
+        var messageId = GetMessageId(ea.BasicProperties);
+        var messageType = ea.BasicProperties.Type;
+        var payload = ea.Body.ToArray();
+        
+        return new MessageData(messageId, payload, messageType);
+    }
+    
+    private static Guid GetMessageId(IBasicProperties properties)
+    {
+        var messageId = properties.MessageId;
+        return Guid.Parse(messageId);
+    }
+
     private void SetCorrelationContext(IBasicProperties basicProperties)
     {
         var correlationId = basicProperties.CorrelationId ?? Guid.Empty.ToString();

@@ -15,7 +15,8 @@ public class ResiliencySettings
 public record ConsumerResiliencySettings(
     bool BrokerRetriesEnabled,
     int BrokerRetriesLimit,
-    int ConsumerRetriesLimit);
+    int ConsumerRetriesLimit,
+    int MaxMessagesFetchedPerConsumer);
 
 public record ProducerResiliencySettings(
     bool PublishMandatoryEnabled,

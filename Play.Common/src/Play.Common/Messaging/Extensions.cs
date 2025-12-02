@@ -111,7 +111,11 @@ public static class Extensions
         var consumer = builder.Configuration
                             .GetSection($"{nameof(ResiliencySettings)}:Consumer")
                             .Get<ConsumerResiliencySettings>() 
-                        ?? new ConsumerResiliencySettings(BrokerRetriesEnabled: true, BrokerRetriesLimit: 3, ConsumerRetriesLimit: 3);
+                        ?? new ConsumerResiliencySettings(
+                            BrokerRetriesEnabled: true,
+                            BrokerRetriesLimit: 3,
+                            ConsumerRetriesLimit: 3,
+                            MaxMessagesFetchedPerConsumer: 10);
         var producer = builder.Configuration
                            .GetSection($"{nameof(ResiliencySettings)}:Producer")
                            .Get<ProducerResiliencySettings>()
