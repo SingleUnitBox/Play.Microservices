@@ -31,6 +31,7 @@ internal sealed class EventConsumer(
     public async Task ConsumeEvent<TEvent>(string? queueName = null, CancellationToken stoppingToken = default) where TEvent : class, IEvent
     {
         var channel = channelFactory.CreateForConsumer();
+        channel.BasicQos(0, 1, false);
         if (queueName is null)
         {
             queueName = typeof(TEvent).GetQueueName();

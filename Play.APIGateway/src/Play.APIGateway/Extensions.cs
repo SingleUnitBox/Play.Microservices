@@ -76,7 +76,9 @@ public static class Extensions
                 
                 command = (TCommand)constructor.Invoke(args.ToArray());
                 
-                await busPublisher.PublishAsync(command);
+                await busPublisher.PublishAsync(
+                    message: command,
+                    exchangeName: typeof(TCommand).GetExchangeName());
                 return Results.Accepted();
             });
 

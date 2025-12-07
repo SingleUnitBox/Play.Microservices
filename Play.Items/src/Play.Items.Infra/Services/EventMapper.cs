@@ -3,6 +3,7 @@ using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Items.Application.Events;
 using Play.Items.Domain.DomainEvents;
 using ItemCreated = Play.Items.Domain.DomainEvents.ItemCreated;
+using ItemDeleted = Play.Items.Domain.DomainEvents.ItemDeleted;
 
 namespace Play.Items.Infra.Services;
 
@@ -18,6 +19,7 @@ internal sealed class EventMapper : IEventMapper
             //NameUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
             //DescriptionUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
             PriceUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
+            ItemDeleted dEvent => new Application.Events.ItemDeleted(dEvent.ItemId),
             _ => null
         };
 }

@@ -2,9 +2,9 @@
 
 @accessToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyZTU3NjkzYi00YTcxLTQ4MDQtOTFlYS0wY2RmZDkxYjc2MjciLCJ1bmlxdWVfbmFtZSI6IjJlNTc2OTNiLTRhNzEtNDgwNC05MWVhLTBjZGZkOTFiNzYyNyIsImp0aSI6ImZjNzhlMDAxLTMyNmEtNDEzZC05NTIyLWU5ZjAwZDhmMDJlYyIsImlhdCI6IjE3MzY5Nzc5NDc3NzEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJ1c2VyIiwicG9saWNpZXMiOlsiaXRlbXMiLCJpbnZlbnRvcnkiXSwibmJmIjoxNzM2OTc3OTQ3LCJleHAiOjE3NDU1MzE1NDcsImlzcyI6IlBsYXkuVXNlci5TZXJ2aWNlIn0.P8ow1IH51kmM7HBk7GiO1cHlakWntYXg9Eseg3Ki0jM
 
-@itemId = 54a811b2-ba74-409b-9cb8-b01a026b27a2
+@itemId = c5ab196a-bca1-4eb8-ae10-a367ca655837
 @userId = 52e9848b-bb0c-4d85-8d67-b32768d6de8e
-@creafterId = b69f5ef7-bf93-4de2-a62f-064652d8dd19
+@creafterId = d83935da-7678-4161-994c-586962868980
 
 ### PLAY-USER ###
 ###
@@ -48,7 +48,7 @@ GET {{url}}/play-items/items
 GET {{url}}/play-items/items/{{itemId}}
 
 ### Get by Crafter
-GET {{url}}/crafters/{{creafterId}}
+GET {{url}}/play-items/crafters/{{creafterId}}
 
 ### Delete All Items sync
 DELETE {{url}}/items
@@ -57,19 +57,19 @@ DELETE {{url}}/items
 DELETE {{url}}/items/delete
 
 ### Create
-POST {{url}}/items
+POST {{url}}/play-items/items
 Content-Type: application/json
 
 {
-  "name": "Sword",
-  "description": "Easy damage",
-  "price": 27.52,
+  "name": "Trident",
+  "description": "Wave is coming",
+  "price": 15.15,
   "crafterId": "{{creafterId}}",
-  "element": "Fire"
+  "element": "Water"
 }
 
 ### Create with Crafter
-POST {{url}}/items/crafter
+POST {{url}}/play-items/items/crafter
 Content-Type: application/json
 
 {
@@ -80,19 +80,27 @@ Content-Type: application/json
 }
 
 ### Update
-PUT {{url}}/items/{{itemId}}
+PUT {{url}}/play-items/items/{{itemId}}
 Content-Type: application/json
 
 {
-  "name": "Antidoteeeeeee",
-  "description": "Cures poison",
+  "name": "Tridentum",
+  "description": "Poseidons strenght",
   "price": 30
 }
 
 ### Delete
-DELETE {{url}}/items/{{itemId}}
+DELETE {{url}}/play-items/items/{{itemId}}
 
 ### CRAFTERS
+POST {{url}}/play-items/crafters
+Content-Type: application/json
+
+{
+  "name": "DinFoon"
+}
+
+###
 GET {{url}}/crafters/{{creafterId}}
 
 ### PLAY-INVENTORY ###

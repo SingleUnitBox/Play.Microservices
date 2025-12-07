@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Play.Common.Messaging.Consumers;
+using Play.Inventory.Infra.Events.External;
 
 namespace Play.Inventory.Infra.Messaging;
 
 public class InventoryEventConsumingService(
-    IEventConsumer eventConsumer) : BackgroundService
+    IEventConsumer eventConsumer,
+    IServiceProvider serviceProvider) : BackgroundService
 {
     public const string ItemChangesQueue = "item_changes_queue";
     
@@ -13,11 +16,16 @@ public class InventoryEventConsumingService(
         await eventConsumer.ConsumeNonGenericEvent(
             async (messageData) =>
             {
-                var demultiplexedHandler = CreateDemultiplexedHandler();
+                var demultiplexedHandler = CreateDemultiplexingHandler();
+                await demultiplexedHandler.HandleAsync(messageData, stoppingToken);
             },
             queue: ItemChangesQueue,
             cancellationToken: stoppingToken);
     }
-    
-    private 
+
+    private ItemDemuliplexingHandler CreateDemultiplexingHandler()
+    {
+        var iocScope = serviceProvider.CreateScope();
+        return iocScope.ServiceProvider.GetRequiredService<ItemDemuliplexingHandler>();
+    }
 }

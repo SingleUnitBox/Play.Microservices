@@ -18,7 +18,9 @@ using Play.Common.Queries;
 using Play.Common.Serialization;
 using Play.Common.Settings;
 using Play.Inventory.Application.Services.Clients;
+using Play.Inventory.Infra.Events.External;
 using Play.Inventory.Infra.Exceptions;
+using Play.Inventory.Infra.Messaging;
 using Play.Inventory.Infra.Postgres;
 using Play.Inventory.Infra.Postgres.Repositories;
 using Play.Inventory.Infra.Postgres.UnitOfWork;
@@ -80,6 +82,9 @@ public static class Extensions
                 config.AddSettings<ServiceSettings>(nameof(ServiceSettings));
                 config.AddPlayTracing(environment);
             });
+
+        services.AddHostedService<InventoryEventConsumingService>();
+        services.AddScoped<ItemDemuliplexingHandler>();
         
         return services;
     }

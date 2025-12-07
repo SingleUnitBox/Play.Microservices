@@ -5,6 +5,8 @@ public class CatalogItem
     public Guid Id { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }
+    
+    public int LastKnownVersion { get; set; }
 
     public CatalogItem(Guid id, string name, decimal price)
     {

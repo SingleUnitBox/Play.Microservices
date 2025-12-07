@@ -78,6 +78,11 @@ namespace Play.Items.Domain.Entities
             Element = element;
         }
 
+        public void Delete()
+        {
+            AddEvent(new ItemDeleted(Id));
+        }
+
         public static Item Create(string name, string description, decimal price, DateTimeOffset createdDate)
             => new(name, description, price, createdDate);
 

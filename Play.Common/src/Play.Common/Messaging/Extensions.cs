@@ -186,6 +186,18 @@ public static class Extensions
         return builder;
     }
 
+    public static IRabbitMqBuilder AddOutOfOrderDetection(this IRabbitMqBuilder builder)
+    {
+        var enabled = builder.Services.GetSettings<OutOfOrderDetectionSettings>(nameof(OutOfOrderDetectionSettings))
+            .Enabled;
+        if (enabled is false)
+        {
+            return builder;
+        }
+
+        return builder;
+    }
+
     public static string GetExchangeName<TMessage>(this TMessage message)
         => message.GetType().GetExchangeName();
 
