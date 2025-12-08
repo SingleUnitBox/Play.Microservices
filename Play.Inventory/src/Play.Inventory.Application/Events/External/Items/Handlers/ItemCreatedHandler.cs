@@ -21,7 +21,7 @@ public class ItemCreatedHandler : IEventHandler<ItemCreated>
             return;
         }
         
-        item = CatalogItem.Create(@event.ItemId, @event.Name, @event.Price);
+        item = CatalogItem.Create(@event.ItemId, @event.Name, @event.Price, @event.Version);
         await _catalogItemRepository.CreateAsync(item);
     }
 }

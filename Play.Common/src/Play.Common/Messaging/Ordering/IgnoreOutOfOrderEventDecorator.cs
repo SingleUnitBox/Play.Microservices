@@ -18,7 +18,13 @@ public class IgnoreOutOfOrderEventDecorator<TEvent>(
             return;
         }
 
-        var outOfOrder = outOfOrderDetector.Check(@event);
-        if ()
+        var isOutOfOrder = await outOfOrderDetector.Check(@event);
+        if (isOutOfOrder)
+        {
+            logger.LogWarning($"[{DateTime.UtcNow:0}] Detected out of order event - skipping... Event: '{Environment.NewLine}' {@event}");
+            return;
+        }
+        
+        await innerHandler.HandleAsync(@event);
     }
 }

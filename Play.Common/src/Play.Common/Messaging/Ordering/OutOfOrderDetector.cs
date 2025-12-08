@@ -8,14 +8,12 @@ public class OutOfOrderDetector(
     Func<Type, object?> currentVersionAccessorFactory,
     ILogger<OutOfOrderDetector> logger)
 {
-    private readonly Func<Type, object?> _currentVersionAccessorFactory = currentVersionAccessorFactory;
-    private readonly ILogger<OutOfOrderDetector>  _logger = logger;
-
     public async Task<bool> Check<TMessage>(TMessage message) where TMessage : IMessage
     {
         if (message is not IVersionedMessage versionedMessage)
         {
             logger.LogInformation($"'{typeof(TMessage)}' is not versioned, thus cannot be verified.");
+            return false;
         }
 
         var currentVersion = await GetCurrentVersion(versionedMessage);
@@ -27,8 +25,19 @@ public class OutOfOrderDetector(
         return currentVersion >= versionedMessage.Version;
     }
 
-    private async Task<int?> GetCurrentVersion<VMessage>(VMessage message) where VMessage : IVersionedMessage
+    private async Task<int?> GetCurrentVersion<TVerMessage>(TVerMessage message) where TVerMessage : IVersionedMessage
     {
-        
+        var getterType = typeof(IGetMessageRelatedEntityVersion<>).MakeGenericType(message.GetType());
+        var getter = currentVersionAccessorFactory(getterType);
+
+        if (getter is null)
+        {
+            logger.LogWarning($"No version getter for the message of type '{typeof(TVerMessage)}' found. Version will not be checked.");
+            return null;
+        }
+
+        return await (Task<int?>)
+            getterType.GetMethod(nameof(IGetMessageRelatedEntityVersion<IVersionedMessage>.GetEntityVersionAsync))
+                ?.Invoke(getter, new object[] { message, CancellationToken.None });
     }
 }

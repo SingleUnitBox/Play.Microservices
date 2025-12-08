@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Commands;
+using Play.Common.Abs.Events;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Builder;
 using Play.Common.Messaging.Connection;
@@ -12,6 +13,7 @@ using Play.Common.Messaging.Deduplication;
 using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
+using Play.Common.Messaging.Ordering;
 using Play.Common.Messaging.Outbox;
 using Play.Common.Messaging.Outbox.Data;
 using Play.Common.Messaging.Outbox.FilterSteps;
@@ -194,6 +196,23 @@ public static class Extensions
         {
             return builder;
         }
+
+        builder.Services.TryDecorate(typeof(IEventHandler<>), typeof(IgnoreOutOfOrderEventDecorator<>));
+        builder.Services.AddSingleton(provider =>
+        {
+            var factory = (Type type) =>
+            {
+                var scope = provider.CreateScope();
+                return scope.ServiceProvider.GetService(type);
+            };
+
+            return new OutOfOrderDetector(factory, provider.GetService<ILogger<OutOfOrderDetector>>()!);
+        });
+
+        builder.Services.Scan(x => x.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
+            .AddClasses(c => c.AssignableTo(typeof(IGetMessageRelatedEntityVersion<>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
 
         return builder;
     }

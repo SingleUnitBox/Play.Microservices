@@ -16,6 +16,7 @@ public class ItemUpdatedHandler(ICatalogItemRepository catalogItemRepository) : 
         
         item.Name = @event.Name;
         item.Price = @event.Price;
+        item.LastKnownVersion = @event.Version;
         
         await catalogItemRepository.UpdateAsync(item);
     }

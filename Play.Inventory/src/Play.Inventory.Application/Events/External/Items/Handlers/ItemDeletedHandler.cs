@@ -14,6 +14,9 @@ public class ItemDeletedHandler(ICatalogItemRepository catalogItemRepository) : 
             throw new CatalogItemNotFoundException(@event.ItemId);
         }
         
-        await catalogItemRepository.DeleteAsync(@event.ItemId);
+        item.Delete();
+        item.LastKnownVersion = @event.Version;
+        
+        await catalogItemRepository.UpdateAsync(item);
     }
 }
