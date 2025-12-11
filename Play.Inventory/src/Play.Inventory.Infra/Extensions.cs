@@ -69,7 +69,8 @@ public static class Extensions
                 .AddBusPublisher()
                 .AddCommandConsumer()
                 .AddEventConsumer()
-                .AddResiliency();
+                .AddResiliency()
+                .AddOutOfOrderDetection();
 
             //.AddTopologyInitializer();
         });

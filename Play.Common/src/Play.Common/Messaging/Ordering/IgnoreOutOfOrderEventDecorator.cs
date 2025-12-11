@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Events;
 using Play.Common.Abs.Messaging.Ordering;
+using Play.Common.Messaging.Ordering.Attributes;
 
 namespace Play.Common.Messaging.Ordering;
 
+[OutOfOrderEventDecorator]
 public class IgnoreOutOfOrderEventDecorator<TEvent>(
     IEventHandler<TEvent> innerHandler,
     OutOfOrderDetector outOfOrderDetector,

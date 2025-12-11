@@ -1,11 +1,14 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Play.Common.Messaging.Ordering;
+using Play.Inventory.Application.Events.External.Items;
 using Play.Inventory.Domain.Entities;
 using Play.Inventory.Domain.Repositories;
 
 namespace Play.Inventory.Infra.Postgres.Repositories;
 
-public class CatalogItemRepository : ICatalogItemRepository
+public class CatalogItemRepository : ICatalogItemRepository,
+    IGetMessageRelatedEntityVersion<ItemCreated>
 {
     private readonly InventoryPostgresDbContext _dbContext;
     private readonly DbSet<CatalogItem> _catalogItems;
@@ -43,4 +46,10 @@ public class CatalogItemRepository : ICatalogItemRepository
 
     public async Task<IReadOnlyCollection<CatalogItem>> BrowseItems()
         => await _catalogItems.ToListAsync();
+
+    public async Task<int?> GetEntityVersionAsync(ItemCreated message, CancellationToken cancellationToken = default)
+    {
+        var item = await _catalogItems.FirstOrDefaultAsync(i => i.Id == message.ItemId, cancellationToken);
+        return item?.LastKnownVersion ?? null;
+    }
 }

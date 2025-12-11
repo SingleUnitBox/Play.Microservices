@@ -7,10 +7,20 @@ namespace Play.Common.Messaging.Outbox;
 internal sealed class OutboxMessagePublisher(IMessageOutbox messageOutbox, MessagePropertiesAccessor messagePropertiesAccessor,
     ILogger<OutboxMessagePublisher> logger) : IBusPublisher
 {
-    public async Task PublishAsync<TMessage>(TMessage message, string exchangeName = null, string messageId = null, string routingKey = "",
-        ICorrelationContext correlationContext = null, IDictionary<string, object> headers = default, CancellationToken cancellationToken = default)
+    public async Task PublishAsync<TMessage>(
+        TMessage message,
+        string exchangeName = null,
+        string messageId = null,
+        string routingKey = "",
+        ICorrelationContext correlationContext = null,
+        IDictionary<string, object> headers = default,
+        CancellationToken cancellationToken = default)
         where TMessage : class
     {
+        logger.LogError("AddAsync called. ThreadId={ThreadId}. Publisher stack:\n{Stack}",
+            Environment.CurrentManagedThreadId,
+            Environment.StackTrace);
+        
         var messageProperties = messagePropertiesAccessor.Get();
         var messageIdSafe = messageProperties?.MessageId ?? messageId;
 

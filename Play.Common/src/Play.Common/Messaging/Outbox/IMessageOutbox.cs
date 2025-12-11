@@ -9,7 +9,7 @@ public interface IMessageOutbox
         string messageId,
         string? exchange = default,
         string? routingKey = default,
-        IDictionary<string, object>? headers = default,
+        IDictionary<string, object>? headers = null,
         CancellationToken cancellationToken = default)
         where TMessage : class;
     

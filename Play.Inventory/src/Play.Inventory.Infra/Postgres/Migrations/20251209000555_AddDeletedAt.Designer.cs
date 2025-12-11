@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Play.Inventory.Infra.Postgres;
@@ -11,9 +12,11 @@ using Play.Inventory.Infra.Postgres;
 namespace Play.Inventory.Infra.Postgres.Migrations
 {
     [DbContext(typeof(InventoryPostgresDbContext))]
-    partial class InventoryPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251209000555_AddDeletedAt")]
+    partial class AddDeletedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,7 +32,7 @@ namespace Play.Inventory.Infra.Postgres.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTimeOffset?>("DeletedAt")
+                    b.Property<DateTimeOffset>("DeletedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("LastKnownVersion")

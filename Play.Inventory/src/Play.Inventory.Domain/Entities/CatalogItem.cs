@@ -6,14 +6,14 @@ public class CatalogItem
     public string Name { get; set; }
     public decimal Price { get; set; }
     public int LastKnownVersion { get; set; }
-    public DateTimeOffset DeletedAt { get; private set; }
+    public DateTimeOffset? DeletedAt { get; private set; }
 
-    public CatalogItem(Guid id, string name, decimal price, int version)
+    public CatalogItem(Guid id, string name, decimal price, int lastKnownVersion)
     {
         Id = id;
         Name = name;
         Price = price;
-        LastKnownVersion = version;
+        LastKnownVersion = lastKnownVersion;
     }
 
     public void Delete()
@@ -21,6 +21,6 @@ public class CatalogItem
         DeletedAt = DateTime.UtcNow;
     }
 
-    public static CatalogItem Create(Guid id, string name, decimal price, int version)
-        => new CatalogItem(id, name, price, version);
+    public static CatalogItem Create(Guid id, string name, decimal price, int lastKnownVersion)
+        => new CatalogItem(id, name, price, lastKnownVersion);
 }

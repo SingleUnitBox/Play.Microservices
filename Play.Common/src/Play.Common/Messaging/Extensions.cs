@@ -14,6 +14,7 @@ using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
 using Play.Common.Messaging.Ordering;
+using Play.Common.Messaging.Ordering.Attributes;
 using Play.Common.Messaging.Outbox;
 using Play.Common.Messaging.Outbox.Data;
 using Play.Common.Messaging.Outbox.FilterSteps;

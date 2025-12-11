@@ -25,7 +25,7 @@ internal class OutboxBackgroundService(IServiceProvider serviceProvider,
             _dbContext = scope.ServiceProvider.GetRequiredService<OutboxDbContext>();
             _outboxSettings = scope.ServiceProvider.GetRequiredService<OutboxSettings>();
             _serializer = scope.ServiceProvider.GetRequiredService<ISerializer>();
-            var publishers = scope.ServiceProvider.GetServices<IBusPublisher>();
+            var publishers = scope.ServiceProvider.GetRequiredService<IEnumerable<IBusPublisher>>();
             var outboxPublishChannel = scope.ServiceProvider.GetRequiredService<OutboxPublishChannel>();
             _busPublisher = publishers.SingleOrDefault(p => p is RabbitMqBusPublisher);
             
@@ -78,7 +78,7 @@ internal class OutboxBackgroundService(IServiceProvider serviceProvider,
     {
         var messageType = Type.GetType(message.MessageType);
         var deserializedMessage = _serializer.Deserialize(message.SerializedMessage, messageType);
-
+        
         await (Task)_busPublisher.GetType()
             .GetMethod(nameof(IBusPublisher.PublishAsync))
             .MakeGenericMethod(messageType)

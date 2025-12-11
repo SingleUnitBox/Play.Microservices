@@ -90,7 +90,6 @@ public static class Extensions
             });
         
         services.AddLoggingCommandHandlerDecorator();
-        var publishers = services.BuildServiceProvider().GetServices<IBusPublisher>();
         
         return services;
     }

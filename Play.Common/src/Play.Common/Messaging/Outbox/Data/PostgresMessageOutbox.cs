@@ -17,7 +17,7 @@ internal sealed class PostgresMessageOutbox(
         string messageId,
         string? exchange = default,
         string? routingKey = default,
-        IDictionary<string, object>? headers = default,
+        IDictionary<string, object>? headers = null,
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
@@ -33,7 +33,7 @@ internal sealed class PostgresMessageOutbox(
             MessageType = message.GetType().AssemblyQualifiedName,
             StoredAt = DateTimeOffset.UtcNow
         };
-
+        
         await dbContext.OutboxMessages.AddAsync(outboxMessage, cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
 

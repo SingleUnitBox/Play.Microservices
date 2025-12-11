@@ -21,7 +21,7 @@ internal sealed class RabbitMqBusPublisher(
         string messageId = null,
         string routingKey = "",
         ICorrelationContext correlationContext = null,
-        IDictionary<string, object?> headers = default,
+        IDictionary<string, object> headers = default,
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
