@@ -17,10 +17,6 @@ internal sealed class OutboxMessagePublisher(IMessageOutbox messageOutbox, Messa
         CancellationToken cancellationToken = default)
         where TMessage : class
     {
-        logger.LogError("AddAsync called. ThreadId={ThreadId}. Publisher stack:\n{Stack}",
-            Environment.CurrentManagedThreadId,
-            Environment.StackTrace);
-        
         var messageProperties = messagePropertiesAccessor.Get();
         var messageIdSafe = messageProperties?.MessageId ?? messageId;
 

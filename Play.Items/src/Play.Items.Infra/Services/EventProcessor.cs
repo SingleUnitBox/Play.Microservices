@@ -38,7 +38,7 @@ internal sealed class EventProcessor : IEventProcessor
             return;
         }
         
-        await _messageBroker.PublishAsync(integrationEvents);
+        await _messageBroker.PublishAsync(integrationEvents.Distinct());
     }
 
     private async Task<List<IEvent>> HandleDomainEventsAsync(IEnumerable<IDomainEvent> domainEvents)

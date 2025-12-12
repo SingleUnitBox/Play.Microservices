@@ -15,9 +15,9 @@ internal sealed class EventMapper : IEventMapper
     public IEvent? Map(IDomainEvent domainEvent)
         => domainEvent switch
         {
-            ItemCreated dEvent => new Application.Events.ItemCreated(dEvent.ItemId, dEvent.Name, dEvent.Price),
-            //NameUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
-            //DescriptionUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
+            ItemCreated dEvent => new Application.Events.ItemCreated(dEvent.ItemId, dEvent.Name, dEvent.Price, 1),
+            NameUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
+            DescriptionUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
             PriceUpdated dEvent => new ItemUpdated(dEvent.ItemId, dEvent.Name, dEvent.Price),
             ItemDeleted dEvent => new Application.Events.ItemDeleted(dEvent.ItemId),
             _ => null
