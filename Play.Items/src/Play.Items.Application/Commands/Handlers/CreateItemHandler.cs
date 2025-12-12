@@ -31,7 +31,7 @@ public class CreateItemHandler(IItemRepository itemRepository,
          {
              throw new CrafterNotFoundException(command.CrafterId);
          }
-
+         
          item.SetCrafter(crafter);
          var element = await elementRepository.GetElement(command.Element);
          item.SetElement(element);

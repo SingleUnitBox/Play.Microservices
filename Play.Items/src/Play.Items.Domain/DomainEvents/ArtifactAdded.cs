@@ -1,7 +1,6 @@
 ﻿using Play.Common.Abs.SharedKernel.DomainEvents;
-using Play.Common.Abs.SharedKernel.Types;
 using Play.Items.Domain.Entities;
 
 namespace Play.Items.Domain.DomainEvents;
 
-public record PriceUpdated(Item Item) : IDomainEvent;
+public record ArtifactAdded(Item Item) : IDomainEvent;

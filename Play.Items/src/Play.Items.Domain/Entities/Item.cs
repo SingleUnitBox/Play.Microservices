@@ -13,6 +13,8 @@ namespace Play.Items.Domain.Entities
         public DateTimeOffset CreatedDate { get; private set; }
         public Crafter Crafter { get; private set; }
         public Element Element { get; private set; }
+        
+        public Socket? Socket { get; private set; }
 
         private Item()
         {
@@ -53,19 +55,19 @@ namespace Play.Items.Domain.Entities
         public void UpdateName(Name newName)
         {
             Name = newName;
-            AddEvent(new NameUpdated(Id, Name, Price));
+            AddEvent(new NameUpdated(this));
         }
         
         public void UpdateDescription(Description newDescription)
         {
             Description = newDescription;
-            AddEvent(new DescriptionUpdated(Id, Name, Price));
+            AddEvent(new DescriptionUpdated(this));
         }
 
         public void UpdatePrice(Price newPrice)
         {
             Price = newPrice;
-            AddEvent(new PriceUpdated(Id, Name, Price));
+            AddEvent(new PriceUpdated(this));
         }
 
         public void SetCrafter(Crafter crafter)
@@ -76,6 +78,17 @@ namespace Play.Items.Domain.Entities
         public void SetElement(Element element)
         {
             Element = element;
+        }
+
+        public void MakeSocket(Socket socket)
+        {
+            if (Socket is not null)
+            {
+                throw new CannotMakeSocketException(Id, socket);
+            }
+
+            Socket = socket;
+            AddEvent(new SocketCreated(this));
         }
 
         public void Delete()

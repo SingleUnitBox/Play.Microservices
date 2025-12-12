@@ -3,4 +3,4 @@ using Play.Common.Abs.Messaging.Ordering;
 
 namespace Play.Items.Application.Events;
 
-public record ItemCreated(Guid ItemId, string Name, decimal Price, int Version) : IEvent, IVersionedMessage;
+public record ArtifactAdded(Guid ItemId, string Artifact, int Version) : IEvent, IVersionedMessage;

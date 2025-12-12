@@ -5,4 +5,4 @@ using Play.Items.Domain.ValueObjects;
 
 namespace Play.Items.Domain.DomainEvents;
 
-public record DescriptionUpdated(Item Item) : IDomainEvent;
+public record SocketCreated(Item Item) : IDomainEvent;
