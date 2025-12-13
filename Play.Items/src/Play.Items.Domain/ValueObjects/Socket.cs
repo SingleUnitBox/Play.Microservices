@@ -6,6 +6,8 @@ namespace Play.Items.Domain.ValueObjects;
 public class Socket
 {
     public HollowType HollowType { get; }
+
+    public Artifact? Artifact { get; }
     
     private Socket(HollowType hollowType)
     {

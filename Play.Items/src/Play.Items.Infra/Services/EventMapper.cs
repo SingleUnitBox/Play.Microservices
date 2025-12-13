@@ -18,7 +18,7 @@ internal sealed class EventMapper : IEventMapper
         {
             ItemCreated dEvent => new Application.Events.ItemCreated(dEvent.ItemId, dEvent.Name, dEvent.Price, 1),
             SocketCreated dEvent => new ItemUpdated(dEvent.Item.Id, dEvent.Item.Name, dEvent.Item.Price, dEvent.Item.Version),
-            ArtifactAdded dEvent => new Application.Events.ArtifactAdded(dEvent.Item.Id, dEvent.Item.Socket.Artifact, dEvent.Item.Version),
+            ArtifactAdded dEvent => new Application.Events.ArtifactAdded(dEvent.Item.Id, dEvent.Item.Socket., dEvent.Item.Version),
             NameUpdated dEvent => new ItemUpdated(dEvent.Item.Id, dEvent.Item.Name, dEvent.Item.Price, dEvent.Item.Version),
             DescriptionUpdated dEvent => new ItemUpdated(dEvent.Item.Id, dEvent.Item.Name, dEvent.Item.Price, dEvent.Item.Version),
             PriceUpdated dEvent => new ItemUpdated(dEvent.Item.Id, dEvent.Item.Name, dEvent.Item.Price, dEvent.Item.Version),
