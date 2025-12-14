@@ -91,6 +91,17 @@ namespace Play.Items.Domain.Entities
             AddEvent(new SocketCreated(this));
         }
 
+        public void EmbedArtifact(Artifact artifact)
+        {
+            if (Socket is null)
+            {
+                CannotEmbedArtifact(Id.Value);
+            }
+
+            Socket.EmbedArtifact(artifact);
+            AddEvent(new ArtifactEmbedded());
+        }
+
         public void Delete()
         {
             AddEvent(new ItemDeleted(Id));

@@ -1,6 +1,7 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Items.Application.Exceptions;
 using Play.Items.Application.Services;
+using Play.Items.Domain.Entities;
 using Play.Items.Domain.Repositories;
 using Play.Items.Domain.Types;
 using Play.Items.Domain.ValueObjects;
@@ -12,10 +13,7 @@ public class MakeSocketHandler(IItemRepository itemRepository,
 {
     public async Task HandleAsync(MakeSocket command)
     {
-        if (Enum.TryParse<HollowType>(
-                command.HollowType,
-                ignoreCase: true,
-                out HollowType hollowType))
+        if (!HollowHelper.TryCreateHollowType(command.HollowType, out var hollowType))
         {
             throw new InvalidHollowTypeException(command.HollowType);
         }

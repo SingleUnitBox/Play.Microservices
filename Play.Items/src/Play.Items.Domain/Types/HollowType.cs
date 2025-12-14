@@ -13,4 +13,13 @@ public class HollowHelper
     {
         return Enum.GetValues(typeof(HollowType)).Cast<HollowType>().Select(e => e.ToString()).ToList();
     }
+
+    public static bool TryCreateHollowType(
+        string hollowTypeString,
+        out HollowType hollowType)
+        => Enum.TryParse(
+               hollowTypeString,
+               ignoreCase: true,
+               out hollowType)
+           && Enum.IsDefined(typeof(HollowType), hollowType);
 }
