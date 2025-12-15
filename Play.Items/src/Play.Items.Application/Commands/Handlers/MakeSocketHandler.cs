@@ -8,7 +8,8 @@ using Play.Items.Domain.ValueObjects;
 
 namespace Play.Items.Application.Commands.Handlers;
 
-public class MakeSocketHandler(IItemRepository itemRepository,
+public class MakeSocketHandler(
+    IItemRepository itemRepository,
     IEventProcessor eventProcessor) : ICommandHandler<MakeSocket>
 {
     public async Task HandleAsync(MakeSocket command)

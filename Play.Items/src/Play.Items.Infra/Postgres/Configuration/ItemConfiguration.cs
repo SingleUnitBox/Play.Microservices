@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Play.Items.Domain.Entities;
+using Play.Items.Domain.Types;
 
 namespace Play.Items.Infra.Postgres.Configuration;
 
@@ -20,5 +22,20 @@ public class ItemConfiguration : IEntityTypeConfiguration<Item>
         builder.Property(i => i.Price)
             .HasConversion(n => n.Value, value => new(value));
         builder.HasOne(i => i.Element);
+
+        builder.OwnsOne(i => i.Socket, socket =>
+        {
+            socket.Property(s => s.HollowType)
+                .HasConversion(ht => ht.ToString(), ht => Enum.Parse<HollowType>(ht));
+            socket.OwnsOne(s => s.Artifact, artifact =>
+            {
+                artifact.Property(a => a.CompatibleHollow)
+                    .HasConversion(ht => ht.ToString(), value => Enum.Parse<HollowType>(value));
+                artifact.Property(a => a.Stats)
+                    .HasConversion(stat => JsonSerializer.Serialize(stat, (JsonSerializerOptions?)null),
+                        stat => JsonSerializer.Deserialize<Dictionary<string, int>>(stat, (JsonSerializerOptions?)null)
+                                ?? new Dictionary<string, int>());
+            });
+        });
     }
 }

@@ -3,4 +3,4 @@ using Play.Items.Domain.Entities;
 
 namespace Play.Items.Domain.DomainEvents;
 
-public record ArtifactAdded(Item Item) : IDomainEvent;
+public record ArtifactEmbedded(Item Item) : IDomainEvent;

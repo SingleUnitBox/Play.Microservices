@@ -178,7 +178,8 @@ public static class Extensions
         builder.Services.AddSingleton(settings);
         builder.Services.AddPostgresDb<OutboxDbContext>();
         builder.Services.AddScoped<IMessageOutbox, PostgresMessageOutbox>();
-        builder.Services.AddSingleton<IBusPublisher, OutboxMessagePublisher>();
+        // should OutboxMessagePublisher be Singleton?
+        builder.Services.AddScoped<IBusPublisher, OutboxMessagePublisher>();
 
         builder.Services.AddHostedService<OutboxBackgroundService>();
         builder.Services.AddSingleton<OutboxLocalCache>();

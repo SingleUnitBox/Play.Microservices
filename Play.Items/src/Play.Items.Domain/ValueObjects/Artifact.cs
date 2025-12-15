@@ -10,6 +10,11 @@ public sealed record Artifact
 
     public IReadOnlyDictionary<string, int> Stats { get; }
 
+    private Artifact()
+    {
+        
+    }
+    
     private Artifact(string name, HollowType compatibleHollow, IReadOnlyDictionary<string, int> stats)
     {
         Name = name;

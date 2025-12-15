@@ -23,7 +23,6 @@ internal sealed class EventConsumer(
     ILogger<EventConsumer> logger,
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
-    IBusPublisher busPublisher,
     TopologyReadinessAccessor topologyReadinessAccessor,
     MessagePropertiesAccessor messagePropertiesAccessor)
     : IEventConsumer
@@ -57,7 +56,7 @@ internal sealed class EventConsumer(
             {
                 var rejectedEvent = exceptionToMessageMapper.Map(e, @event);
                 channel.BasicAck(ea.DeliveryTag, false);
-                await busPublisher.PublishAsync(rejectedEvent);
+                // await busPublisher.PublishAsync(rejectedEvent);
             }
 
         };

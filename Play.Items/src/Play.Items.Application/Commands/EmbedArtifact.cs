@@ -2,4 +2,4 @@
 
 namespace Play.Items.Application.Commands;
 
-public record EmbedArtifact(Guid ItemId, string Artifact, IDictionary<string, int> Stats) : ICommand;
+public record EmbedArtifact(Guid ItemId, string ArtifactName, IDictionary<string, int> Stats) : ICommand;

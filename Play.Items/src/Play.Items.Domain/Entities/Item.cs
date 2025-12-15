@@ -13,7 +13,6 @@ namespace Play.Items.Domain.Entities
         public DateTimeOffset CreatedDate { get; private set; }
         public Crafter Crafter { get; private set; }
         public Element Element { get; private set; }
-        
         public Socket? Socket { get; private set; }
 
         private Item()
@@ -95,11 +94,11 @@ namespace Play.Items.Domain.Entities
         {
             if (Socket is null)
             {
-                CannotEmbedArtifact(Id.Value);
+                throw new CannotEmbedArtifactInSocketlessItemException(Id);
             }
 
             Socket.EmbedArtifact(artifact);
-            AddEvent(new ArtifactEmbedded());
+            AddEvent(new ArtifactEmbedded(this));
         }
 
         public void Delete()

@@ -22,7 +22,6 @@ internal sealed class CommandConsumer(
     ILogger<CommandConsumer> logger,
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
-    IBusPublisher busPublisher,
     MessagePropertiesAccessor messagePropertiesAccessor,
     ReliableConsuming reliableConsuming)
     : ICommandConsumer

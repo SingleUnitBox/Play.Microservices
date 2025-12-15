@@ -2,9 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
-using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
-using Play.Common.Abs.RabbitMq;
 using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.AppInitializer;
 using Play.Common.Commands;
@@ -13,8 +11,6 @@ using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Messaging;
-using Play.Common.Messaging.Executor;
-using Play.Common.Observability;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Common.Serialization;
@@ -41,10 +37,6 @@ public static class Extensions
 
         services.AddPostgresDb<ItemsPostgresDbContext>();
         services.AddPostgresRepositories();
-        //caching
-        //builder.Services.AddScoped<IItemRepository, CachedItemRepository>();
-        //builder.Services.AddMemoryCache();
-        //builder.Services.AddCaching();
         
         services.AddCommands();
         services.AddQueries();

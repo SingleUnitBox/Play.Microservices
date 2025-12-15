@@ -16,7 +16,7 @@ public class Socket
     {
         HollowType = hollowType;
     }
-
+    
     public void EmbedArtifact(Artifact artifact)
     {
         if (IsOccupied)

@@ -9,11 +9,11 @@ using Play.Common.Settings;
 namespace Play.Common.Messaging.Outbox;
 
 internal class OutboxBackgroundService(IServiceProvider serviceProvider,
-    IMessageOutbox messageOutbox,
     ILogger<OutboxBackgroundService> logger) : BackgroundService
 {
     private OutboxDbContext _dbContext;
     private OutboxSettings _outboxSettings;
+    private IMessageOutbox _messageOutbox;
     private ISerializer _serializer;
     private IBusPublisher _busPublisher;
     
@@ -24,6 +24,7 @@ internal class OutboxBackgroundService(IServiceProvider serviceProvider,
             var scope = serviceProvider.CreateScope();
             _dbContext = scope.ServiceProvider.GetRequiredService<OutboxDbContext>();
             _outboxSettings = scope.ServiceProvider.GetRequiredService<OutboxSettings>();
+            _messageOutbox = scope.ServiceProvider.GetRequiredService<IMessageOutbox>();
             _serializer = scope.ServiceProvider.GetRequiredService<ISerializer>();
             var publishers = scope.ServiceProvider.GetRequiredService<IEnumerable<IBusPublisher>>();
             var outboxPublishChannel = scope.ServiceProvider.GetRequiredService<OutboxPublishChannel>();
@@ -38,7 +39,7 @@ internal class OutboxBackgroundService(IServiceProvider serviceProvider,
                 try
                 {
                     var unprocessedMessages = // new List<OutboxMessage>();
-                        await messageOutbox.GetUnsentAsync(_outboxSettings.BatchSize, stoppingToken);
+                        await _messageOutbox.GetUnsentAsync(_outboxSettings.BatchSize, stoppingToken);
                     if (unprocessedMessages.Any() && unprocessedMessages.Count > 0)
                     {
                         logger.LogInformation($"Found '{unprocessedMessages.Count}' unprocessed messages. Publishing...");
@@ -84,7 +85,7 @@ internal class OutboxBackgroundService(IServiceProvider serviceProvider,
             .MakeGenericMethod(messageType)
             .Invoke(_busPublisher, new[] {deserializedMessage, message.Destination, message.MessageId, message.RoutingKey, null, message.Headers, stoppingToken});
         
-        await messageOutbox.MarkAsProcessedAsync(message, stoppingToken);
+        await _messageOutbox.MarkAsProcessedAsync(message, stoppingToken);
         logger.LogInformation($"Outbox message '{messageType.Name}' with id '{message.MessageId}' marked as processed.");
     }
 }
