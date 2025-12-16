@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using Play.Common.Auth;
+using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Logging.Mappers;
 using Play.Common.Observability;
@@ -29,7 +30,7 @@ builder.Host.UseSerilogWithSeq();
 builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
 var app = builder.Build();
 
-//app.UseExceptionHandling();
+// app.UseExceptionHandling();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

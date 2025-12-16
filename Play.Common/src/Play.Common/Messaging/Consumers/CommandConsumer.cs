@@ -49,6 +49,7 @@ internal sealed class CommandConsumer(
             }
             catch (Exception exception)
             {
+                logger.LogError(exception, $"Error while processing command {typeof(TCommand).Name}");
                 await OnCommandDispatcherFailure<TCommand>(ea, channel);
                 return;
             }

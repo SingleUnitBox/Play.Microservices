@@ -9,42 +9,43 @@ namespace Play.APIGateway;
 
 public static class Extensions
 {
-    public static WebApplication PublishCommand<TCommand>(this WebApplication app,
+    public static WebApplication PublishCommand<TCommand>(
+        this WebApplication app,
         string route,
-        HttpMethod method)
+        HttpMethod method,
+        params (string routeKey, string propertyName)[] routeMap)
         where TCommand : class, ICommand
     {
-        app.MapMethods(route + "/{id?}", new[] { method.Method },
-            async (
-                [FromBody] TCommand command,
-                [FromServices] IBusPublisher busPublisher,
-                [FromRoute] Guid? id,
-                HttpContext context,
-                [FromServices] IContext idContext
-                ) =>
+        async Task<IResult> Handler(
+            HttpContext context,
+            TCommand command,
+            IBusPublisher busPublisher,
+            IContext idContext)
+        {
+            foreach (var (routeKey, propertyName) in routeMap)
             {
-                if (id.HasValue)
+                if (context.Request.RouteValues.TryGetValue(routeKey, out var value) &&
+                    Guid.TryParse(value?.ToString(), out var guid))
                 {
-                    var idProperty = typeof(TCommand).GetProperties()
-                        .FirstOrDefault(p => p.PropertyType == typeof(Guid));
-                    if (idProperty is not null)
-                    {
-                        idProperty.SetValue(command, id);
-                    }
+                    var prop = typeof(TCommand).GetProperty(propertyName);
+                    prop?.SetValue(command, guid);
                 }
-                
-                var correlationId = Guid.NewGuid();
-                var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
-                await busPublisher.PublishAsync<TCommand>(
-                    message: command, 
-                    exchangeName: typeof(TCommand).GetExchangeName(),
-                    routingKey: "",
-                    correlationContext: new CorrelationContext(correlationId, userId));
-                
-                context.Response.Headers["RequestId"] = correlationId.ToString();
-                return Results.Accepted($"play-operations/{correlationId}");
-            });
+            }
 
+            var correlationId = Guid.NewGuid();
+            var userId = idContext.IdentityContext?.UserId ?? Guid.Empty;
+
+            await busPublisher.PublishAsync(
+                message: command,
+                exchangeName: typeof(TCommand).GetExchangeName(),
+                routingKey: "",
+                correlationContext: new CorrelationContext(correlationId, userId));
+
+            context.Response.Headers["RequestId"] = correlationId.ToString();
+            return Results.Accepted($"play-operations/{correlationId}");
+        }
+        
+        app.MapMethods(route, new[] { method.Method }, (Delegate)Handler);
         return app;
     }
     

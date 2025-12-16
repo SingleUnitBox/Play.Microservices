@@ -47,6 +47,8 @@ public class Program
         // Play.Items
         // this is async, goes to RabbitMq
         app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
+        app.PublishCommand<MakeSocket>("play-items/items/{itemId}/socket", HttpMethod.Post, ("itemId", "ItemId"));
+        app.PublishCommand<EmbedArtifact>("play-items/items/{itemId}/artifact", HttpMethod.Post, ("itemId", "ItemId"));
         app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
         app.PublishCommand<CreateCrafter>("play-items/crafters", HttpMethod.Post);
         app.PublishDeleteCommand<DeleteItem>("play-items/items");
