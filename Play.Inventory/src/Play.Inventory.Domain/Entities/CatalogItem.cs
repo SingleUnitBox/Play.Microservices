@@ -5,6 +5,8 @@ public class CatalogItem
     public Guid Id { get; set; }
     public string Name { get; set; }
     public decimal Price { get; set; }
+
+    public bool HasArtifact { get; set; }
     public int LastKnownVersion { get; set; }
     public DateTimeOffset? DeletedAt { get; private set; }
 

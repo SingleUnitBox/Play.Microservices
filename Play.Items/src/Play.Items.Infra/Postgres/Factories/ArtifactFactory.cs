@@ -6,7 +6,7 @@ namespace Play.Items.Infra.Postgres.Factories;
 
 public class ArtifactFactory(IArtifactDefinitionRepository artifactDefinitionRepository) : IArtifactFactory
 {
-    public async Task<Artifact> Create(string artifactName, IDictionary<string, int> stats)
+    public async Task<Artifact> Create(string artifactName, IDictionary<string, int>? stats)
     {
         var artifactDefinition = await artifactDefinitionRepository.GetByNameAsync(artifactName);
         if (artifactDefinition is null)
@@ -14,7 +14,7 @@ public class ArtifactFactory(IArtifactDefinitionRepository artifactDefinitionRep
             throw new ArtifactDefinitionNotFoundException(artifactName);
         }
 
-        return stats.Any() 
+        return stats is not null && stats.Any() 
             ? Artifact.Create(artifactDefinition.Name, artifactDefinition.CompatibleHollowType, stats)
             : Artifact.Create(artifactDefinition.Name, artifactDefinition.CompatibleHollowType, artifactDefinition.BaseStats.ToDictionary());
     }

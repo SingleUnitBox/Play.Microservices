@@ -1,5 +1,6 @@
 ﻿using Play.Common.Abs.Commands;
 using Play.Items.Application.Exceptions;
+using Play.Items.Application.Factories;
 using Play.Items.Application.Services;
 using Play.Items.Domain.Repositories;
 using Play.Items.Domain.Types;
@@ -9,6 +10,7 @@ namespace Play.Items.Application.Commands.Handlers;
 
 public class EmbedArtifactHandler(
     IItemRepository itemRepository,
+    IArtifactFactory artifactFactory,
     IEventProcessor eventProcessor) : ICommandHandler<EmbedArtifact>
 {
     public async Task HandleAsync(EmbedArtifact command)
@@ -18,8 +20,8 @@ public class EmbedArtifactHandler(
         {
             throw new ItemNotFoundException(command.ItemId);
         }
-        
-        var artifact = Artifact.Create(command.ArtifactName, HollowType.Stone, command.Stats);
+
+        var artifact = await artifactFactory.Create(command.ArtifactName, command.Stats);
         item.EmbedArtifact(artifact);
         
         await itemRepository.UpdateAsync(item);
