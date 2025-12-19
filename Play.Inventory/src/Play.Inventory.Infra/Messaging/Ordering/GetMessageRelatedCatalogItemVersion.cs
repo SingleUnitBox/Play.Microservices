@@ -6,7 +6,7 @@ using Play.Inventory.Infra.Postgres;
 namespace Play.Inventory.Infra.Messaging.Ordering;
 
 public class GetMessageRelatedCatalogItemVersion(InventoryPostgresDbContext dbContext)
-    : IGetMessageRelatedEntityVersion<ItemCreated>
+    : IGetMessageRelatedEntityVersion<ItemCreated>, IGetMessageRelatedEntityVersion<ArtifactAdded>
 {
     public async Task<int?> GetEntityVersionAsync(ItemCreated message, CancellationToken cancellationToken = default)
     {
@@ -17,5 +17,10 @@ public class GetMessageRelatedCatalogItemVersion(InventoryPostgresDbContext dbCo
         }
         
         return item.LastKnownVersion;
+    }
+
+    public Task<int?> GetEntityVersionAsync(ArtifactAdded message, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 }
