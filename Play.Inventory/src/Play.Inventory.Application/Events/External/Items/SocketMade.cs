@@ -1,6 +1,6 @@
 ﻿using Play.Common.Abs.Events;
 using Play.Common.Abs.Messaging.Ordering;
 
-namespace Play.Items.Application.Events;
+namespace Play.Inventory.Application.Events.External.Items;
 
 public record SocketMade(Guid ItemId, int Version) : IEvent, IVersionedMessage;

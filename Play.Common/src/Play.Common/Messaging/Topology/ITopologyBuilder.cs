@@ -5,7 +5,7 @@ public interface ITopologyBuilder
     Task CreateTopologyAsync(
         string publisherSource,
         string consumerDestination,
-        string filter,
+        string routingKey,
         TopologyType topologyType,
         CancellationToken cancellationToken);
 }

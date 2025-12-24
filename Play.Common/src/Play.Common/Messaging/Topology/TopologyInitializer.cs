@@ -7,7 +7,7 @@ namespace Play.Common.Messaging.Topology;
 public class TopologyInitializer(ITopologyBuilder topologyBuilder,
     TopologyReadinessAccessor topologyReadinessAccessor) : BackgroundService
 {
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var commandTypes = AppDomain.CurrentDomain.GetAssemblies()
             .SelectMany(a => a.GetTypes())
@@ -19,29 +19,24 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder,
             .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
 
-        topologyReadinessAccessor.MarkTopologyProvisionStart(GetType().Name);
+        // topologyReadinessAccessor.MarkTopologyProvisionStart(GetType().Name);
+
+        var tasks = new List<Task>();
+        tasks.AddRange(commandTypes.Select(c => topologyBuilder.CreateTopologyAsync(
+            c.GetExchangeName(),
+            c.GetQueueName(),
+            "",
+            TopologyType.Direct,
+            stoppingToken)));
         
-        foreach (var commandType in commandTypes)
-        {
-            topologyBuilder.CreateTopologyAsync(
-                commandType.GetExchangeName(),
-                commandType.GetQueueName(),
-                "",
-                TopologyType.Direct, 
-                stoppingToken);
-        }
+        tasks.AddRange(eventTypes.Select(e => topologyBuilder.CreateTopologyAsync(
+            e.GetExchangeName(),
+            e.GetQueueName(),
+            "",
+            TopologyType.PublishSubscribe, 
+            stoppingToken)));
         
-        foreach (var eventType in eventTypes)
-        {
-            topologyBuilder.CreateTopologyAsync(
-                eventType.GetExchangeName(),
-                eventType.GetQueueName(),
-                "",
-                TopologyType.PublishSubscribe, 
-                stoppingToken);
-        }
-        
-        topologyReadinessAccessor.MarkTopologyProvisionEnd(GetType().Name);
-        return Task.CompletedTask;
+        await Task.WhenAll(tasks);
+        topologyReadinessAccessor.MarkTopologyProvisionEnd();
     }
 }

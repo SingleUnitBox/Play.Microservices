@@ -5,22 +5,30 @@ using Play.Inventory.Infra.Postgres;
 
 namespace Play.Inventory.Infra.Messaging.Ordering;
 
-public class GetMessageRelatedCatalogItemVersion(InventoryPostgresDbContext dbContext)
-    : IGetMessageRelatedEntityVersion<ItemCreated>, IGetMessageRelatedEntityVersion<ArtifactAdded>
+public class GetMessageRelatedCatalogItemVersion(InventoryPostgresDbContext dbContext) : IGetMessageRelatedEntityVersion<ItemCreated>,
+        IGetMessageRelatedEntityVersion<ItemUpdated>,
+        IGetMessageRelatedEntityVersion<ArtifactAdded>
+
 {
-    public async Task<int?> GetEntityVersionAsync(ItemCreated message, CancellationToken cancellationToken = default)
+    public Task<int?> GetEntityVersionAsync(ItemCreated message, CancellationToken cancellationToken = default)
     {
-        var item = await dbContext.CatalogItems.SingleOrDefaultAsync(i => i.Id == message.ItemId);
-        if (item is null)
-        {
-            return null;
-        }
-        
-        return item.LastKnownVersion;
+        return GetEntityVersionAsync(message.ItemId, cancellationToken);
     }
 
     public Task<int?> GetEntityVersionAsync(ArtifactAdded message, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        return GetEntityVersionAsync(message.ItemId, cancellationToken);
+    }
+
+    public Task<int?> GetEntityVersionAsync(ItemUpdated message, CancellationToken cancellationToken = default)
+    {
+        return GetEntityVersionAsync(message.ItemId, cancellationToken);
+    }
+
+    private async Task<int?> GetEntityVersionAsync(Guid itemId, CancellationToken cancellationToken)
+    {
+        var item = await dbContext.CatalogItems.SingleOrDefaultAsync(i => i.Id == itemId, cancellationToken);
+
+        return item?.LastKnownVersion;
     }
 }

@@ -38,6 +38,7 @@ public static class Extensions
         services.AddPostgresDb<ItemsPostgresDbContext>();
         services.AddPostgresRepositories();
         
+
         services.AddCommands();
         services.AddQueries();
         services.AddLoggingQueryHandlerDecorator();
@@ -66,8 +67,8 @@ public static class Extensions
                 .AddDeduplication()
                 .AddMessageExecutor()
                 .AddResiliency()
-                .AddOutbox());
-                //.AddTopologyInitializer());
+                .AddOutbox()
+                .AddTopologyInitializer());
                 
                 
         services.AddPlayMicroservice(
@@ -81,6 +82,8 @@ public static class Extensions
                 // config.AddPlayTracing(environment);
             });
         
+        // decorators order logging > retry > executor> handler
+        // registration order handler > exec > retry > logging
         services.AddLoggingCommandHandlerDecorator();
         
         return services;

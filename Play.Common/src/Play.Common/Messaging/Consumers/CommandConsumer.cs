@@ -8,6 +8,7 @@ using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Connection;
 using Play.Common.Messaging.Message;
 using Play.Common.Messaging.Resiliency;
+using Play.Common.Messaging.Topology;
 using Play.Common.Observability.Tracing;
 using Play.Common.Serialization;
 using RabbitMQ.Client;
@@ -23,6 +24,7 @@ internal sealed class CommandConsumer(
     IServiceProvider serviceProvider,
     IExceptionToMessageMapper exceptionToMessageMapper,
     MessagePropertiesAccessor messagePropertiesAccessor,
+    TopologyReadinessAccessor topologyReadinessAccessor,
     ReliableConsuming reliableConsuming)
     : ICommandConsumer
 {
@@ -55,9 +57,9 @@ internal sealed class CommandConsumer(
             }
             
             channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
-
         };
         
+        await EnsureTopologyReadiness(stoppingToken);
         channel.BasicConsume(queueName, false, consumer);
     }
 
@@ -83,7 +85,7 @@ internal sealed class CommandConsumer(
             
             channel.BasicAck(ea.DeliveryTag, multiple: false);
         };
-
+        
         channel.BasicConsume(queue, false, consumer);
         return Task.CompletedTask;
     }
@@ -170,5 +172,14 @@ internal sealed class CommandConsumer(
             links: [new ActivityLink(parentContext)]);
         
         return activity;
+    }
+    
+    private async Task EnsureTopologyReadiness(CancellationToken stoppingToken)
+    {
+        while (topologyReadinessAccessor.TopologyProvisioned is false)
+        {
+            logger.LogInformation("Waiting for topology to be provisioned...");
+            await Task.Delay(1_000, stoppingToken);
+        }
     }
 }

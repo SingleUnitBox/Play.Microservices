@@ -25,7 +25,8 @@ public class Program
                 .AddConnectionProvider()
                 .AddChannelFactory()
                 .AddBusPublisher()
-                .AddResiliency());
+                .AddResiliency()
+                .AddTopologyInitializer());
         builder.Services.AddSerialization();
         builder.Host.UseSerilogWithSeq();
         builder.Services.AddContext();

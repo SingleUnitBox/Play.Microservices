@@ -13,7 +13,7 @@ public class RabbitMqTopologyBuilder(
     public Task CreateTopologyAsync(
         string publisherSource,
         string consumerDestination,
-        string filter,
+        string routkingKey,
         TopologyType topologyType,
         CancellationToken cancellationToken)
     {
@@ -27,10 +27,10 @@ public class RabbitMqTopologyBuilder(
         switch (topologyType)
         {
             case TopologyType.Direct:
-                CreateDirect(publisherSource, consumerDestination, filter, channel);
+                CreateDirect(publisherSource, consumerDestination, routkingKey, channel);
                 break;
             case TopologyType.PublishSubscribe:
-                CreateTopic(publisherSource, consumerDestination, filter, channel);
+                CreateTopic(publisherSource, consumerDestination, routkingKey, channel);
                 break;
             default:
                 throw new NotImplementedException($"{nameof(topologyType)} is not supported");
@@ -39,7 +39,7 @@ public class RabbitMqTopologyBuilder(
         return Task.CompletedTask;
     }
 
-    private void CreateDirect(string publisherSource, string consumerDestination, string filter, IModel channel)
+    private void CreateDirect(string publisherSource, string consumerDestination, string routkingKey, IModel channel)
     {
         if (!string.IsNullOrWhiteSpace(publisherSource))
         {
@@ -52,11 +52,11 @@ public class RabbitMqTopologyBuilder(
 
         if (!string.IsNullOrWhiteSpace(publisherSource))
         {
-            channel.QueueBind(queue: consumerDestination, exchange: publisherSource, routingKey: filter);
+            channel.QueueBind(queue: consumerDestination, exchange: publisherSource, routingKey: routkingKey);
         }
     }
     
-    private void CreateTopic(string publisherSource, string consumerDestination, string filter, IModel channel)
+    private void CreateTopic(string publisherSource, string consumerDestination, string routkingKey, IModel channel)
     {
         logger.LogInformation($"Declaring exchange name of '{publisherSource}'.");
         channel.ExchangeDeclare(publisherSource, ExchangeType.Topic, durable: true);
@@ -65,8 +65,8 @@ public class RabbitMqTopologyBuilder(
         channel.QueueDeclare(consumerDestination, durable: true, exclusive: false, autoDelete: false);
         
         channel.QueueBind(queue: consumerDestination, exchange: publisherSource,
-            routingKey: string.IsNullOrEmpty(filter)
+            routingKey: string.IsNullOrEmpty(routkingKey)
                 ? "#"
-                : filter);
+                : routkingKey);
     }
 }
