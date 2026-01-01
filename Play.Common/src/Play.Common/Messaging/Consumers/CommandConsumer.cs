@@ -59,7 +59,7 @@ internal sealed class CommandConsumer(
             channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);
         };
         
-        await EnsureTopologyReadiness(stoppingToken);
+        await topologyReadinessAccessor.EnsureTopologyReadiness(stoppingToken);
         channel.BasicConsume(queueName, false, consumer);
     }
 
@@ -172,14 +172,5 @@ internal sealed class CommandConsumer(
             links: [new ActivityLink(parentContext)]);
         
         return activity;
-    }
-    
-    private async Task EnsureTopologyReadiness(CancellationToken stoppingToken)
-    {
-        while (topologyReadinessAccessor.TopologyProvisioned is false)
-        {
-            logger.LogInformation("Waiting for topology to be provisioned...");
-            await Task.Delay(1_000, stoppingToken);
-        }
     }
 }

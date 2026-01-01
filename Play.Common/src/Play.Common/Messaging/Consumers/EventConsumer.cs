@@ -61,7 +61,7 @@ internal sealed class EventConsumer(
 
         };
 
-        await EnsureTopologyReadiness(stoppingToken);
+        await topologyReadinessAccessor.EnsureTopologyReadiness(stoppingToken);
         channel.BasicConsume(queueName, false, consumer);
     }
 
@@ -122,15 +122,6 @@ internal sealed class EventConsumer(
         var correlationContextAccessor = serviceProvider.GetRequiredService<ICorrelationContextAccessor>();
         correlationContextAccessor.CorrelationContext = 
             new CorrelationContext.CorrelationContext(Guid.Parse(correlationId), userId);
-    }
-
-    private async Task EnsureTopologyReadiness(CancellationToken stoppingToken)
-    {
-        while (topologyReadinessAccessor.TopologyProvisioned is false)
-        {
-            logger.LogInformation("Waiting for topology to be provisioned...");
-            await Task.Delay(1_000, stoppingToken);
-        }
     }
     
     private void SetMessageProperties(IBasicProperties basicProperties)

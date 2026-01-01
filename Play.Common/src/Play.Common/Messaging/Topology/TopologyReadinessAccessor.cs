@@ -1,33 +1,35 @@
 ﻿using System.Collections.Concurrent;
+using Microsoft.Extensions.Logging;
 
 namespace Play.Common.Messaging.Topology;
 
-public class TopologyReadinessAccessor
+public class TopologyReadinessAccessor(ILogger<TopologyReadinessAccessor> logger)
 {
-    // private readonly ConcurrentDictionary<string, bool> _readinessMap = new();
     private readonly TaskCompletionSource _ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private bool _initializerStarted;
 
-    // public void MarkTopologyProvisionStart(string source)
-    // {
-    //     _readinessMap.TryAdd(source, false);
-    // }
-
-    // public void MarkTopologyProvisionEnd(string source)
-    // {
-    //     _readinessMap[source] = true;
-    // }
-
+    public void MarkTopologyProvisionStart()
+    {
+        _initializerStarted = true;
+    }
+    
     public void MarkTopologyProvisionEnd()
         => _ready.TrySetResult();
-
-    // public bool TopologyProvisioned
-    // {
-    //     get
-    //     {
-    //         return _readinessMap.Values.All(t => t);
-    //     }
-    // }
     
-    public bool TopologyProvisioned
+    private bool TopologyProvisioned
         => _ready.Task.IsCompleted;
+    
+    public async Task EnsureTopologyReadiness(CancellationToken stoppingToken)
+    {
+        if (_initializerStarted is false)
+        {
+            return;
+        }
+
+        while (TopologyProvisioned is false)
+        {
+            logger.LogInformation("Waiting for topology to be provisioned...");
+            await Task.Delay(1_000, stoppingToken);
+        }
+    }
 }

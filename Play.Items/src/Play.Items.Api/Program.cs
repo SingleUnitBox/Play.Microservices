@@ -28,6 +28,15 @@ builder.Services.AddControllers(options => { options.SuppressAsyncSuffixInAction
 builder.Services.AddInfrastructure(builder.Configuration, builder.Environment);
 builder.Host.UseSerilogWithSeq();
 builder.Services.AddSingleton<IMessageToLogTemplateMapper, MessageToLogTemplateMapper>();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 var app = builder.Build();
 
 // app.UseExceptionHandling();
@@ -38,7 +47,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Services.GetRequiredService<ItemsMetrics>();
-app.UseCors("AllowAngularUI");
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseRouting();
 app.UseAuthorization();
