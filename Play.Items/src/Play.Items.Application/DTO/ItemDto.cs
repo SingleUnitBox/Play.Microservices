@@ -10,6 +10,8 @@ public class ItemDto
     public decimal Price { get; set; }
     public DateTimeOffset CreatedDate { get; set; }
 
+    public SocketDto? Socket { get; set; }
+
     public ItemDto(Guid id, string name)
     {
         Id = id;

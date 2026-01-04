@@ -27,7 +27,7 @@ public class GetItemHandler : IQueryHandler<GetItem, ItemDto>
             .FromSqlInterpolated($"SELECT * FROM \"play.items\".\"Items\" WHERE \"Id\" = {query.ItemId}")
             .SingleOrDefaultAsync();
 
-        return item is null
+        var itemDto = item is null
             ? null
             : new ItemDto
             (
@@ -37,5 +37,15 @@ public class GetItemHandler : IQueryHandler<GetItem, ItemDto>
                 item.Price,
                 item.CreatedDate
             );
+
+        if (item.Socket is not null)
+        {
+            itemDto.Socket = new SocketDto
+            {
+                HollowType = item.Socket.HollowType.ToString(),
+            };
+        }
+
+        return itemDto;
     }
 }

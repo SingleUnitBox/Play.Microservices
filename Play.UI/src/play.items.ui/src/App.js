@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Search, Eye, Calendar, DollarSign, AlertCircle, Plus, X } from 'lucide-react';
+import { RefreshCw, Search, Eye, Calendar, DollarSign, AlertCircle, Plus, X, Edit } from 'lucide-react';
 
 const API_BASE_URL = 'http://localhost:5008/play-items';
 
@@ -13,8 +13,13 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSocketModal, setShowSocketModal] = useState(false);
+  const [socketItemId, setSocketItemId] = useState(null);
   const [createLoading, setCreateLoading] = useState(false);
+  const [socketLoading, setSocketLoading] = useState(false);
   const [createError, setCreateError] = useState(null);
+  const [socketError, setSocketError] = useState(null);
+  const [hollowType, setHollowType] = useState('Stone');
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -130,8 +135,7 @@ function App() {
     }).format(price);
   };
 
-  const handleCreateItem = async (e) => {
-    e.preventDefault();
+  const handleCreateItem = async () => {
     setCreateLoading(true);
     setCreateError(null);
 
@@ -155,6 +159,7 @@ function App() {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
+      // Reset form
       setFormData({
         name: '',
         description: '',
@@ -162,14 +167,50 @@ function App() {
         crafterId: '',
         element: ''
       });
+
+      // Close modal
       setShowCreateModal(false);
 
+      // Refresh items list
       await fetchItems();
     } catch (err) {
       console.error('Create error:', err);
       setCreateError(err.message);
     } finally {
       setCreateLoading(false);
+    }
+  };
+
+  const handleAddSocket = async () => {
+    setSocketLoading(true);
+    setSocketError(null);
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/items/${socketItemId}/socket`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          hollowType: hollowType
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      setShowSocketModal(false);
+      setSocketItemId(null);
+      setHollowType('Stone');
+
+      await fetchItems();
+    } catch (err) {
+      console.error('Socket error:', err);
+      setSocketError(err.message);
+    } finally {
+      setSocketLoading(false);
     }
   };
 
@@ -260,6 +301,83 @@ function App() {
               </div>
           )}
 
+          {/* Add Socket Modal */}
+          {showSocketModal && (
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+                <div className="bg-gray-900 rounded-lg max-w-md w-full border border-gray-800">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-6">
+                      <h2 className="text-2xl font-bold text-white">Add Socket</h2>
+                      <button
+                          onClick={() => {
+                            setShowSocketModal(false);
+                            setSocketError(null);
+                            setHollowType('Stone');
+                          }}
+                          className="text-gray-400 hover:text-gray-300"
+                      >
+                        <X className="w-6 h-6" />
+                      </button>
+                    </div>
+
+                    {socketError && (
+                        <div className="mb-4 bg-red-900/50 border border-red-500 rounded-lg p-3">
+                          <p className="text-red-200 text-sm">{socketError}</p>
+                        </div>
+                    )}
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Hollow Type *</label>
+                        <select
+                            value={hollowType}
+                            onChange={(e) => setHollowType(e.target.value)}
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                        >
+                          <option value="Stone">Stone</option>
+                          <option value="Dust">Dust</option>
+                          <option value="Liquid">Liquid</option>
+                        </select>
+                        <p className="text-gray-500 text-xs mt-2">Select the type of hollow for this socket</p>
+                      </div>
+
+                      <div className="flex gap-3 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => {
+                              setShowSocketModal(false);
+                              setSocketError(null);
+                              setHollowType('Stone');
+                            }}
+                            className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleAddSocket}
+                            disabled={socketLoading}
+                            className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          {socketLoading ? (
+                              <>
+                                <RefreshCw className="w-4 h-4 animate-spin" />
+                                Adding...
+                              </>
+                          ) : (
+                              <>
+                                <Plus className="w-4 h-4" />
+                                Add Socket
+                              </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          )}
+
           {/* Loading State */}
           {loading && items.length === 0 && !error && (
               <div className="flex flex-col items-center justify-center py-12 text-gray-400">
@@ -293,13 +411,25 @@ function App() {
                 >
                   <div className="flex justify-between items-start mb-4">
                     <h3 className="text-xl font-bold text-white">{item.name || 'Unnamed Item'}</h3>
-                    <button
-                        onClick={() => setSelectedItem(item)}
-                        className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                        title="View Details"
-                    >
-                      <Eye className="w-5 h-5 text-gray-400" />
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                          onClick={() => {
+                            setSocketItemId(item.id);
+                            setShowSocketModal(true);
+                          }}
+                          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                          title="Add/Edit Socket"
+                      >
+                        <Edit className="w-5 h-5 text-gray-400" />
+                      </button>
+                      <button
+                          onClick={() => setSelectedItem(item)}
+                          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                          title="View Details"
+                      >
+                        <Eye className="w-5 h-5 text-gray-400" />
+                      </button>
+                    </div>
                   </div>
 
                   <p className="text-gray-400 text-sm mb-4 line-clamp-2">
@@ -363,6 +493,30 @@ function App() {
                           <p className="text-white mt-1">{formatDate(selectedItem.createdDate)}</p>
                         </div>
                       </div>
+
+                      {selectedItem.socket && (
+                          <div className="bg-black border border-gray-800 rounded-lg p-4">
+                            <label className="text-gray-400 text-sm font-semibold block mb-2">Socket</label>
+                            <div className="space-y-2">
+                              <div className="flex justify-between">
+                                <span className="text-gray-400 text-sm">Hollow Type:</span>
+                                <span className="text-white font-semibold">{selectedItem.socket.hollowType || 'N/A'}</span>
+                              </div>
+                              {selectedItem.socket.artifact && (
+                                  <div className="flex justify-between">
+                                    <span className="text-gray-400 text-sm">Artifact:</span>
+                                    <span className="text-purple-400 font-semibold">{selectedItem.socket.artifact.name || 'N/A'}</span>
+                                  </div>
+                              )}
+                            </div>
+                          </div>
+                      )}
+
+                      {!selectedItem.socket && (
+                          <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                            <p className="text-gray-400 text-sm">No socket added yet</p>
+                          </div>
+                      )}
 
                       <div>
                         <label className="text-gray-400 text-sm font-semibold">Item ID</label>
