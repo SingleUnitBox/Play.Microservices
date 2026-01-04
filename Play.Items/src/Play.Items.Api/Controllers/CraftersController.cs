@@ -12,6 +12,10 @@ public class CraftersController(
     IQueryDispatcher queryDispatcher,
     ICommandDispatcher commandDispatcher) : BaseController
 {
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<CrafterDto>>> GetCrafters()
+        => Ok(await queryDispatcher.QueryAsync(new GetCrafters()));
+    
     [HttpGet("{crafterId:guid}")]
     public async Task<ActionResult<CrafterDto>> GetCrafter(Guid crafterId)
         => OkOrNotFound(await queryDispatcher.QueryAsync(new GetCrafter(crafterId)));

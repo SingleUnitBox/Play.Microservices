@@ -36,15 +36,11 @@ public class Program
             {
                 config.AddPlayTracing(builder.Environment);
             });
-        var app = builder.Build();
         
+        var app = builder.Build();
         app.UseRouting();
         app.MapReverseProxy();
-        // app.MapGet("publishCreateItem", async ([FromServices] CommandPublisher publisher) =>
-        // {
-        //     await publisher.PublishCommand(new CreateItem("Sword", "Good damage", 100.2m));
-        // });
-
+        
         // Play.Items
         // this is async, goes to RabbitMq
         app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
@@ -57,6 +53,7 @@ public class Program
 
         // Play.Inventory
         app.PublishCommand<PurchaseItem>("play-inventory/items", HttpMethod.Post);
+        
         app.Run();
     }
 }

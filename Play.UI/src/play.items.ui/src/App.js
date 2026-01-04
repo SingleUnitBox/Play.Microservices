@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { RefreshCw, Search, Eye, Calendar, DollarSign, AlertCircle, Plus, X } from 'lucide-react';
 
-const API_BASE_URL = 'http://localhost:5002/items';
+const API_BASE_URL = 'http://localhost:5008/play-items';
 
 function App() {
   const [items, setItems] = useState([]);
+  const [crafters, setCrafters] = useState([]);
+  const [elements, setElements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,7 +29,7 @@ function App() {
       setError(null);
 
       const timestamp = new Date().getTime();
-      const url = `${API_BASE_URL}?_t=${timestamp}`;
+      const url = `${API_BASE_URL}/items?_t=${timestamp}`;
       console.log('Fetching from:', url);
 
       const response = await fetch(url, {
@@ -56,8 +58,50 @@ function App() {
     }
   };
 
+  const fetchCrafters = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/crafters`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Crafters:', data);
+        setCrafters(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error('Error fetching crafters:', err);
+    }
+  };
+
+  const fetchElements = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/elements`, {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Elements:', data);
+        setElements(Array.isArray(data) ? data : []);
+      }
+    } catch (err) {
+      console.error('Error fetching elements:', err);
+    }
+  };
+
   useEffect(() => {
     fetchItems();
+    fetchCrafters();
+    fetchElements();
   }, []);
 
   useEffect(() => {
@@ -92,7 +136,7 @@ function App() {
     setCreateError(null);
 
     try {
-      const response = await fetch(API_BASE_URL, {
+      const response = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
         mode: 'cors',
         headers: {
@@ -111,7 +155,6 @@ function App() {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      // Reset form and close modal
       setFormData({
         name: '',
         description: '',
@@ -121,7 +164,6 @@ function App() {
       });
       setShowCreateModal(false);
 
-      // Refresh items list
       await fetchItems();
     } catch (err) {
       console.error('Create error:', err);
@@ -132,31 +174,31 @@ function App() {
   };
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen bg-black">
         <div className="container mx-auto px-4 py-8">
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-white mb-2">
               Play.Items Admin Dashboard
             </h1>
-            <p className="text-purple-300">Manage and monitor game items in real-time</p>
-            <div className="mt-2 text-sm text-purple-400">
-              API: <code className="bg-slate-800 px-2 py-1 rounded">{API_BASE_URL}</code>
+            <p className="text-gray-400">Manage and monitor game items in real-time</p>
+            <div className="mt-2 text-sm text-gray-500">
+              API: <code className="bg-gray-900 px-2 py-1 rounded border border-gray-800">{API_BASE_URL}/items</code>
             </div>
           </div>
 
           {/* Controls */}
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-6 mb-6 border border-purple-500/20">
+          <div className="bg-gray-900 rounded-lg p-6 mb-6 border border-gray-800">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
               {/* Search */}
               <div className="relative flex-1 w-full md:max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-purple-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
                 <input
                     type="text"
                     placeholder="Search items..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                    className="w-full pl-10 pr-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
                 />
               </div>
 
@@ -164,18 +206,18 @@ function App() {
               <div className="flex gap-3 items-center">
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
                 >
                   <Plus className="w-4 h-4" />
                   Create Item
                 </button>
 
-                <label className="flex items-center gap-2 text-purple-300 cursor-pointer">
+                <label className="flex items-center gap-2 text-gray-400 cursor-pointer">
                   <input
                       type="checkbox"
                       checked={autoRefresh}
                       onChange={(e) => setAutoRefresh(e.target.checked)}
-                      className="w-4 h-4 rounded border-purple-500 bg-slate-700"
+                      className="w-4 h-4 rounded border-gray-700 bg-black"
                   />
                   <span className="text-sm">Auto-refresh (5s)</span>
                 </label>
@@ -183,7 +225,7 @@ function App() {
                 <button
                     onClick={fetchItems}
                     disabled={loading}
-                    className="flex items-center gap-2 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                   Refresh
@@ -193,10 +235,10 @@ function App() {
 
             {/* Stats */}
             <div className="mt-4 flex gap-4 text-sm">
-              <div className="text-purple-300">
+              <div className="text-gray-400">
                 Total Items: <span className="text-white font-semibold">{items.length}</span>
               </div>
-              <div className="text-purple-300">
+              <div className="text-gray-400">
                 Filtered: <span className="text-white font-semibold">{filteredItems.length}</span>
               </div>
               <div className={`${loading ? 'text-yellow-400' : 'text-green-400'}`}>
@@ -213,14 +255,130 @@ function App() {
                   <div>
                     <h3 className="text-red-200 font-semibold mb-1">Connection Error</h3>
                     <p className="text-red-300 text-sm mb-2">{error}</p>
-                    <div className="text-xs text-red-400 space-y-1">
-                      <p>💡 Common fixes:</p>
-                      <ul className="list-disc list-inside ml-2">
-                        <li>Check if API is running on port 5002</li>
-                        <li>Add CORS policy to allow browser requests</li>
-                        <li>Verify endpoint is GET /items</li>
-                        <li>Check browser console (F12) for details</li>
-                      </ul>
+                  </div>
+                </div>
+              </div>
+          )}
+
+          {/* Loading State */}
+          {loading && items.length === 0 && !error && (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                <RefreshCw className="w-8 h-8 mb-3 animate-spin" />
+                <p>Loading items...</p>
+              </div>
+          )}
+
+          {/* Empty State */}
+          {!loading && !error && filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  {searchTerm
+                      ? '🔍 No items match your search.'
+                      : '📦 No items found in database.'}
+                </div>
+                {!searchTerm && (
+                    <p className="text-gray-500 text-sm">
+                      Create an item by clicking the "Create Item" button above!
+                    </p>
+                )}
+              </div>
+          )}
+
+          {/* Items Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+                <div
+                    key={item.id}
+                    className="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-gray-700 transition-all"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-white">{item.name || 'Unnamed Item'}</h3>
+                    <button
+                        onClick={() => setSelectedItem(item)}
+                        className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                        title="View Details"
+                    >
+                      <Eye className="w-5 h-5 text-gray-400" />
+                    </button>
+                  </div>
+
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
+                    {item.description || 'No description'}
+                  </p>
+
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <DollarSign className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400 font-semibold">
+                    {formatPrice(item.price || 0)}
+                  </span>
+                    </div>
+
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(item.createdDate)}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-4 border-t border-gray-800">
+                    <code className="text-xs text-gray-500 break-all">
+                      ID: {item.id}
+                    </code>
+                  </div>
+                </div>
+            ))}
+          </div>
+
+          {/* Item Details Modal */}
+          {selectedItem && (
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+                <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-6">
+                      <h2 className="text-2xl font-bold text-white">{selectedItem.name}</h2>
+                      <button
+                          onClick={() => setSelectedItem(null)}
+                          className="text-gray-400 hover:text-gray-300 text-2xl leading-none"
+                      >
+                        <X className="w-6 h-6" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-gray-400 text-sm font-semibold">Description</label>
+                        <p className="text-white mt-1">{selectedItem.description || 'No description'}</p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-gray-400 text-sm font-semibold">Price</label>
+                          <p className="text-green-400 text-xl font-bold mt-1">
+                            {formatPrice(selectedItem.price || 0)}
+                          </p>
+                        </div>
+
+                        <div>
+                          <label className="text-gray-400 text-sm font-semibold">Created Date</label>
+                          <p className="text-white mt-1">{formatDate(selectedItem.createdDate)}</p>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-gray-400 text-sm font-semibold">Item ID</label>
+                        <code className="block text-gray-500 text-sm mt-1 break-all bg-black p-2 rounded border border-gray-800">
+                          {selectedItem.id}
+                        </code>
+                      </div>
+                    </div>
+
+                    <div className="mt-6">
+                      <button
+                          onClick={() => setSelectedItem(null)}
+                          className="w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                      >
+                        Close
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -229,8 +387,8 @@ function App() {
 
           {/* Create Item Modal */}
           {showCreateModal && (
-              <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                <div className="bg-slate-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-purple-500/30">
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+                <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-6">
                       <h2 className="text-2xl font-bold text-white">Create New Item</h2>
@@ -239,7 +397,7 @@ function App() {
                             setShowCreateModal(false);
                             setCreateError(null);
                           }}
-                          className="text-purple-400 hover:text-purple-300"
+                          className="text-gray-400 hover:text-gray-300"
                       >
                         <X className="w-6 h-6" />
                       </button>
@@ -251,39 +409,33 @@ function App() {
                         </div>
                     )}
 
-                    <form onSubmit={handleCreateItem} className="space-y-4">
+                    <div className="space-y-4">
                       <div>
-                        <label className="block text-purple-400 text-sm font-semibold mb-2">
-                          Name *
-                        </label>
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Name *</label>
                         <input
                             type="text"
                             required
                             value={formData.name}
                             onChange={(e) => setFormData({...formData, name: e.target.value})}
-                            className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
                             placeholder="Enter item name"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-purple-400 text-sm font-semibold mb-2">
-                          Description *
-                        </label>
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Description *</label>
                         <textarea
                             required
                             value={formData.description}
                             onChange={(e) => setFormData({...formData, description: e.target.value})}
                             rows="3"
-                            className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
                             placeholder="Enter item description"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-purple-400 text-sm font-semibold mb-2">
-                          Price *
-                        </label>
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Price *</label>
                         <input
                             type="number"
                             step="0.01"
@@ -291,38 +443,43 @@ function App() {
                             required
                             value={formData.price}
                             onChange={(e) => setFormData({...formData, price: e.target.value})}
-                            className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
                             placeholder="0.00"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-purple-400 text-sm font-semibold mb-2">
-                          Crafter ID *
-                        </label>
-                        <input
-                            type="text"
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Crafter *</label>
+                        <select
                             required
                             value={formData.crafterId}
                             onChange={(e) => setFormData({...formData, crafterId: e.target.value})}
-                            className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                            placeholder="Enter crafter GUID"
-                        />
-                        <p className="text-purple-400/60 text-xs mt-1">Example: d83935da-7678-4161-994c-586962868980</p>
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                        >
+                          <option value="">Select a crafter</option>
+                          {crafters.map((crafter) => (
+                              <option key={crafter.crafterId} value={crafter.crafterId}>
+                                {crafter.crafterName}
+                              </option>
+                          ))}
+                        </select>
                       </div>
 
                       <div>
-                        <label className="block text-purple-400 text-sm font-semibold mb-2">
-                          Element *
-                        </label>
-                        <input
-                            type="text"
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Element *</label>
+                        <select
                             required
                             value={formData.element}
                             onChange={(e) => setFormData({...formData, element: e.target.value})}
-                            className="w-full px-4 py-2 bg-slate-700 text-white rounded-lg border border-purple-500/30 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-                            placeholder="Enter element (e.g., Fire, Water, Earth)"
-                        />
+                            className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                        >
+                          <option value="">Select an element</option>
+                          {elements.map((element) => (
+                              <option key={element.elementId || element.name} value={element.name}>
+                                {element.name}
+                              </option>
+                          ))}
+                        </select>
                       </div>
 
                       <div className="flex gap-3 pt-4">
@@ -332,14 +489,15 @@ function App() {
                               setShowCreateModal(false);
                               setCreateError(null);
                             }}
-                            className="flex-1 px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+                            className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
                         >
                           Cancel
                         </button>
                         <button
-                            type="submit"
+                            type="button"
+                            onClick={handleCreateItem}
                             disabled={createLoading}
-                            className="flex-1 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                            className="flex-1 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                         >
                           {createLoading ? (
                               <>
@@ -354,131 +512,6 @@ function App() {
                           )}
                         </button>
                       </div>
-                    </form>
-                  </div>
-                </div>
-              </div>
-          )}
-
-          {/* Loading State */}
-          {loading && items.length === 0 && !error && (
-              <div className="flex flex-col items-center justify-center py-12 text-purple-300">
-                <RefreshCw className="w-8 h-8 mb-3 animate-spin" />
-                <p>Loading items...</p>
-              </div>
-          )}
-
-          {/* Empty State */}
-          {!loading && !error && filteredItems.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-purple-300 mb-4">
-                  {searchTerm
-                      ? '🔍 No items match your search.'
-                      : '📦 No items found in database.'}
-                </div>
-                {!searchTerm && (
-                    <p className="text-purple-400 text-sm">
-                      Create an item by sending a CreateItem command through RabbitMQ!
-                    </p>
-                )}
-              </div>
-          )}
-
-          {/* Items Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-                <div
-                    key={item.id}
-                    className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-6 border border-purple-500/20 hover:border-purple-500/50 transition-all hover:shadow-lg hover:shadow-purple-500/20"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-white">{item.name || 'Unnamed Item'}</h3>
-                    <button
-                        onClick={() => setSelectedItem(item)}
-                        className="p-2 hover:bg-purple-600/20 rounded-lg transition-colors"
-                        title="View Details"
-                    >
-                      <Eye className="w-5 h-5 text-purple-400" />
-                    </button>
-                  </div>
-
-                  <p className="text-purple-200 text-sm mb-4 line-clamp-2">
-                    {item.description || 'No description'}
-                  </p>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <DollarSign className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400 font-semibold">
-                    {formatPrice(item.price || 0)}
-                  </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-purple-300">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatDate(item.createdDate)}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-purple-500/20">
-                    <code className="text-xs text-purple-400 break-all">
-                      ID: {item.id}
-                    </code>
-                  </div>
-                </div>
-            ))}
-          </div>
-
-          {/* Item Details Modal */}
-          {selectedItem && (
-              <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-                <div className="bg-slate-800 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-purple-500/30">
-                  <div className="p-6">
-                    <div className="flex justify-between items-start mb-6">
-                      <h2 className="text-2xl font-bold text-white">{selectedItem.name}</h2>
-                      <button
-                          onClick={() => setSelectedItem(null)}
-                          className="text-purple-400 hover:text-purple-300 text-2xl leading-none"
-                      >
-                        ×
-                      </button>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-purple-400 text-sm font-semibold">Description</label>
-                        <p className="text-white mt-1">{selectedItem.description || 'No description'}</p>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-purple-400 text-sm font-semibold">Price</label>
-                          <p className="text-green-400 text-xl font-bold mt-1">
-                            {formatPrice(selectedItem.price || 0)}
-                          </p>
-                        </div>
-
-                        <div>
-                          <label className="text-purple-400 text-sm font-semibold">Created Date</label>
-                          <p className="text-white mt-1">{formatDate(selectedItem.createdDate)}</p>
-                        </div>
-                      </div>
-
-                      <div>
-                        <label className="text-purple-400 text-sm font-semibold">Item ID</label>
-                        <code className="block text-purple-300 text-sm mt-1 break-all bg-slate-900/50 p-2 rounded">
-                          {selectedItem.id}
-                        </code>
-                      </div>
-                    </div>
-
-                    <div className="mt-6">
-                      <button
-                          onClick={() => setSelectedItem(null)}
-                          className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
-                      >
-                        Close
-                      </button>
                     </div>
                   </div>
                 </div>
