@@ -12,7 +12,7 @@ services:
       - mongodbdata:/data/db
   
   rabbitmq:
-    image: rabbitmq:3.13.6-management
+    image: rabbitmq:4.1.4-management
     container_name: rabbitmq
     ports:
       - 5672:5672
@@ -22,12 +22,14 @@ services:
     hostname: rabbitmq
 
   postgres:
-    image: postgres
+    image: postgis/postgis:16-3.4
     container_name: postgres
     ports: 
       - 5432:5432
     environment:
       - POSTGRES_PASSWORD=czcz
+      - POSTGRES_PASSWORD=czcz
+      - POSTGRES_DB=Play.World.Db
     volumes:
       - postgresdbdata:/var/lib/postgresql/data
 

@@ -28,7 +28,7 @@ public static class Extensions
         
         return services;
     }
-
+    
     public static IServiceCollection AddPostgresUnitOfWork<TUnitOfWork, TImplementation>(this IServiceCollection services)
     where TUnitOfWork : IUnitOfWork where TImplementation : TUnitOfWork
     {
