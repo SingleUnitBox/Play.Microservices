@@ -22,8 +22,9 @@ public class ItemLocation : AggregateRoot
     
     public static ItemLocation Create(Guid itemId, string itemName, Coordinate position)
     {
-        var location = new ItemLocation
+        var location = new ItemLocation()
         {
+            Id = Guid.NewGuid(),
             ItemId = itemId,
             ItemName = itemName,
             Position = position,

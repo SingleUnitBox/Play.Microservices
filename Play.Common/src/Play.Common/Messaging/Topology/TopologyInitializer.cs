@@ -19,8 +19,6 @@ public class TopologyInitializer(ITopologyBuilder topologyBuilder,
             .Where(t => typeof(IEvent).IsAssignableFrom(t) && !t.IsInterface)
             .ToList();
 
-        // topologyReadinessAccessor.MarkTopologyProvisionStart(GetType().Name);
-
         var tasks = new List<Task>();
         tasks.AddRange(commandTypes.Select(c => topologyBuilder.CreateTopologyAsync(
             c.GetExchangeName(),
