@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Play.World.Infrastructure.Postgres;
 namespace Play.World.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(WorldPostgresDbContext))]
-    partial class WorldPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260107224146_FixCoordinateConfiguration")]
+    partial class FixCoordinateConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,26 +69,12 @@ namespace Play.World.Infrastructure.Postgres.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<Polygon>("Boundary")
-                        .IsRequired()
-                        .HasColumnType("geometry(Polygon, 4326)")
-                        .HasColumnName("Boundary");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
                     b.Property<int>("Version")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Boundary");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Boundary"), "gist");
-
-                    b.ToTable("Zones", "play.world");
+                    b.ToTable("Zone", "play.world");
                 });
 #pragma warning restore 612, 618
         }

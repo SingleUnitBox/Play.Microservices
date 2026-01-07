@@ -22,7 +22,8 @@ public class ItemLocationConfiguration : IEntityTypeConfiguration<ItemLocation>
         // });
         
         builder.Property(x => x.Position)
-            .HasConversion(coordinate => new Point(coordinate.Longitude, coordinate.Latitude),
+            .HasConversion(
+                coordinate => new Point(coordinate.Longitude, coordinate.Latitude) { SRID = 4326 },
                 point => Coordinate.Create(point.X, point.Y))
             .HasColumnName("position")
             .HasColumnType("geometry(Point, 4326)");

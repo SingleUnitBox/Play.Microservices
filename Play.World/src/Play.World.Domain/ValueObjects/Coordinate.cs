@@ -5,6 +5,11 @@ public class Coordinate
     public double Longitude { get; private set; }
     public double Latitude { get; private set; }
 
+    private Coordinate()
+    {
+        
+    }
+    
     private Coordinate(double longitude, double latitude)
     {
         if (longitude < -180 || longitude > 180)

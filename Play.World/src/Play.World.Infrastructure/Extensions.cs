@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
+using Play.Common.Context;
 using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
@@ -23,6 +24,7 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddContext();
         services.AddCors(options =>
         {
             options.AddPolicy("AllowAll", policy =>
@@ -53,6 +55,7 @@ public static class Extensions
                 .AddBusPublisher()
                 .AddEventConsumer()
                 .AddMessageExecutor()
+                .AddResiliency()
                 .AddTopologyInitializer();
         });
 

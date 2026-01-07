@@ -1,5 +1,52 @@
 import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import { RefreshCw, Download, MapPin } from 'lucide-react';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix Leaflet icon issue with React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom icons for available and collected items
+const availableIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const collectedIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+// Component to fit map bounds to all markers
+function FitBounds({ items }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (items.length > 0) {
+      const bounds = items.map(item => [
+        item.position.latitude,
+        item.position.longitude
+      ]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+    }
+  }, [items, map]);
+
+  return null;
+}
 
 const API_BASE_URL = 'http://localhost:5008/play-world';
 
@@ -14,7 +61,10 @@ export default function PlayWorld() {
     try {
       const response = await fetch(`${API_BASE_URL}/itemLocations`);
       const data = await response.json();
-      setItems(data.items || []);
+
+      // Handle the response structure
+      const itemsData = data.itemLocations || data.items || data || [];
+      setItems(itemsData);
       setZones(data.zones || []);
 
       // Generate GeoJSON
@@ -104,59 +154,69 @@ export default function PlayWorld() {
           </div>
         </div>
 
-        {/* Map Visualization */}
+        {/* Leaflet Map */}
         <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden mb-6">
           <div className="bg-gray-800 px-4 py-2 border-b border-gray-700">
             <h3 className="font-semibold">Interactive World Map</h3>
             <p className="text-xs text-gray-400 mt-1">
-              Showing item locations with coordinates (Lat, Lon)
+              Click on markers to see item details
             </p>
           </div>
 
-          {/* Simple Map Visualization */}
-          <div className="relative h-96 bg-gradient-to-br from-gray-800 to-gray-900">
-            <svg className="absolute inset-0 w-full h-full">
-              {/* Grid */}
-              <defs>
-                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
+          <div className="h-[600px]">
+            <MapContainer
+                center={[20, 0]}
+                zoom={2}
+                style={{ height: '100%', width: '100%' }}
+                className="z-0"
+            >
+              <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
 
-              {/* Items as circles */}
-              {items.map((item) => {
-                // Convert lat/lon to percentage positions
-                const x = ((item.position.longitude + 180) / 360) * 100;
-                const y = ((90 - item.position.latitude) / 180) * 100;
-                return (
-                    <g key={item.itemId}>
-                      <circle
-                          cx={`${x}%`}
-                          cy={`${y}%`}
-                          r="6"
-                          fill={item.isCollected ? '#666' : '#10b981'}
-                          stroke="#fff"
-                          strokeWidth="2"
-                      />
-                      <text
-                          x={`${x}%`}
-                          y={`${y - 2}%`}
-                          fontSize="11"
-                          fill="#fff"
-                          textAnchor="middle"
-                          fontWeight="bold"
-                      >
-                        {item.itemName}
-                      </text>
-                    </g>
-                );
-              })}
-            </svg>
+              {items.map((item) => (
+                  <Marker
+                      key={item.itemId}
+                      position={[item.position.latitude, item.position.longitude]}
+                      icon={item.isCollected ? collectedIcon : availableIcon}
+                  >
+                    <Popup>
+                      <div className="text-gray-900">
+                        <h3 className="font-bold text-lg mb-2">{item.itemName}</h3>
+                        <div className="space-y-1 text-sm">
+                          <div>
+                            <strong>Status:</strong>{' '}
+                            <span className={item.isCollected ? 'text-gray-600' : 'text-green-600'}>
+                          {item.isCollected ? 'Collected' : 'Available'}
+                        </span>
+                          </div>
+                          <div>
+                            <strong>Position:</strong><br/>
+                            Lat: {item.position.latitude.toFixed(4)}<br/>
+                            Lon: {item.position.longitude.toFixed(4)}
+                          </div>
+                          <div>
+                            <strong>Dropped:</strong><br/>
+                            {new Date(item.droppedAt).toLocaleString()}
+                          </div>
+                          <div className="text-xs text-gray-500 mt-2">
+                            ID: {item.itemId}
+                          </div>
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+              ))}
 
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 bg-black/80 px-3 py-2 rounded text-xs">
-              <div className="flex items-center gap-2 mb-1">
+              {items.length > 0 && <FitBounds items={items} />}
+            </MapContainer>
+          </div>
+
+          {/* Legend */}
+          <div className="bg-gray-800 px-4 py-2 border-t border-gray-700">
+            <div className="flex items-center gap-4 text-xs">
+              <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
                 <span>Available Item</span>
               </div>
@@ -164,12 +224,10 @@ export default function PlayWorld() {
                 <div className="w-3 h-3 rounded-full bg-gray-600"></div>
                 <span>Collected Item</span>
               </div>
-            </div>
-
-            {/* Info */}
-            <div className="absolute top-4 right-4 bg-black/80 px-3 py-2 rounded text-xs">
-              <MapPin className="w-4 h-4 inline mr-1" />
-              <span>{items.length} items tracked</span>
+              <div className="ml-auto text-gray-400">
+                <MapPin className="w-4 h-4 inline mr-1" />
+                {items.length} items on map
+              </div>
             </div>
           </div>
         </div>

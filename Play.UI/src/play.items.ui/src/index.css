@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Leaflet overrides for dark theme */
+.leaflet-container {
+  background: #1f2937;
+}
+
+.leaflet-popup-content-wrapper {
+  background: white;
+  color: black;
+}
+
+.leaflet-popup-tip {
+  background: white;
+}

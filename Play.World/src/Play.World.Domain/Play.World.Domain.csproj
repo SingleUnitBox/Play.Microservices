@@ -10,8 +10,4 @@
       <ProjectReference Include="..\..\..\Play.Common\src\Play.Common.Abs\Play.Common.Abs.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Exceptions\" />
-    </ItemGroup>
-
 </Project>
