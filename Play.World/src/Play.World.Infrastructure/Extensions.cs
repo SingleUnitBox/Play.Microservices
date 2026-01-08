@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
+using Play.Common.Commands;
 using Play.Common.Context;
 using Play.Common.Events;
 using Play.Common.Exceptions;
@@ -42,9 +43,11 @@ public static class Extensions
                 configuration.GetSettings<PostgresSettings>(nameof(PostgresSettings)).ConnectionString,
                 o => o.UseNetTopologySuite()));
         services.AddScoped<IItemLocationsRepository, ItemLocationRepository>();
+        services.AddScoped<IZoneRepository, ZoneRepository>();
         
         services.AddEvents();
         services.AddQueries();
+        services.AddCommands();
         // services.AddLoggingEventHandlerDecorator();
         
         services.AddRabbitMq(configuration, builder =>
@@ -54,6 +57,7 @@ public static class Extensions
                 .AddConnectionProvider()
                 .AddBusPublisher()
                 .AddEventConsumer()
+                .AddCommandConsumer()
                 .AddMessageExecutor()
                 .AddResiliency()
                 .AddTopologyInitializer();

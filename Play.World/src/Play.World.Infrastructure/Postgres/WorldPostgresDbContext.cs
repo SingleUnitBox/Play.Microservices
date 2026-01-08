@@ -23,6 +23,6 @@ public class WorldPostgresDbContext : DbContext
         //ignore value objects so they are not treated as entities
         modelBuilder.Ignore<Coordinate>();
         modelBuilder.Ignore<ZoneBoundary>();
-        modelBuilder.Ignore<ZoneType>();
+        // modelBuilder.Ignore<ZoneType>();
     }
 }

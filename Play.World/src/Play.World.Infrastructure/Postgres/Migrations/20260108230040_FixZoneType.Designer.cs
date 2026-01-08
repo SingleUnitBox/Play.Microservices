@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Play.World.Infrastructure.Postgres;
 namespace Play.World.Infrastructure.Postgres.Migrations
 {
     [DbContext(typeof(WorldPostgresDbContext))]
-    partial class WorldPostgresDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260108230040_FixZoneType")]
+    partial class FixZoneType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 using Play.APIGateway.Commands.Inventory;
 using Play.APIGateway.Commands.Items;
+using Play.APIGateway.Commands.World;
 using Play.Common;
 using Play.Common.Auth;
 using Play.Common.Context;
@@ -48,6 +49,7 @@ public class Program
         app.PublishCommand<EmbedArtifact>("play-items/items/{itemId}/artifact", HttpMethod.Post, ("itemId", "ItemId"));
         app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
         app.PublishCommand<CreateCrafter>("play-items/crafters", HttpMethod.Post);
+        app.PublishCommand<CreateZone>("play-world/zones", HttpMethod.Post);
         app.PublishDeleteCommand<DeleteItem>("play-items/items");
         app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
 

@@ -1,3 +1,5 @@
+using Play.World.Domain.Entities;
+
 namespace Play.World.Application.DTO;
 
 public class ItemLocationDto

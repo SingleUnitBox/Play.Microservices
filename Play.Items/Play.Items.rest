@@ -145,6 +145,31 @@ Content-Type: application/json
   "quantity": 1
 }
 
+
+### PLAY-WORLD
+### Create zone
+POST {{url}}/play-world/zones
+Content-Type: application/json
+
+{
+  "boundary": [
+    {
+      "longitude": 15.0,
+      "latitude": 10
+    },
+    {
+      "longitude": 30.0,
+      "latitude": 10
+    },
+    {
+      "longitude": 22,
+      "latitude": 5
+    }
+  ],
+  "zoneName": "Dark Forest",
+  "zoneType": "Forest"
+}
+
 ###
 POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=pending
 
@@ -153,3 +178,6 @@ POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=c
 
 ###
 POST http://localhost:5010/trigger/52e9848b-bb0c-4d85-8d67-b32768d6de8e?status=rejected
+
+###
+GET http://localhost:5010/itemLocations

@@ -10,13 +10,13 @@ public class Zone : AggregateRoot
     public ZoneBoundary Boundary { get; private set; }
     
     public ZoneType Type { get; private set; }
-
+    
     private Zone()
     {
-        
+        Id = Guid.NewGuid();
     }
-    
-    public Zone(string name, ZoneBoundary boundary, ZoneType type)
+
+    public Zone(string name, ZoneBoundary boundary, ZoneType type) : this()
     {
         Name = name;
         Boundary = boundary;

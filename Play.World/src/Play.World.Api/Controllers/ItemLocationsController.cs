@@ -17,7 +17,7 @@ namespace Play.World.Api.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MapDataDto>>> GetMapDataAsync()
+        public async Task<ActionResult<MapDataDto>> GetMapDataAsync()
         {
             var mapDataDto = await _queryDispatcher.QueryAsync(new GetMapData());
             return Ok(mapDataDto);

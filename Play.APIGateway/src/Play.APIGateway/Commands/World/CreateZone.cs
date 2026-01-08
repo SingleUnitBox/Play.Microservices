@@ -1,6 +1,5 @@
 ﻿using Play.Common.Abs.Commands;
-using Play.World.Application.DTO;
 
-namespace Play.World.Application.Commands;
+namespace Play.APIGateway.Commands.World;
 
 public record CreateZone(IEnumerable<CoordinateDto> Boundary, string ZoneName, string ZoneType) : ICommand;
