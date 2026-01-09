@@ -12,21 +12,23 @@ public class GetItemsInZoneHandler(
 {
     public async Task<IEnumerable<ItemLocationDto>> QueryAsync(GetItemsInZone query)
     {
-        var zone = await zoneRepository.GetByNameAsync(query.ZoneName);
+        var zone = await zoneRepository.GetByIdAsync(query.ZoneId);
         if (zone is null)
         {
             return Enumerable.Empty<ItemLocationDto>();
         }
         
-        return (await dbContext.ItemLocations
+        var items = await dbContext.ItemLocations
             .FromSqlInterpolated($@"
                 SELECT il.* 
                 FROM ""play.world"".""ItemLocations"" il
-                JOIN ""play.world"".""Zones"" z ON z.""Name"" = {query.ZoneName}
+                JOIN ""play.world"".""Zones"" z ON z.""Name"" = {zone.Name}
                 WHERE ST_Contains(z.""Boundary"", il.""Position"")
                 AND il.""IsCollected"" = false
             ")
-            .ToListAsync())
+            .ToListAsync();
+        
+        return items
             .Select(il => new ItemLocationDto()
             {
                 ItemId = il.ItemId,

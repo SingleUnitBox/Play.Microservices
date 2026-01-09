@@ -14,6 +14,7 @@ public class GetZonesHandler(WorldPostgresDbContext dbContext) : IQueryHandler<G
 
         return zones.Select(z => new ZoneDto
         {
+            ZoneId = z.Id,
             Name = z.Name,
             Boundary = new ZoneBoundaryDto
             {

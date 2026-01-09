@@ -3,4 +3,4 @@ using Play.World.Application.DTO;
 
 namespace Play.World.Application.Queries;
 
-public record GetItemsInZone(string ZoneName) : IQuery<IEnumerable<ItemLocationDto>>;
+public record GetItemsInZone(Guid ZoneId) : IQuery<IEnumerable<ItemLocationDto>>;

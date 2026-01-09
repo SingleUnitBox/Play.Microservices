@@ -14,4 +14,11 @@ public class ZonesController(IQueryDispatcher queryDispatcher) : BaseController
         var zones = await queryDispatcher.QueryAsync(new GetZones());
         return Ok(zones);
     }
+
+    [HttpGet("{zoneId}/items")]
+    public async Task<ActionResult<IEnumerable<ZoneDto>>> GetItemsInZoneAsync(Guid zoneId)
+    {
+        var items = await queryDispatcher.QueryAsync(new GetItemsInZone(zoneId));
+        return Ok(items);
+    }
 }

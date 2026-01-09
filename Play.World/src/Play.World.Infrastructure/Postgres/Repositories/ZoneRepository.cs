@@ -25,4 +25,9 @@ public class ZoneRepository : IZoneRepository
     {
         return _zones.SingleOrDefaultAsync(z => z.Name == zoneName);
     }
+
+    public Task<Zone> GetByIdAsync(Guid zoneId)
+    {
+        return _zones.SingleOrDefaultAsync(z => z.Id == zoneId);
+    }
 }

@@ -109,10 +109,10 @@ export default function PlayWorld() {
     }
   };
 
-  const fetchItemsInZone = async (zoneName) => {
+  const fetchItemsInZone = async (zoneId) => {
     setZoneItemsLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/zones/${encodeURIComponent(zoneName)}/items`);
+      const response = await fetch(`${API_BASE_URL}/zones/${encodeURIComponent(zoneId)}/items`);
       if (response.ok) {
         const data = await response.json();
         setZoneItems(data.items || data || []);
@@ -335,7 +335,7 @@ export default function PlayWorld() {
                         eventHandlers={{
                           click: () => {
                             setSelectedZone(zone);
-                            fetchItemsInZone(zone.name);
+                            fetchItemsInZone(zone.zoneId);
                           }
                         }}
                     >
@@ -343,6 +343,7 @@ export default function PlayWorld() {
                         <div className="text-gray-900">
                           <h3 className="font-bold text-lg mb-2">{zone.name}</h3>
                           <div className="space-y-1 text-sm">
+                            <div><strong>Id:</strong> {zone.zoneId}</div>
                             <div><strong>Type:</strong> {zone.type}</div>
                             <div><strong>Points:</strong> {zone.boundary.points.length}</div>
                           </div>
@@ -420,7 +421,7 @@ export default function PlayWorld() {
                     className="p-4 bg-gray-800 rounded hover:bg-gray-750 cursor-pointer"
                     onClick={() => {
                       setSelectedZone(zone);
-                      fetchItemsInZone(zone.name);
+                      fetchItemsInZone(zone.zoneId);
                     }}
                 >
                   <div className="flex items-start justify-between mb-2">
