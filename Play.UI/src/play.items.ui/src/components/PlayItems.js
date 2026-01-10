@@ -11,7 +11,7 @@ function App() {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
-  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [autoRefresh, setAutoRefresh] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSocketModal, setShowSocketModal] = useState(false);
   const [socketItemId, setSocketItemId] = useState(null);

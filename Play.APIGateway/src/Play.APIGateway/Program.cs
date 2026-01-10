@@ -17,6 +17,15 @@ public class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
         builder.Services.AddReverseProxy()
             .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
         var settings = builder.Services.GetSettings<ServiceSettings>(nameof(ServiceSettings));
@@ -39,23 +48,53 @@ public class Program
             });
         
         var app = builder.Build();
+        app.UseCors("AllowAll");
         app.UseRouting();
-        app.MapReverseProxy();
+        
+        app.Use(async (context, next) =>
+        {
+            Console.WriteLine($"=== INCOMING REQUEST ===");
+            Console.WriteLine($"Method: {context.Request.Method}");
+            Console.WriteLine($"Path: {context.Request.Path}");
+            Console.WriteLine($"Headers: {string.Join(", ", context.Request.Headers.Select(h => $"{h.Key}={h.Value}"))}");
+            Console.WriteLine($"========================");
+    
+            await next();
+        });
         
         // Play.Items
         // this is async, goes to RabbitMq
-        app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
-        app.PublishCommand<MakeSocket>("play-items/items/{itemId}/socket", HttpMethod.Post, ("itemId", "ItemId"));
-        app.PublishCommand<EmbedArtifact>("play-items/items/{itemId}/artifact", HttpMethod.Post, ("itemId", "ItemId"));
-        app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
-        app.PublishCommand<CreateCrafter>("play-items/crafters", HttpMethod.Post);
-        app.PublishCommand<CreateZone>("play-world/zones", HttpMethod.Post);
-        app.PublishDeleteCommand<DeleteItem>("play-items/items");
-        app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
-
-        // Play.Inventory
-        app.PublishCommand<PurchaseItem>("play-inventory/items", HttpMethod.Post);
+        // app.PublishCommand<CreateItem>("play-items/items", HttpMethod.Post);
+        // app.PublishCommand<MakeSocket>("play-items/items/{itemId}/socket", HttpMethod.Post, ("itemId", "ItemId"));
+        // app.PublishCommand<EmbedArtifact>("play-items/items/{itemId}/artifact", HttpMethod.Post, ("itemId", "ItemId"));
+        // app.PublishCommand<UpdateItem>("play-items/items", HttpMethod.Put);
+        // app.PublishCommand<CreateCrafter>("play-items/crafters", HttpMethod.Post);
+        // app.PublishDeleteCommand<DeleteItem>("play-items/items");
+        // app.PublishDeleteCommand<DeleteItems>("play-items/items/delete");
         
+        // // Play.Items
+        app.MapCommands(items =>
+        {
+            items.Post<CreateItem>("play-items/items");
+            items.Post<MakeSocket>("play-items/items/{itemId}/socket", ("itemId", "ItemId"));
+            items.Post<EmbedArtifact>("play-items/items/{itemId}/artifact", ("itemId", "ItemId"));
+            items.Put<UpdateItem>("play-items/items");
+            items.Post<CreateCrafter>("play-items/crafters");
+            items.Delete<DeleteItem>("play-items/items");
+            items.Delete<DeleteItems>("play-items/items/delete");
+        });
+        // // Play.Inventory
+        // app.MapCommands(inventory =>
+        // {
+        //     inventory.Post<PurchaseItem>("play-inventory/items");
+        // }); 
+        // // Play.World
+        // app.MapCommands(world =>
+        // {
+        //     world.Post<CreateZone>("play-world/zones");
+        // });
+        
+        app.MapReverseProxy();
         app.Run();
     }
 }

@@ -51,9 +51,9 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
             .ToList();
 
         // Ensure ring is closed (first point = last point)
-        if (coords[0].X != coords[^1].X || coords[0].Y != coords[^1].Y)
+        if (!coords[0].Equals2D(coords[^1]))
         {
-            coords.Add(new NetTopologySuite.Geometries.Coordinate(coords[0].X, coords[0].Y));
+            coords.Add(coords[0]);
         }
 
         // Must have at least 4 coordinates (triangle + closing point)
@@ -63,7 +63,7 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
         var factory = NtsGeometryServices.Instance.CreateGeometryFactory(srid);
         var ring = factory.CreateLinearRing(coords.ToArray());
 
-        if (!ring.IsValid || ring.IsEmpty)
+        if (!ring.IsValid)
             throw new InvalidZoneBoundaryException();
 
         var polygon = factory.CreatePolygon(ring);
@@ -71,8 +71,7 @@ public class ZoneConfiguration : IEntityTypeConfiguration<Zone>
         if (!polygon.IsValid)
             throw new InvalidZoneBoundaryException();
 
-        polygon.SRID = srid;
-        return polygon;
+        return polygon; // SRID already set by factory
     }
 
     private static List<Coordinate> ExtractCoordinates(Polygon polygon)
