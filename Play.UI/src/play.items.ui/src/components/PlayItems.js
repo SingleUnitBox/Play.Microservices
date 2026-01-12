@@ -28,6 +28,13 @@ function App() {
     element: ''
   });
 
+  const [detailsLoading, setDetailsLoading] = useState(false);
+  const [detailsError, setDetailsError] = useState(null);
+
+  const [socketItem, setSocketItem] = useState(null);
+  const [artifacts, setArtifacts] = useState([]);
+  const [artifactId, setArtifactId] = useState('');
+
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -62,6 +69,36 @@ function App() {
       setLoading(false);
     }
   };
+
+  const fetchItemDetails = async (id) => {
+    try {
+      setDetailsLoading(true);
+      setDetailsError(null);
+
+      const timestamp = new Date().getTime();
+      const url = `${API_BASE_URL}/items/${id}?_t=${timestamp}`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setSelectedItem(data); // IMPORTANT: replace the list item with full details
+    } catch (err) {
+      console.error('Details fetch error:', err);
+      setDetailsError(err.message);
+    } finally {
+      setDetailsLoading(false);
+    }
+  };
+
 
   const fetchCrafters = async () => {
     try {
@@ -423,7 +460,12 @@ function App() {
                         <Edit className="w-5 h-5 text-gray-400" />
                       </button>
                       <button
-                          onClick={() => setSelectedItem(item)}
+                          onClick={() => {
+                            // Show modal immediately with current data (optional)
+                            setSelectedItem(item);
+                            // Then fetch the full details and update selectedItem
+                            fetchItemDetails(item.id);
+                          }}
                           className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
                           title="View Details"
                       >

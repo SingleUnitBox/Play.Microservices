@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Play.Common.Abs.Commands;
 using Play.Common.Abs.Queries;
 using Play.Common.Controllers;
 using Play.World.Application.DTO;
@@ -21,6 +20,14 @@ namespace Play.World.Api.Controllers
         {
             var mapDataDto = await _queryDispatcher.QueryAsync(new GetMapData());
             return Ok(mapDataDto);
+        }
+
+        [HttpGet("distance")]
+        public async Task<ActionResult<double>> GetDistance(
+            [FromQuery] Guid fromItemId, 
+            [FromQuery] Guid toItemId)
+        {
+            return Ok(await _queryDispatcher.QueryAsync(new CalculateDistance(fromItemId, toItemId)));
         }
     }
 }

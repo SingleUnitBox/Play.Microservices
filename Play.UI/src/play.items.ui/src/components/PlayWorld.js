@@ -72,7 +72,38 @@ export default function PlayWorld() {
     name: '',
     type: 'Forest'
   });
+  
+  const [distanceSelection, setDistanceSelection] = useState([]); // stores 0..2 itemIds
+  const [distanceResult, setDistanceResult] = useState(null);
+  const [distanceLoading, setDistanceLoading] = useState(false);
+  const [distanceError, setDistanceError] = useState(null);
+  const [distance, setDistance] = useState(null);
+  
+  const fetchDistance = async (a, b) => {
+    setDistanceLoading(true);
+    setDistanceError(null);
+    try {
+      const url = `${API_BASE_URL}/itemLocations/distance?fromItemId=${encodeURIComponent(a)}&toItemId=${encodeURIComponent(b)}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+      const data = await res.json();
 
+// If backend returns a raw number: 123.45
+// If backend returns an object: { distanceMeters: 123.45 }
+      const meters =
+          typeof data === "number"
+              ? data
+              : (data?.distanceMeters ?? data?.value ?? null);
+
+      setDistance(meters);
+    } catch (e) {
+      setDistanceError(e.message);
+      setDistanceResult(null);
+    } finally {
+      setDistanceLoading(false);
+    }
+  };
+  
   const fetchMapData = async () => {
     setLoading(true);
     try {
@@ -437,7 +468,37 @@ export default function PlayWorld() {
               </button>
             </div>
           </div>
-        </div>
+          
+          
+          <div className="mt-3 text-sm text-gray-300">
+            <div>
+              Selected for distance: {distanceSelection.length}/2
+              {distanceSelection.length > 0 && (
+                  <button
+                      className="ml-3 text-xs px-2 py-1 bg-gray-800 rounded"
+                      onClick={() => { setDistanceSelection([]); setDistance(null); setDistanceError(null); }}
+                  >
+                    Clear
+                  </button>
+              )}
+            </div>
+            {distanceLoading && <div className="text-gray-400">Calculating distance…</div>}
+
+            {distanceError && <div className="text-red-400">Distance error: {distanceError}</div>}
+
+            {distanceLoading && <div className="text-gray-400">Calculating distance…</div>}
+
+            {distanceError && <div className="text-red-400">Distance error: {distanceError}</div>}
+
+            {distanceSelection.length === 2 && !distanceLoading && (
+                <div className="text-green-400">
+                  Distance: {" "}
+                  {distance != null && `${(distance / 1000).toFixed(2)} km`}
+                </div>
+            )}
+
+
+          </div>
 
         {/* Leaflet Map */}
         <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden mb-6">
@@ -511,6 +572,30 @@ export default function PlayWorld() {
                       key={item.itemId}
                       position={[item.position.latitude, item.position.longitude]}
                       icon={item.isCollected ? collectedIcon : availableIcon}
+                      
+                      /// ---- ///
+                      eventHandlers={{
+                        click: () => {
+                          setDistance(null);
+                          setDistanceError(null);
+
+                          setDistanceSelection(prev => {
+                            // if already selected, ignore
+                            if (prev.includes(item.itemId)) return prev;
+
+                            // start new pair after 2 selected
+                            const next = prev.length >= 2 ? [item.itemId] : [...prev, item.itemId];
+
+                            // if we now have 2, fetch distance
+                            if (next.length === 2) {
+                              fetchDistance(next[0], next[1]);
+                            }
+                            return next;
+                          });
+                        }
+                      }}
+                      /// ---- ////
+                      
                   >
                     <Popup>
                       <div className="text-gray-900">
@@ -869,6 +954,7 @@ export default function PlayWorld() {
               </div>
             </div>
         )}
+      </div>
       </div>
   );
 }
