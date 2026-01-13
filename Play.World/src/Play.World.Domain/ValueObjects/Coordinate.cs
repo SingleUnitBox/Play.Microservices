@@ -24,4 +24,13 @@ public class Coordinate
 
     public static Coordinate Create(double longitude, double latitude)
         => new(longitude, latitude);
+
+    public static Coordinate CreateRandom()
+    {
+        var random = new Random();
+        var longitude = random.Next(-180, 180);
+        var latitude = random.Next(-90, 90);
+        
+        return Create(latitude, longitude);
+    }
 }

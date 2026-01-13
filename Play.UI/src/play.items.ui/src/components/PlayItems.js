@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { RefreshCw, Search, Eye, Calendar, DollarSign, AlertCircle, Plus, X, Edit } from 'lucide-react';
+import { RefreshCw, Search, Eye, Calendar, DollarSign, AlertCircle, Plus, X } from 'lucide-react';
 
 const API_BASE_URL = 'http://localhost:5008/play-items';
 
@@ -20,6 +20,14 @@ function App() {
   const [createError, setCreateError] = useState(null);
   const [socketError, setSocketError] = useState(null);
   const [hollowType, setHollowType] = useState('Stone');
+  const [showArtifactModal, setShowArtifactModal] = useState(false);
+  const [artifactItemId, setArtifactItemId] = useState(null);
+  const [artifactLoading, setArtifactLoading] = useState(false);
+  const [artifactError, setArtifactError] = useState(null);
+  const [artifactFormData, setArtifactFormData] = useState({
+    artifactName: '',
+    stats: [{ key: '', value: '' }]
+  });
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -27,43 +35,25 @@ function App() {
     crafterId: '',
     element: ''
   });
-
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [detailsError, setDetailsError] = useState(null);
-
-  const [socketItem, setSocketItem] = useState(null);
-  const [artifacts, setArtifacts] = useState([]);
-  const [artifactId, setArtifactId] = useState('');
 
   const fetchItems = async () => {
     try {
       setLoading(true);
       setError(null);
-
       const timestamp = new Date().getTime();
       const url = `${API_BASE_URL}/items?_t=${timestamp}`;
-      console.log('Fetching from:', url);
-
       const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
-
-      console.log('Response status:', response.status);
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       const data = await response.json();
-      console.log('Received data:', data);
       setItems(Array.isArray(data) ? data : []);
     } catch (err) {
-      console.error('Fetch error:', err);
       setError(err.message);
     } finally {
       setLoading(false);
@@ -74,45 +64,33 @@ function App() {
     try {
       setDetailsLoading(true);
       setDetailsError(null);
-
       const timestamp = new Date().getTime();
       const url = `${API_BASE_URL}/items/${id}?_t=${timestamp}`;
-
       const response = await fetch(url, {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache',
         headers: { 'Content-Type': 'application/json' },
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       const data = await response.json();
-      setSelectedItem(data); // IMPORTANT: replace the list item with full details
+      setSelectedItem(data);
     } catch (err) {
-      console.error('Details fetch error:', err);
       setDetailsError(err.message);
     } finally {
       setDetailsLoading(false);
     }
   };
 
-
   const fetchCrafters = async () => {
     try {
       const response = await fetch(`${API_BASE_URL}/crafters`, {
         method: 'GET',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Crafters:', data);
         setCrafters(Array.isArray(data) ? data : []);
       }
     } catch (err) {
@@ -125,14 +103,10 @@ function App() {
       const response = await fetch(`${API_BASE_URL}/elements`, {
         method: 'GET',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
-
       if (response.ok) {
         const data = await response.json();
-        console.log('Elements:', data);
         setElements(Array.isArray(data) ? data : []);
       }
     } catch (err) {
@@ -148,11 +122,9 @@ function App() {
 
   useEffect(() => {
     if (!autoRefresh) return;
-
     const interval = setInterval(() => {
       fetchItems();
     }, 5000);
-
     return () => clearInterval(interval);
   }, [autoRefresh]);
 
@@ -161,28 +133,17 @@ function App() {
       item.description?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString();
-  };
-
-  const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD'
-    }).format(price);
-  };
+  const formatDate = (date) => new Date(date).toLocaleString();
+  const formatPrice = (price) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(price);
 
   const handleCreateItem = async () => {
     setCreateLoading(true);
     setCreateError(null);
-
     try {
       const response = await fetch(`${API_BASE_URL}/items`, {
         method: 'POST',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           description: formData.description,
@@ -191,27 +152,11 @@ function App() {
           element: formData.element
         })
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      // Reset form
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        crafterId: '',
-        element: ''
-      });
-
-      // Close modal
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      setFormData({ name: '', description: '', price: '', crafterId: '', element: '' });
       setShowCreateModal(false);
-
-      // Refresh items list
       await fetchItems();
     } catch (err) {
-      console.error('Create error:', err);
       setCreateError(err.message);
     } finally {
       setCreateLoading(false);
@@ -221,54 +166,87 @@ function App() {
   const handleAddSocket = async () => {
     setSocketLoading(true);
     setSocketError(null);
-
     try {
       const response = await fetch(`${API_BASE_URL}/items/${socketItemId}/socket`, {
         method: 'POST',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          hollowType: hollowType
-        })
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hollowType: hollowType })
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       setShowSocketModal(false);
       setSocketItemId(null);
       setHollowType('Stone');
-
       await fetchItems();
     } catch (err) {
-      console.error('Socket error:', err);
       setSocketError(err.message);
     } finally {
       setSocketLoading(false);
     }
   };
 
+  const handleEmbedArtifact = async () => {
+    setArtifactLoading(true);
+    setArtifactError(null);
+    try {
+      const statsDict = {};
+      artifactFormData.stats.forEach(stat => {
+        if (stat.key && stat.value) {
+          statsDict[stat.key] = parseInt(stat.value);
+        }
+      });
+      const response = await fetch(`${API_BASE_URL}/items/${artifactItemId}/artifact`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          artifactName: artifactFormData.artifactName,
+          stats: statsDict
+        })
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      setShowArtifactModal(false);
+      setArtifactItemId(null);
+      setArtifactFormData({ artifactName: '', stats: [{ key: '', value: '' }] });
+      await fetchItems();
+    } catch (err) {
+      setArtifactError(err.message);
+    } finally {
+      setArtifactLoading(false);
+    }
+  };
+
+  const addStatField = () => {
+    setArtifactFormData({
+      ...artifactFormData,
+      stats: [...artifactFormData.stats, { key: '', value: '' }]
+    });
+  };
+
+  const removeStatField = (index) => {
+    const newStats = artifactFormData.stats.filter((_, i) => i !== index);
+    setArtifactFormData({ ...artifactFormData, stats: newStats });
+  };
+
+  const updateStatField = (index, field, value) => {
+    const newStats = [...artifactFormData.stats];
+    newStats[index][field] = value;
+    setArtifactFormData({ ...artifactFormData, stats: newStats });
+  };
+
   return (
       <div className="min-h-screen bg-black">
         <div className="container mx-auto px-4 py-8">
-          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">
-              Play.Items Admin Dashboard
-            </h1>
+            <h1 className="text-4xl font-bold text-white mb-2">Play.Items Admin Dashboard</h1>
             <p className="text-gray-400">Manage and monitor game items in real-time</p>
             <div className="mt-2 text-sm text-gray-500">
               API: <code className="bg-gray-900 px-2 py-1 rounded border border-gray-800">{API_BASE_URL}/items</code>
             </div>
           </div>
 
-          {/* Controls */}
           <div className="bg-gray-900 rounded-lg p-6 mb-6 border border-gray-800">
             <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-              {/* Search */}
               <div className="relative flex-1 w-full md:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
                 <input
@@ -279,8 +257,6 @@ function App() {
                     className="w-full pl-10 pr-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
                 />
               </div>
-
-              {/* Controls */}
               <div className="flex gap-3 items-center">
                 <button
                     onClick={() => setShowCreateModal(true)}
@@ -289,7 +265,6 @@ function App() {
                   <Plus className="w-4 h-4" />
                   Create Item
                 </button>
-
                 <label className="flex items-center gap-2 text-gray-400 cursor-pointer">
                   <input
                       type="checkbox"
@@ -299,7 +274,6 @@ function App() {
                   />
                   <span className="text-sm">Auto-refresh (5s)</span>
                 </label>
-
                 <button
                     onClick={fetchItems}
                     disabled={loading}
@@ -310,8 +284,6 @@ function App() {
                 </button>
               </div>
             </div>
-
-            {/* Stats */}
             <div className="mt-4 flex gap-4 text-sm">
               <div className="text-gray-400">
                 Total Items: <span className="text-white font-semibold">{items.length}</span>
@@ -325,7 +297,6 @@ function App() {
             </div>
           </div>
 
-          {/* Error Message */}
           {error && (
               <div className="bg-red-900/50 border border-red-500 rounded-lg mb-6 p-4">
                 <div className="flex items-start gap-3">
@@ -338,7 +309,84 @@ function App() {
               </div>
           )}
 
-          {/* Add Socket Modal */}
+          {loading && items.length === 0 && !error && (
+              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+                <RefreshCw className="w-8 h-8 mb-3 animate-spin" />
+                <p>Loading items...</p>
+              </div>
+          )}
+
+          {!loading && !error && filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <div className="text-gray-400 mb-4">
+                  {searchTerm ? '🔍 No items match your search.' : '📦 No items found in database.'}
+                </div>
+                {!searchTerm && (
+                    <p className="text-gray-500 text-sm">Create an item by clicking the "Create Item" button above!</p>
+                )}
+              </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map((item) => (
+                <div key={item.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-gray-700 transition-all">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-white">{item.name || 'Unnamed Item'}</h3>
+                    <div className="flex gap-2">
+                      {!item.socket && (
+                          <button
+                              onClick={() => {
+                                setSocketItemId(item.id);
+                                setShowSocketModal(true);
+                              }}
+                              className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                              title="Add Socket"
+                          >
+                            <Plus className="w-5 h-5 text-gray-400" />
+                          </button>
+                      )}
+                      {item.socket && !item.socket.artifact && (
+                          <button
+                              onClick={() => {
+                                setArtifactItemId(item.id);
+                                setShowArtifactModal(true);
+                              }}
+                              className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                              title="Embed Artifact"
+                          >
+                            <Plus className="w-5 h-5 text-purple-400" />
+                          </button>
+                      )}
+                      <button
+                          onClick={() => {
+                            setSelectedItem(item);
+                            fetchItemDetails(item.id);
+                          }}
+                          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
+                          title="View Details"
+                      >
+                        <Eye className="w-5 h-5 text-gray-400" />
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">{item.description || 'No description'}</p>
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm">
+                      <DollarSign className="w-4 h-4 text-green-400" />
+                      <span className="text-green-400 font-semibold">{formatPrice(item.price || 0)}</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-400">
+                      <Calendar className="w-4 h-4" />
+                      <span>{formatDate(item.createdDate)}</span>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-gray-800">
+                    <code className="text-xs text-gray-500 break-all">ID: {item.id}</code>
+                  </div>
+                </div>
+            ))}
+          </div>
+
           {showSocketModal && (
               <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
                 <div className="bg-gray-900 rounded-lg max-w-md w-full border border-gray-800">
@@ -356,13 +404,11 @@ function App() {
                         <X className="w-6 h-6" />
                       </button>
                     </div>
-
                     {socketError && (
                         <div className="mb-4 bg-red-900/50 border border-red-500 rounded-lg p-3">
                           <p className="text-red-200 text-sm">{socketError}</p>
                         </div>
                     )}
-
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Hollow Type *</label>
@@ -375,9 +421,8 @@ function App() {
                           <option value="Dust">Dust</option>
                           <option value="Liquid">Liquid</option>
                         </select>
-                        <p className="text-gray-500 text-xs mt-2">Select the type of hollow for this socket</p>
+                        <p className="text-gray-500 text-xs mt-2">⚠️ Hollow type cannot be changed after creation</p>
                       </div>
-
                       <div className="flex gap-3 pt-4">
                         <button
                             type="button"
@@ -415,93 +460,133 @@ function App() {
               </div>
           )}
 
-          {/* Loading State */}
-          {loading && items.length === 0 && !error && (
-              <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-                <RefreshCw className="w-8 h-8 mb-3 animate-spin" />
-                <p>Loading items...</p>
+          {showArtifactModal && (
+              <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+                <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-6">
+                      <h2 className="text-2xl font-bold text-purple-400">Embed Artifact</h2>
+                      <button
+                          onClick={() => {
+                            setShowArtifactModal(false);
+                            setArtifactError(null);
+                            setArtifactFormData({ artifactName: '', stats: [{ key: '', value: '' }] });
+                          }}
+                          className="text-gray-400 hover:text-gray-300"
+                      >
+                        <X className="w-6 h-6" />
+                      </button>
+                    </div>
+                    {artifactError && (
+                        <div className="mb-4 bg-red-900/50 border border-red-500 rounded-lg p-3">
+                          <p className="text-red-200 text-sm">{artifactError}</p>
+                        </div>
+                    )}
+                    <div className="space-y-4">
+                      <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
+                        <label className="block text-gray-400 text-sm font-semibold mb-2">Existing Socket</label>
+                        <div className="flex justify-between items-center">
+                          <span className="text-gray-400 text-sm">Hollow Type:</span>
+                          <span className="text-white font-semibold px-3 py-1 bg-gray-900 rounded">
+                        {items.find(i => i.id === artifactItemId)?.socket?.hollowType || 'N/A'}
+                      </span>
+                        </div>
+                        <p className="text-gray-500 text-xs mt-2">🔒 Socket is locked and cannot be modified</p>
+                      </div>
+
+                      <div className="border-t border-gray-800 pt-4">
+                        <label className="block text-purple-400 text-sm font-semibold mb-4">New Artifact Details</label>
+
+                        <div className="mb-4">
+                          <label className="block text-gray-400 text-sm font-semibold mb-2">Artifact Name *</label>
+                          <input
+                              type="text"
+                              required
+                              value={artifactFormData.artifactName}
+                              onChange={(e) => setArtifactFormData({...artifactFormData, artifactName: e.target.value})}
+                              className="w-full px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                              placeholder="Enter artifact name"
+                          />
+                          <p className="text-gray-500 text-xs mt-2">⚠️ Artifact cannot be changed after embedding</p>
+                        </div>
+
+                        <div>
+                          <label className="block text-gray-400 text-sm font-semibold mb-3">Stats</label>
+                          {artifactFormData.stats.map((stat, index) => (
+                              <div key={index} className="flex gap-2 mb-2">
+                                <input
+                                    type="text"
+                                    value={stat.key}
+                                    onChange={(e) => updateStatField(index, 'key', e.target.value)}
+                                    className="flex-1 px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                                    placeholder="Stat name (e.g., Strength)"
+                                />
+                                <input
+                                    type="number"
+                                    value={stat.value}
+                                    onChange={(e) => updateStatField(index, 'value', e.target.value)}
+                                    className="w-24 px-4 py-2 bg-black text-white rounded-lg border border-gray-800 focus:border-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-700"
+                                    placeholder="Value"
+                                />
+                                {artifactFormData.stats.length > 1 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => removeStatField(index)}
+                                        className="p-2 bg-red-900/50 hover:bg-red-900 text-red-400 rounded-lg transition-colors"
+                                    >
+                                      <X className="w-5 h-5" />
+                                    </button>
+                                )}
+                              </div>
+                          ))}
+                          <button
+                              type="button"
+                              onClick={addStatField}
+                              className="mt-2 flex items-center gap-2 px-3 py-2 bg-gray-800 hover:bg-gray-700 text-gray-400 rounded-lg transition-colors text-sm"
+                          >
+                            <Plus className="w-4 h-4" />
+                            Add Stat
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 pt-4">
+                        <button
+                            type="button"
+                            onClick={() => {
+                              setShowArtifactModal(false);
+                              setArtifactError(null);
+                              setArtifactFormData({ artifactName: '', stats: [{ key: '', value: '' }] });
+                            }}
+                            className="flex-1 px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg transition-colors"
+                        >
+                          Cancel
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleEmbedArtifact}
+                            disabled={artifactLoading || !artifactFormData.artifactName}
+                            className="flex-1 px-4 py-2 bg-purple-700 hover:bg-purple-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          {artifactLoading ? (
+                              <>
+                                <RefreshCw className="w-4 h-4 animate-spin" />
+                                Embedding...
+                              </>
+                          ) : (
+                              <>
+                                <Plus className="w-4 h-4" />
+                                Embed Artifact
+                              </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
           )}
 
-          {/* Empty State */}
-          {!loading && !error && filteredItems.length === 0 && (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  {searchTerm
-                      ? '🔍 No items match your search.'
-                      : '📦 No items found in database.'}
-                </div>
-                {!searchTerm && (
-                    <p className="text-gray-500 text-sm">
-                      Create an item by clicking the "Create Item" button above!
-                    </p>
-                )}
-              </div>
-          )}
-
-          {/* Items Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map((item) => (
-                <div
-                    key={item.id}
-                    className="bg-gray-900 rounded-lg p-6 border border-gray-800 hover:border-gray-700 transition-all"
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-white">{item.name || 'Unnamed Item'}</h3>
-                    <div className="flex gap-2">
-                      <button
-                          onClick={() => {
-                            setSocketItemId(item.id);
-                            setShowSocketModal(true);
-                          }}
-                          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                          title="Add/Edit Socket"
-                      >
-                        <Edit className="w-5 h-5 text-gray-400" />
-                      </button>
-                      <button
-                          onClick={() => {
-                            // Show modal immediately with current data (optional)
-                            setSelectedItem(item);
-                            // Then fetch the full details and update selectedItem
-                            fetchItemDetails(item.id);
-                          }}
-                          className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-                          title="View Details"
-                      >
-                        <Eye className="w-5 h-5 text-gray-400" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <p className="text-gray-400 text-sm mb-4 line-clamp-2">
-                    {item.description || 'No description'}
-                  </p>
-
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-sm">
-                      <DollarSign className="w-4 h-4 text-green-400" />
-                      <span className="text-green-400 font-semibold">
-                    {formatPrice(item.price || 0)}
-                  </span>
-                    </div>
-
-                    <div className="flex items-center gap-2 text-sm text-gray-400">
-                      <Calendar className="w-4 h-4" />
-                      <span>{formatDate(item.createdDate)}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 pt-4 border-t border-gray-800">
-                    <code className="text-xs text-gray-500 break-all">
-                      ID: {item.id}
-                    </code>
-                  </div>
-                </div>
-            ))}
-          </div>
-
-          {/* Item Details Modal */}
           {selectedItem && (
               <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
                 <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
@@ -515,27 +600,21 @@ function App() {
                         <X className="w-6 h-6" />
                       </button>
                     </div>
-
                     <div className="space-y-4">
                       <div>
                         <label className="text-gray-400 text-sm font-semibold">Description</label>
                         <p className="text-white mt-1">{selectedItem.description || 'No description'}</p>
                       </div>
-
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <label className="text-gray-400 text-sm font-semibold">Price</label>
-                          <p className="text-green-400 text-xl font-bold mt-1">
-                            {formatPrice(selectedItem.price || 0)}
-                          </p>
+                          <p className="text-green-400 text-xl font-bold mt-1">{formatPrice(selectedItem.price || 0)}</p>
                         </div>
-
                         <div>
                           <label className="text-gray-400 text-sm font-semibold">Created Date</label>
                           <p className="text-white mt-1">{formatDate(selectedItem.createdDate)}</p>
                         </div>
                       </div>
-
                       {selectedItem.socket && (
                           <div className="bg-black border border-gray-800 rounded-lg p-4">
                             <label className="text-gray-400 text-sm font-semibold block mb-2">Socket</label>
@@ -544,22 +623,39 @@ function App() {
                                 <span className="text-gray-400 text-sm">Hollow Type:</span>
                                 <span className="text-white font-semibold">{selectedItem.socket.hollowType || 'N/A'}</span>
                               </div>
-                              {selectedItem.socket.artifact && (
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-400 text-sm">Artifact:</span>
-                                    <span className="text-purple-400 font-semibold">{selectedItem.socket.artifact.name || 'N/A'}</span>
+                              {selectedItem.socket.artifact ? (
+                                  <div className="mt-3 pt-3 border-t border-gray-800">
+                                    <div className="flex justify-between mb-2">
+                                      <span className="text-gray-400 text-sm">Artifact:</span>
+                                      <span className="text-purple-400 font-semibold">{selectedItem.socket.artifact.name || 'N/A'}</span>
+                                    </div>
+                                    {selectedItem.socket.artifact.stats && Object.keys(selectedItem.socket.artifact.stats).length > 0 && (
+                                        <div className="mt-2 bg-gray-900 rounded p-3">
+                                          <div className="text-gray-400 text-xs font-semibold mb-2">Stats:</div>
+                                          <div className="space-y-1">
+                                            {Object.entries(selectedItem.socket.artifact.stats).map(([key, value]) => (
+                                                <div key={key} className="flex justify-between text-sm">
+                                                  <span className="text-gray-400">{key}:</span>
+                                                  <span className="text-green-400 font-semibold">+{value}</span>
+                                                </div>
+                                            ))}
+                                          </div>
+                                        </div>
+                                    )}
+                                  </div>
+                              ) : (
+                                  <div className="mt-3 pt-3 border-t border-gray-700">
+                                    <p className="text-gray-500 text-sm italic">No artifact embedded</p>
                                   </div>
                               )}
                             </div>
                           </div>
                       )}
-
                       {!selectedItem.socket && (
                           <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-4">
                             <p className="text-gray-400 text-sm">No socket added yet</p>
                           </div>
                       )}
-
                       <div>
                         <label className="text-gray-400 text-sm font-semibold">Item ID</label>
                         <code className="block text-gray-500 text-sm mt-1 break-all bg-black p-2 rounded border border-gray-800">
@@ -567,7 +663,6 @@ function App() {
                         </code>
                       </div>
                     </div>
-
                     <div className="mt-6">
                       <button
                           onClick={() => setSelectedItem(null)}
@@ -581,7 +676,6 @@ function App() {
               </div>
           )}
 
-          {/* Create Item Modal */}
           {showCreateModal && (
               <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
                 <div className="bg-gray-900 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-gray-800">
@@ -598,13 +692,11 @@ function App() {
                         <X className="w-6 h-6" />
                       </button>
                     </div>
-
                     {createError && (
                         <div className="mb-4 bg-red-900/50 border border-red-500 rounded-lg p-3">
                           <p className="text-red-200 text-sm">{createError}</p>
                         </div>
                     )}
-
                     <div className="space-y-4">
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Name *</label>
@@ -617,7 +709,6 @@ function App() {
                             placeholder="Enter item name"
                         />
                       </div>
-
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Description *</label>
                         <textarea
@@ -629,7 +720,6 @@ function App() {
                             placeholder="Enter item description"
                         />
                       </div>
-
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Price *</label>
                         <input
@@ -643,7 +733,6 @@ function App() {
                             placeholder="0.00"
                         />
                       </div>
-
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Crafter *</label>
                         <select
@@ -660,7 +749,6 @@ function App() {
                           ))}
                         </select>
                       </div>
-
                       <div>
                         <label className="block text-gray-400 text-sm font-semibold mb-2">Element *</label>
                         <select
@@ -677,7 +765,6 @@ function App() {
                           ))}
                         </select>
                       </div>
-
                       <div className="flex gap-3 pt-4">
                         <button
                             type="button"

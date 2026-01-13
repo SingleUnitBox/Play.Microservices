@@ -42,8 +42,7 @@ public static class Extensions
             options.UseNpgsql(
                 configuration.GetSettings<PostgresSettings>(nameof(PostgresSettings)).ConnectionString,
                 o => o.UseNetTopologySuite()));
-        services.AddScoped<IItemLocationsRepository, ItemLocationRepository>();
-        services.AddScoped<IZoneRepository, ZoneRepository>();
+        services.AddRepositories();
         
         services.AddEvents();
         services.AddQueries();

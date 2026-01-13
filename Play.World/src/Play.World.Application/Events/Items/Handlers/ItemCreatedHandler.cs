@@ -16,8 +16,7 @@ public class ItemCreatedHandler(IItemLocationsRepository itemLocationsRepository
             throw new ItemLocationAlreadyExistException(@event.ItemId);
         }
         
-        var random = new Random();
-        var position = Coordinate.Create(new Random().Next(-180, 180), random.Next(-90, 90));
+        var position = Coordinate.CreateRandom();
         itemLocation = ItemLocation.Create(@event.ItemId, @event.Name, position);
         
         await itemLocationsRepository.AddAsync(itemLocation);

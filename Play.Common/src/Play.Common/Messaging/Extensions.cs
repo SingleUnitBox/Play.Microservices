@@ -140,9 +140,9 @@ public static class Extensions
         {
             builder.Services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
             builder.Services.AddSingleton(topologySettings);
-            builder.Services.AddHostedService<TopologyInitializer>();
             builder.Services.Configure<TopologyReadinessAccessor>(accessor =>
                 accessor.MarkTopologyProvisionStart());
+            builder.Services.AddHostedService<TopologyInitializer>();
         }
         
         return builder;

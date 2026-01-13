@@ -10,6 +10,8 @@ public class WorldPostgresDbContext : DbContext
 
     public DbSet<Zone> Zones { get; set; }
 
+    public DbSet<Player> Players { get; set; }
+
     public WorldPostgresDbContext(DbContextOptions<WorldPostgresDbContext> options) : base(options)
     {
         
