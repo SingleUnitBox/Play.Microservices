@@ -40,7 +40,15 @@ public static class Extensions
         services.AddSingleton(rabbitSettings);
         services.AddSingleton<ICorrelationContextAccessor, CorrelationContextAccessor>();
         services.AddSingleton<MessagePropertiesAccessor>();
-        services.AddSingleton<TopologyReadinessAccessor>();
+        
+        var topologySettings = services.GetSettings<TopologySettings>(nameof(TopologySettings));
+        services.AddSingleton<TopologyReadinessAccessor>(sp =>
+        {
+            var logger = sp.GetRequiredService<ILogger<TopologyReadinessAccessor>>();
+            var accessor = new TopologyReadinessAccessor(logger, topologySettings.Enabled);
+
+            return accessor;
+        });
         
         return services;
     }
@@ -140,8 +148,6 @@ public static class Extensions
         {
             builder.Services.AddTransient<ITopologyBuilder, RabbitMqTopologyBuilder>();
             builder.Services.AddSingleton(topologySettings);
-            builder.Services.Configure<TopologyReadinessAccessor>(accessor =>
-                accessor.MarkTopologyProvisionStart());
             builder.Services.AddHostedService<TopologyInitializer>();
         }
         
