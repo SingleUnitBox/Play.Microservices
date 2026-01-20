@@ -22,10 +22,13 @@ builder.Services.AddMongoRepository<IUserRepository, UserMongoRepository>(
     db => new UserMongoRepository(db, "users"));
 builder.Services.AddRabbitMq(builder.Configuration, rabbitBuilder =>
     rabbitBuilder
-        //.AddCommandConsumer()
-        //.AddEventConsumer()
         .AddConnectionProvider()
-        .AddChannelFactory());
+        .AddChannelFactory()
+        .AddBusPublisher()
+        .AddMessageBroker()
+        .AddResiliency()
+        .AddTopologyInitializer());
+    
 builder.Services.AddPlayMicroservice(builder.Configuration,
     config =>
     {

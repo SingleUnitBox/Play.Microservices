@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Play.Common.Abs.Auth;
-using Play.Common.Abs.RabbitMq;
+using Play.Common.Abs.Messaging.Message;
+using Play.Common.Messaging.Message;
 using Play.User.Core.DTO;
 using Play.User.Core.Repositories;
 using UserCreated = Play.User.Core.Events.UserCreated;
@@ -13,17 +14,17 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher<Entities.User> _passwordHasher;
     private readonly IJwtManager _jwtManager;
-    private readonly IBusPublisher _busPublisher;
+    private readonly IMessageBroker _messageBroker;
 
     public UserService(IUserRepository userRepository,
         IPasswordHasher<Entities.User> passwordHasher,
         IJwtManager jwtManager,
-        IBusPublisher busPublisher)
+        IMessageBroker messageBroker)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _jwtManager = jwtManager;
-        _busPublisher = busPublisher;
+        _messageBroker = messageBroker;
     }
 
     public async Task SignUp(SignUpDto dto)
@@ -44,7 +45,7 @@ public class UserService : IUserService
             dto.Claims is null ? emptyClaims : dto.Claims);
         
         await _userRepository.CreateUser(user);
-        await _busPublisher.PublishAsync(new UserCreated(user.Id, user.Username));
+        await _messageBroker.PublishAsync(new UserCreated(user.Id, user.Username));
     }
 
     public async Task<JwtToken> SignIn(SignInDto dto)
@@ -105,6 +106,6 @@ public class UserService : IUserService
         
         user.Username = dto.NewUsername;
         await _userRepository.UpdateUser(user);
-        await _busPublisher.PublishAsync(new UsernameChanged(user.Id, user.Username));
+        await _messageBroker.PublishAsync(new UsernameChanged(user.Id, user.Username));
     }
 }

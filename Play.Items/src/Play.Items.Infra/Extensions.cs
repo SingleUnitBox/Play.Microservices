@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Play.Common;
 using Play.Common.Abs.Events;
+using Play.Common.Abs.Messaging.Message;
 using Play.Common.Abs.SharedKernel.DomainEvents;
 using Play.Common.AppInitializer;
 using Play.Common.Commands;
@@ -11,6 +12,7 @@ using Play.Common.Events;
 using Play.Common.Exceptions;
 using Play.Common.Logging;
 using Play.Common.Messaging;
+using Play.Common.Messaging.Message;
 using Play.Common.PostgresDb;
 using Play.Common.Queries;
 using Play.Common.Serialization;
@@ -46,7 +48,6 @@ public static class Extensions
         services.AddLoggingEventHandlerDecorator();
         
         services.AddSerialization();
-        services.AddScoped<IMessageBroker, MessageBroker>();
         services.AddScoped<IEventProcessor, EventProcessor>();
         services.AddSingleton<IEventMapper, EventMapper>();
         services.Scan(a => a.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies())
@@ -62,6 +63,7 @@ public static class Extensions
                 .AddChannelFactory()
                 .AddConnectionProvider()
                 .AddBusPublisher()
+                .AddMessageBroker()
                 .AddCommandConsumer()
                 .AddEventConsumer()
                 .AddDeduplication()

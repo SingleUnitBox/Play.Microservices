@@ -1,3 +1,5 @@
-﻿namespace Play.User.Core.Events;
+﻿using Play.Common.Abs.Events;
 
-public record UsernameChanged(Guid UserId, string Username);
+namespace Play.User.Core.Events;
+
+public record UsernameChanged(Guid UserId, string Username) : IEvent;

@@ -1,6 +1,6 @@
 ﻿using Play.Common.Abs.Events;
 
-namespace Play.Items.Application.Services;
+namespace Play.Common.Abs.Messaging.Message;
 
 public interface IMessageBroker
 {

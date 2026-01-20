@@ -1,11 +1,10 @@
 ﻿using Play.Common.Abs.Events;
+using Play.Common.Abs.Messaging.Message;
 using Play.Common.Abs.RabbitMq;
-using Play.Common.Messaging;
-using Play.Items.Application.Services;
 
-namespace Play.Items.Infra.Services;
+namespace Play.Common.Messaging.Message;
 
-internal sealed class MessageBroker : IMessageBroker
+public class MessageBroker : IMessageBroker
 {
     private readonly IBusPublisher _busPublisher;
 

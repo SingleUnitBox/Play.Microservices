@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Play.Common.Abs.Commands;
 using Play.Common.Abs.Events;
+using Play.Common.Abs.Messaging.Message;
 using Play.Common.Abs.RabbitMq;
 using Play.Common.Messaging.Builder;
 using Play.Common.Messaging.Connection;
@@ -13,6 +14,7 @@ using Play.Common.Messaging.Deduplication;
 using Play.Common.Messaging.Deduplication.Data;
 using Play.Common.Messaging.Deduplication.FilterSteps;
 using Play.Common.Messaging.Executor;
+using Play.Common.Messaging.Message;
 using Play.Common.Messaging.Ordering;
 using Play.Common.Messaging.Ordering.Attributes;
 using Play.Common.Messaging.Outbox;
@@ -97,6 +99,13 @@ public static class Extensions
     public static IRabbitMqBuilder AddBusPublisher(this IRabbitMqBuilder builder)
     {
         builder.Services.AddSingleton<IBusPublisher, RabbitMqBusPublisher>();
+        
+        return builder;
+    }
+    
+    public static IRabbitMqBuilder AddMessageBroker(this IRabbitMqBuilder builder)
+    {
+        builder.Services.AddSingleton<IMessageBroker, MessageBroker>();
         
         return builder;
     }

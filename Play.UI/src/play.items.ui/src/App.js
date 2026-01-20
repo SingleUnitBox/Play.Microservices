@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PlayItems from './components/PlayItems';
 import PlayWorld from './components/PlayWorld';
+import PlayUsers from './components/PlayUsers';
 import { Package, Map } from 'lucide-react';
 
 function App() {
@@ -40,12 +41,24 @@ function App() {
                 <Map className="w-4 h-4" />
                 Play.World
               </button>
+              <button
+                  onClick={() => setActiveTab('users')}
+                  className={`px-4 py-2 flex items-center gap-2 border-b-2 transition-colors ${
+                      activeTab === 'users'
+                          ? 'border-gray-400 text-white'
+                          : 'border-transparent text-gray-500 hover:text-gray-300'
+                  }`}
+              >
+                <Map className="w-4 h-4" />
+                Play.Users
+              </button>
             </div>
           </div>
 
           {/* Content */}
           {activeTab === 'items' && <PlayItems />}
           {activeTab === 'world' && <PlayWorld />}
+          {activeTab === 'users' && <PlayUsers />}
         </div>
       </div>
   );

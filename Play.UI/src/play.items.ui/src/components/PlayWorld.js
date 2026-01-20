@@ -30,6 +30,15 @@ const collectedIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+const playerIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 // Component for drawing zones
 function DrawZone({ onPointAdded, isDrawing, currentPoints }) {
   useMapEvents({
@@ -56,6 +65,7 @@ const API_BASE_URL = 'http://localhost:5008/play-world';
 export default function PlayWorld() {
   const [items, setItems] = useState([]);
   const [zones, setZones] = useState([]);
+  const [players, setPlayers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [geoJson, setGeoJson] = useState(null);
   const [exportFormat, setExportFormat] = useState('geojson');
@@ -72,13 +82,12 @@ export default function PlayWorld() {
     name: '',
     type: 'Forest'
   });
-  
-  const [distanceSelection, setDistanceSelection] = useState([]); // stores 0..2 itemIds
-  const [distanceResult, setDistanceResult] = useState(null);
+
+  const [distanceSelection, setDistanceSelection] = useState([]);
   const [distanceLoading, setDistanceLoading] = useState(false);
   const [distanceError, setDistanceError] = useState(null);
   const [distance, setDistance] = useState(null);
-  
+
   const fetchDistance = async (a, b) => {
     setDistanceLoading(true);
     setDistanceError(null);
@@ -88,22 +97,15 @@ export default function PlayWorld() {
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
       const data = await res.json();
 
-// If backend returns a raw number: 123.45
-// If backend returns an object: { distanceMeters: 123.45 }
-      const meters =
-          typeof data === "number"
-              ? data
-              : (data?.distanceMeters ?? data?.value ?? null);
-
+      const meters = typeof data === "number" ? data : (data?.distanceMeters ?? data?.value ?? null);
       setDistance(meters);
     } catch (e) {
       setDistanceError(e.message);
-      setDistanceResult(null);
     } finally {
       setDistanceLoading(false);
     }
   };
-  
+
   const fetchMapData = async () => {
     setLoading(true);
     try {
@@ -114,6 +116,7 @@ export default function PlayWorld() {
       setItems(itemsData);
 
       await fetchZones();
+      await fetchPlayers();
     } catch (err) {
       console.error('Error fetching map data:', err);
     } finally {
@@ -130,6 +133,18 @@ export default function PlayWorld() {
       }
     } catch (err) {
       console.error('Error fetching zones:', err);
+    }
+  };
+
+  const fetchPlayers = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/players`);
+      if (response.ok) {
+        const data = await response.json();
+        setPlayers(data.players || data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching players:', err);
     }
   };
 
@@ -153,7 +168,7 @@ export default function PlayWorld() {
   }, []);
 
   useEffect(() => {
-    if (items.length > 0 || zones.length > 0) {
+    if (items.length > 0 || zones.length > 0 || players.length > 0) {
       const geojson = {
         type: 'FeatureCollection',
         features: [
@@ -182,25 +197,26 @@ export default function PlayWorld() {
               name: zone.name,
               zoneType: zone.type
             }
+          })),
+          ...players.map(player => ({
+            type: 'Feature',
+            geometry: {
+              type: 'Point',
+              coordinates: [player.position.longitude, player.position.latitude]
+            },
+            properties: {
+              type: 'player',
+              id: player.playerId,
+              username: player.username
+            }
           }))
         ]
       };
       setGeoJson(geojson);
     }
-  }, [items, zones]);
-
-  const downloadGeoJSON = () => {
-    const blob = new Blob([JSON.stringify(geoJson, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'play-world-map.geojson';
-    a.click();
-    URL.revokeObjectURL(url);
-  };
+  }, [items, zones, players]);
 
   const convertToGML = () => {
-    // GML (Geography Markup Language) - XML-based format
     let gml = `<?xml version="1.0" encoding="UTF-8"?>
 <FeatureCollection xmlns="http://www.opengis.net/gml">
   <featureMembers>`;
@@ -218,7 +234,7 @@ export default function PlayWorld() {
       </geometry>
       <properties>
         <type>${props.type}</type>
-        <name>${props.name || ''}</name>
+        <name>${props.name || props.username || ''}</name>
         ${props.isCollected !== undefined ? `<isCollected>${props.isCollected}</isCollected>` : ''}
       </properties>
     </Feature>`;
@@ -251,8 +267,6 @@ export default function PlayWorld() {
   };
 
   const convertToShapefile = () => {
-    // Shapefile format explanation (we'll create a .shp.json which is a JSON representation)
-    // Real shapefiles require binary format (.shp, .shx, .dbf files)
     const shapefile = {
       type: "FeatureCollection",
       name: "play_world_map",
@@ -274,8 +288,6 @@ export default function PlayWorld() {
   };
 
   const convertToGeoTIFF = () => {
-    // GeoTIFF metadata (actual GeoTIFF requires binary raster data)
-    // This creates a GeoTIFF metadata file that describes the extent and properties
     const bounds = {
       minLon: Math.min(...geoJson.features.flatMap(f =>
           f.geometry.type === 'Point' ? [f.geometry.coordinates[0]] :
@@ -304,7 +316,8 @@ export default function PlayWorld() {
       crs: "EPSG:4326",
       features: {
         items: geoJson.features.filter(f => f.properties.type === 'item').length,
-        zones: geoJson.features.filter(f => f.properties.type === 'zone').length
+        zones: geoJson.features.filter(f => f.properties.type === 'zone').length,
+        players: geoJson.features.filter(f => f.properties.type === 'player').length
       },
       note: "This is metadata. Full GeoTIFF requires raster data processing.",
       featureData: geoJson.features
@@ -357,10 +370,6 @@ export default function PlayWorld() {
     setDrawnPoints([]);
     setZoneFormData({ name: '', type: 'Forest' });
     setCreateZoneError(null);
-  };
-
-  const handleDrawingComplete = (points) => {
-    setDrawnPoints(points);
   };
 
   const addPoint = (point) => {
@@ -434,13 +443,14 @@ export default function PlayWorld() {
   };
 
   return (
-      <div>
+      <div className="min-h-screen bg-gray-950 text-white p-6">
         {/* Controls */}
         <div className="bg-gray-900 rounded-lg p-6 mb-6 border border-gray-800">
           <div className="flex justify-between items-center">
             <div className="text-sm text-gray-400">
               Items: <span className="text-white font-semibold">{items.length}</span>
               <span className="ml-4">Zones: <span className="text-white font-semibold">{zones.length}</span></span>
+              <span className="ml-4">Players: <span className="text-white font-semibold">{players.length}</span></span>
             </div>
             <div className="flex gap-3">
               <button
@@ -468,8 +478,7 @@ export default function PlayWorld() {
               </button>
             </div>
           </div>
-          
-          
+
           <div className="mt-3 text-sm text-gray-300">
             <div>
               Selected for distance: {distanceSelection.length}/2
@@ -483,22 +492,14 @@ export default function PlayWorld() {
               )}
             </div>
             {distanceLoading && <div className="text-gray-400">Calculating distance…</div>}
-
             {distanceError && <div className="text-red-400">Distance error: {distanceError}</div>}
-
-            {distanceLoading && <div className="text-gray-400">Calculating distance…</div>}
-
-            {distanceError && <div className="text-red-400">Distance error: {distanceError}</div>}
-
-            {distanceSelection.length === 2 && !distanceLoading && (
+            {distanceSelection.length === 2 && !distanceLoading && distance != null && (
                 <div className="text-green-400">
-                  Distance: {" "}
-                  {distance != null && `${(distance / 1000).toFixed(2)} km`}
+                  Distance: {(distance / 1000).toFixed(2)} km
                 </div>
             )}
-
-
           </div>
+        </div>
 
         {/* Leaflet Map */}
         <div className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden mb-6">
@@ -572,21 +573,14 @@ export default function PlayWorld() {
                       key={item.itemId}
                       position={[item.position.latitude, item.position.longitude]}
                       icon={item.isCollected ? collectedIcon : availableIcon}
-                      
-                      /// ---- ///
                       eventHandlers={{
                         click: () => {
                           setDistance(null);
                           setDistanceError(null);
 
                           setDistanceSelection(prev => {
-                            // if already selected, ignore
                             if (prev.includes(item.itemId)) return prev;
-
-                            // start new pair after 2 selected
                             const next = prev.length >= 2 ? [item.itemId] : [...prev, item.itemId];
-
-                            // if we now have 2, fetch distance
                             if (next.length === 2) {
                               fetchDistance(next[0], next[1]);
                             }
@@ -594,8 +588,6 @@ export default function PlayWorld() {
                           });
                         }
                       }}
-                      /// ---- ////
-                      
                   >
                     <Popup>
                       <div className="text-gray-900">
@@ -617,6 +609,34 @@ export default function PlayWorld() {
                     </Popup>
                   </Marker>
               ))}
+
+              {/* Display players */}
+              {players.map((player) => (
+                  <Marker
+                      key={player.playerId}
+                      position={[player.position.latitude, player.position.longitude]}
+                      icon={playerIcon}
+                  >
+                    <Popup>
+                      <div className="text-gray-900">
+                        <h3 className="font-bold text-lg mb-2">👤 {player.username}</h3>
+                        <div className="space-y-1 text-sm">
+                          <div>
+                            <strong>Player ID:</strong> {player.playerId}
+                          </div>
+                          <div>
+                            <strong>Player Name:</strong> {player.playerName}
+                          </div>
+                          <div>
+                            <strong>Position:</strong><br/>
+                            Lat: {player.position.latitude.toFixed(4)}<br/>
+                            Lon: {player.position.longitude.toFixed(4)}
+                          </div>
+                        </div>
+                      </div>
+                    </Popup>
+                  </Marker>
+              ))}
             </MapContainer>
           </div>
 
@@ -632,12 +652,16 @@ export default function PlayWorld() {
                 <span>Collected Item</span>
               </div>
               <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span>Player</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <Layers className="w-3 h-3 text-purple-400" />
                 <span>Zone (click to see items)</span>
               </div>
               <div className="ml-auto text-gray-400">
                 <MapPin className="w-4 h-4 inline mr-1" />
-                {items.length} items • {zones.length} zones
+                {items.length} items • {zones.length} zones • {players.length} players
               </div>
             </div>
           </div>
@@ -679,7 +703,7 @@ export default function PlayWorld() {
           </div>
         </div>
 
-        {/* Create Zone Modal - Positioned in corner, non-blocking */}
+        {/* Create Zone Modal */}
         {showCreateZoneModal && (
             <div className="fixed top-4 right-4 z-50 pointer-events-none">
               <div className="bg-gray-900 rounded-lg max-w-md w-full border border-gray-800 shadow-2xl pointer-events-auto">
@@ -954,7 +978,6 @@ export default function PlayWorld() {
               </div>
             </div>
         )}
-      </div>
       </div>
   );
 }
